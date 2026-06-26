@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bondipain | Pain artisanal livré à Moka</title>
+  <link rel="icon" type="image/png" id="favicon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --brand:        #F2A24C;
+      --brand-strong: #E5892B;
+      --brand-deep:   #C9711B;
+      --brand-soft:   #FBE5CC;
+      --cream:        #FFF8F1;
+      --cream-2:      #FDF1E5;
+      --ink:          #2A2622;
+      --muted:        #837A70;
+      --line:         #EFE3D5;
+      --green-ok:     #2E7D52;
+      --danger:       #C0392B;
+      --shadow-sm:    0 2px 10px rgba(60,40,15,.08);
+      --shadow-md:    0 8px 30px rgba(60,40,15,.12);
+      --radius:       16px;
+    }
+    body { font-family: 'Barlow', sans-serif; font-weight: 500; background: var(--cream); color: var(--ink); overflow-x: hidden; line-height: 1.5; }
+    h1,h2,h3,h4 { font-family: 'Rubik', sans-serif; line-height: 1.1; }
+    img { max-width: 100%; display: block; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 22px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Rubik', sans-serif; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 999px; transition: all .18s ease; white-space: nowrap; }
+    .btn-primary { background: var(--brand); color: #fff; box-shadow: var(--shadow-sm); }
+    .btn-primary:hover { background: var(--brand-strong); transform: translateY(-1px); }
+    .btn-ghost { background: #fff; color: var(--ink); border: 1.5px solid var(--line); }
+    .btn-ghost:hover { border-color: var(--brand); color: var(--brand-deep); }
+    .btn-block { width: 100%; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .topbar { background: var(--brand); color: #fff; font-size: 13.5px; font-weight: 600; }
+    .topbar .container { display: flex; align-items: center; justify-content: center; position: relative; min-height: 38px; gap: 10px; text-align: center; }
+    .topbar .promo { display:flex; align-items:center; gap:8px; }
+    .lang-switch { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); display: flex; gap: 2px; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px; }
+    .lang-switch button { color: #fff; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; opacity: .8; }
+    .lang-switch button.active { background: #fff; color: var(--brand-deep); opacity: 1; }
+    header.site { position: sticky; top: 0; z-index: 50; background: var(--cream); border-bottom: 1px solid var(--line); transition: box-shadow .2s; }
+    header.site.scrolled { box-shadow: var(--shadow-sm); }
+    .nav { display: flex; align-items: center; justify-content: space-between; min-height: 74px; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 50px; height: 50px; border-radius: 50%; }
+    .brand .name { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--brand-deep); letter-spacing: -.5px; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { font-family: 'Rubik'; font-weight: 500; font-size: 15px; color: var(--ink); }
+    .nav-links a:hover { color: var(--brand-deep); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .icon-btn { position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #fff; border: 1.5px solid var(--line); transition: border-color .15s; }
+    .icon-btn:hover { border-color: var(--brand); }
+    .icon-btn svg { width: 21px; height: 21px; stroke: var(--ink); }
+    .cart-count { position: absolute; top: -5px; right: -5px; background: var(--brand-deep); color: #fff; font-size: 11px; font-weight: 800; font-family: 'Rubik'; min-width: 19px; height: 19px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; }
+    .menu-toggle { display: none; }
+    .hero { position: relative; min-height: 520px; display: grid; place-items: center; text-align: center; color: #fff; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(30,18,5,.35) 0%, rgba(30,18,5,.55) 100%); z-index: 1; }
+    .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-content { position: relative; z-index: 2; padding: 60px 20px; max-width: 760px; }
+    .hero .eyebrow { font-family: 'Caveat'; font-size: 30px; color: var(--brand); font-weight: 700; }
+    .hero h1 { font-size: clamp(44px, 8vw, 92px); font-weight: 900; letter-spacing: -2px; text-shadow: 0 4px 24px rgba(0,0,0,.4); }
+    .hero p.sub { font-size: 19px; margin: 14px auto 28px; max-width: 520px; font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
+    .hero .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .info-strip { background: var(--ink); color: #fff; padding: 18px 0; }
+    .info-strip .container { display: flex; align-items: center; justify-content: center; gap: 14px; text-align: center; font-size: 14.5px; font-weight: 500; }
+    .info-strip svg { width: 26px; height: 26px; stroke: var(--brand); flex-shrink: 0; }
+    section.block { padding: 72px 0; }
+    .section-head { text-align: center; max-width: 620px; margin: 0 auto 46px; }
+    .section-head .eyebrow { font-family: 'Caveat'; font-size: 26px; color: var(--brand-deep); font-weight: 700; }
+    .section-head h2 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -1px; margin-top: 2px; }
+    .section-head p { color: var(--muted); margin-top: 12px; font-size: 16px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--line); display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .card .ph { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+    .card .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .card:hover .ph img { transform: scale(1.05); }
+    .card .tag { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,.95); color: var(--brand-deep); font-family: 'Rubik'; font-weight: 700; font-size: 12px; padding: 5px 12px; border-radius: 999px; }
+    .card .body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
+    .card h3 { font-size: 22px; font-weight: 700; }
+    .card .desc { color: var(--muted); font-size: 14.5px; margin: 8px 0 16px; flex: 1; }
+    .card .price-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .card .price { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--ink); }
+    .card .avail { font-size: 12.5px; color: var(--muted); margin-top: 10px; display: flex; align-items: center; gap: 6px; }
+    .card .avail .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-ok); }
+    .about { background: var(--cream-2); }
+    .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 50px; align-items: center; }
+    .about-grid img { border-radius: var(--radius); box-shadow: var(--shadow-md); aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+    .about-text h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -1px; }
+    .about-text .eyebrow { font-family: 'Caveat'; font-size: 26px; color: var(--brand-deep); font-weight: 700; }
+    .about-text p { color: var(--muted); margin-top: 14px; font-size: 16px; }
+    .feature-list { list-style: none; margin-top: 22px; display: grid; gap: 14px; }
+    .feature-list li { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; }
+    .feature-list svg { width: 24px; height: 24px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 10px; }
+    .step { text-align: center; padding: 10px; }
+    .step .num { font-family: 'Rubik'; font-weight: 900; font-size: 46px; color: var(--brand-soft); line-height: 1; }
+    .step h4 { font-size: 17px; font-weight: 700; margin: 6px 0 6px; }
+    .step p { color: var(--muted); font-size: 14px; }
+    .contact { background: var(--ink); color: #fff; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+    .contact h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+    .contact .eyebrow { font-family: 'Caveat'; font-size: 26px; color: var(--brand); font-weight: 700; }
+    .contact p { color: #d8cfc4; margin-top: 12px; }
+    .contact-info { display: grid; gap: 16px; margin-top: 8px; }
+    .contact-info .row { display: flex; gap: 14px; align-items: center; }
+    .contact-info svg { width: 24px; height: 24px; stroke: var(--brand); flex-shrink: 0; }
+    .contact-info b { font-family: 'Rubik'; }
+    .contact-info span { display: block; color: #c9bfb4; font-size: 14px; }
+    footer.site { background: #1B1814; color: #cbbfb2; padding: 44px 0 28px; font-size: 14px; }
+    .foot-grid { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .foot-grid .brand .name { color: #fff; }
+    footer.site .legal { width: 100%; border-top: 1px solid rgba(255,255,255,.1); margin-top: 28px; padding-top: 18px; text-align: center; color: #8c8175; font-size: 13px; }
+    .overlay { position: fixed; inset: 0; background: rgba(25,15,5,.5); backdrop-filter: blur(2px); z-index: 100; opacity: 0; visibility: hidden; transition: opacity .25s; }
+    .overlay.open { opacity: 1; visibility: visible; }
+    .modal { position: fixed; z-index: 110; left: 50%; top: 50%; transform: translate(-50%, -46%); width: min(560px, 94vw); max-height: 90vh; overflow-y: auto; background: var(--cream); border-radius: 20px; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transition: all .25s; }
+    .modal.open { opacity: 1; visibility: visible; transform: translate(-50%, -50%); }
+    .modal-head { position: sticky; top: 0; background: var(--cream); padding: 20px 24px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); z-index: 2; }
+    .modal-head h3 { font-size: 22px; font-weight: 800; }
+    .modal-close { width: 38px; height: 38px; border-radius: 50%; background: #fff; border: 1.5px solid var(--line); display: grid; place-items: center; }
+    .modal-close svg { width: 18px; height: 18px; stroke: var(--ink); }
+    .modal-body { padding: 22px 24px; }
+    .modal-foot { position: sticky; bottom: 0; background: var(--cream); padding: 16px 24px; border-top: 1px solid var(--line); }
+    .drawer { position: fixed; z-index: 110; top: 0; right: 0; height: 100%; width: min(440px, 100vw); background: var(--cream); box-shadow: var(--shadow-md); display: flex; flex-direction: column; transform: translateX(100%); transition: transform .3s ease; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { padding: 20px 22px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .drawer-head h3 { font-size: 21px; font-weight: 800; }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 18px 22px; }
+    .drawer-foot { padding: 18px 22px; border-top: 1px solid var(--line); background: var(--cream-2); }
+    .opt-group { margin-bottom: 22px; }
+    .opt-group > label.gl { font-family: 'Rubik'; font-weight: 700; font-size: 15px; display: block; margin-bottom: 4px; }
+    .opt-group .hint { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .opt-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; }
+    .opt-row .label { font-weight: 600; }
+    .opt-row .op { color: var(--muted); font-size: 13.5px; font-weight: 600; }
+    .stepper { display: flex; align-items: center; gap: 10px; }
+    .stepper button { width: 30px; height: 30px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-deep); font-weight: 800; font-size: 18px; display: grid; place-items: center; line-height: 1; }
+    .stepper button:hover { background: var(--brand); color: #fff; }
+    .stepper .q { min-width: 18px; text-align: center; font-family: 'Rubik'; font-weight: 700; }
+    .cart-line { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .cart-line img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+    .cart-line .ci-main { flex: 1; min-width: 0; }
+    .cart-line .ci-title { font-family: 'Rubik'; font-weight: 700; font-size: 15.5px; }
+    .cart-line .ci-extras { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .cart-line .ci-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .cart-line .ci-price { font-family: 'Rubik'; font-weight: 800; }
+    .cart-line .ci-remove { color: var(--danger); font-size: 12.5px; font-weight: 600; }
+    .cart-empty { text-align: center; color: var(--muted); padding: 50px 20px; }
+    .cart-empty svg { width: 56px; height: 56px; stroke: var(--line); margin: 0 auto 14px; }
+    .totals { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 14.5px; color: var(--muted); }
+    .totals.grand { font-size: 19px; color: var(--ink); font-family: 'Rubik'; font-weight: 800; margin: 10px 0 16px; }
+    .field { margin-bottom: 16px; }
+    .field label { font-family: 'Rubik'; font-weight: 600; font-size: 13.5px; display: block; margin-bottom: 6px; }
+    .field input, .field textarea, .field select { width: 100%; font-family: inherit; font-size: 15px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 11px; background: #fff; color: var(--ink); }
+    .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--brand); }
+    .field .err { color: var(--danger); font-size: 12.5px; margin-top: 5px; display: none; }
+    .field.invalid input, .field.invalid textarea, .field.invalid select { border-color: var(--danger); }
+    .field.invalid .err { display: block; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+    .day-opt { border: 1.5px solid var(--line); border-radius: 12px; background: #fff; padding: 12px 6px; text-align: center; transition: all .15s; }
+    .day-opt:hover { border-color: var(--brand); }
+    .day-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
+    .day-opt .dow { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
+    .day-opt .dnum { font-family: 'Rubik'; font-weight: 800; font-size: 22px; margin: 2px 0; }
+    .day-opt .mon { font-size: 12px; color: var(--muted); }
+    .pay-opt { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; margin-bottom: 10px; cursor: pointer; transition: all .15s; }
+    .pay-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
+    .pay-opt input { margin-top: 3px; accent-color: var(--brand-strong); width: 18px; height: 18px; }
+    .pay-opt .pt { font-family: 'Rubik'; font-weight: 700; }
+    .pay-opt .pd { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .juice-box { display: none; background: #fff; border: 1.5px dashed var(--brand); border-radius: 12px; padding: 14px; margin: 4px 0 14px; font-size: 14px; }
+    .juice-box.show { display: block; }
+    .notice { background: var(--brand-soft); border-radius: 12px; padding: 13px 15px; font-size: 13.5px; color: var(--brand-deep); display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px; }
+    .notice svg { width: 20px; height: 20px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
+    .confirm-wrap { text-align: center; padding: 12px 6px 6px; }
+    .confirm-check { width: 78px; height: 78px; border-radius: 50%; background: var(--green-ok); display: grid; place-items: center; margin: 0 auto 18px; }
+    .confirm-check svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 3; }
+    .confirm-wrap h3 { font-size: 26px; font-weight: 800; }
+    .confirm-wrap .ordernum { font-family: 'Rubik'; font-weight: 800; font-size: 20px; color: var(--brand-deep); background: var(--brand-soft); display: inline-block; padding: 8px 18px; border-radius: 999px; margin: 14px 0; letter-spacing: 1px; }
+    .confirm-recap { text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 8px; font-size: 14px; }
+    .confirm-recap .r { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; }
+    .confirm-recap .r b { font-family: 'Rubik'; }
+    .hidden { display: none !important; }
+    @media (max-width: 900px) { .menu-grid { grid-template-columns: 1fr 1fr; } .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; } .steps { grid-template-columns: 1fr 1fr; gap: 28px; } }
+    @media (max-width: 680px) { .nav-links { display: none; } .menu-toggle { display: grid; } .menu-grid { grid-template-columns: 1fr; } .info-strip .container { font-size: 13px; } .two-col { grid-template-columns: 1fr; } .brand .name { font-size: 19px; } .topbar .promo { font-size: 12px; } .lang-switch { position: static; transform: none; } .topbar .container { flex-direction: column; padding: 8px 22px; } }
+    .mobile-nav { position: fixed; inset: 0; z-index: 120; background: var(--cream); transform: translateX(100%); transition: transform .3s; display: flex; flex-direction: column; padding: 22px; }
+    .mobile-nav.open { transform: translateX(0); }
+    .mobile-nav a { font-family: 'Rubik'; font-weight: 600; font-size: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .mobile-nav .mn-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="container"><div class="promo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="topbar"></span></div><div class="lang-switch"><button data-lang="fr" onclick="setLang('fr')">FR</button><button data-lang="en" onclick="setLang('en')">EN</button></div></div></div>
+  <header class="site" id="header"><div class="container nav"><a href="#top" class="brand"><img class="logo-img" alt="Bondipain" /><span class="name">Bondipain</span></a><nav class="nav-links"><a href="#top" data-i18n="nav_home"></a><a href="#menu" data-i18n="nav_menu"></a><a href="#about" data-i18n="nav_about"></a><a href="#contact" data-i18n="nav_contact"></a></nav><div class="nav-right"><button class="icon-btn" onclick="openCart()" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H3"/></svg><span class="cart-count hidden" id="cartCount">0</span></button><button class="menu-toggle icon-btn" onclick="toggleMobileNav(true)" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div></header>
+  <div class="mobile-nav" id="mobileNav"><div class="mn-head"><span style="font-family:'Rubik';font-weight:800;color:var(--brand-deep);font-size:22px;">Bondipain</span><button class="modal-close" onclick="toggleMobileNav(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><a href="#top" onclick="toggleMobileNav(false)" data-i18n="nav_home"></a><a href="#menu" onclick="toggleMobileNav(false)" data-i18n="nav_menu"></a><a href="#about" onclick="toggleMobileNav(false)" data-i18n="nav_about"></a><a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a></div>
+  <span id="top"></span>
+  <section class="hero"><img class="bg" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80" alt="Sandwich" /><div class="hero-content"><div class="eyebrow" data-i18n="hero_eyebrow"></div><h1 data-i18n="hero_title"></h1><p class="sub" data-i18n="hero_sub"></p><div class="btn-row"><a href="#menu" class="btn btn-primary" data-i18n="hero_cta"></a><a href="#about" class="btn btn-ghost" data-i18n="hero_cta2"></a></div></div></section>
+  <div class="info-strip"><div class="container"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><span data-i18n="info_strip"></span></div></div>
+  <section class="block" id="menu"><div class="container"><div class="section-head"><div class="eyebrow" data-i18n="menu_eyebrow"></div><h2 data-i18n="menu_title"></h2><p data-i18n="menu_sub"></p></div><div class="menu-grid" id="menuGrid"></div></div></section>
+  <section class="block" style="padding-top:0;"><div class="container"><div class="section-head"><div class="eyebrow" data-i18n="steps_eyebrow"></div><h2 data-i18n="steps_title"></h2></div><div class="steps" id="stepsGrid"></div></div></section>
+  <section class="block about" id="about"><div class="container about-grid"><img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" /><div class="about-text"><div class="eyebrow" data-i18n="about_eyebrow"></div><h2 data-i18n="about_title"></h2><p data-i18n="about_p1"></p><p data-i18n="about_p2"></p><ul class="feature-list" id="aboutFeatures"></ul></div></div></section>
+  <section class="block contact" id="contact"><div class="container contact-grid"><div><div class="eyebrow" data-i18n="contact_eyebrow"></div><h2 data-i18n="contact_title"></h2><p data-i18n="contact_p"></p></div><div class="contact-info"><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><div><b data-i18n="contact_zone_t"></b><span data-i18n="contact_zone_v"></span></div></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><div><b data-i18n="contact_phone_t"></b><span>+230 5xxx xxxx</span></div></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><div><b>Email</b><span>hello@bondipain.com</span></div></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><div><b data-i18n="contact_hours_t"></b><span data-i18n="contact_hours_v"></span></div></div></div></div></section>
+  <footer class="site"><div class="container foot-grid"><a href="#top" class="brand"><img class="logo-img" alt="Bondipain" style="width:42px;height:42px;border-radius:50%;" /><span class="name" style="font-family:'Rubik';font-weight:800;font-size:20px;">Bondipain</span></a><span data-i18n="footer_tag"></span><div class="legal" data-i18n="footer_legal"></div></div></footer>
+  <div class="overlay" id="overlay" onclick="closeAll()"></div>
+  <div class="modal" id="productModal" role="dialog"><div class="modal-head"><h3 id="pmTitle"></h3><button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div class="modal-body" id="pmBody"></div><div class="modal-foot"><button class="btn btn-primary btn-block" id="pmAdd" onclick="addConfiguredToCart()"></button></div></div>
+  <div class="drawer" id="cartDrawer" role="dialog"><div class="drawer-head"><h3 data-i18n="cart_title"></h3><button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div class="drawer-body" id="cartBody"></div><div class="drawer-foot" id="cartFoot"></div></div>
+  <div class="modal" id="checkoutModal" role="dialog"><div class="modal-head"><h3 data-i18n="checkout_title"></h3><button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div class="modal-body" id="checkoutBody"></div><div class="modal-foot"><button class="btn btn-primary btn-block" id="placeOrderBtn" onclick="placeOrder()"></button></div></div>
+  <div class="modal" id="confirmModal" role="dialog"><div class="modal-body" id="confirmBody"></div><div class="modal-foot"><button class="btn btn-primary btn-block" onclick="closeAll()" data-i18n="confirm_close"></button></div></div>
+<script>
+const I18N={fr:{topbar:"Commandes livrées en 48h · Livraison entre 11h et 14h",nav_home:"Accueil",nav_menu:"Nos pains",nav_about:"À propos",nav_contact:"Contact",hero_eyebrow:"Bienvenue",hero_title:"Chez Bondipain",hero_sub:"Le pain garni, fait maison et livré chez vous à Moka.",hero_cta:"Commander",hero_cta2:"En savoir plus",info_strip:"Pour garantir la disponibilité, merci de commander au moins 48h avant la livraison.",menu_eyebrow:"Notre carte",menu_title:"Nos pains garnis",menu_sub:"Choisissez votre pain, ajoutez vos accompagnements et vos boissons.",choose:"Choisir",steps_eyebrow:"Comment ça marche",steps_title:"Commander en 4 étapes",about_eyebrow:"Notre histoire",about_title:"Du pain artisanal, livré dans le quartier de Moka",about_p1:"Bondipain prépare chaque jour des pains garnis généreux à partir d'ingrédients frais et locaux.",about_p2:"Nous livrons uniquement dans le quartier de Moka, pour un service de proximité et des produits toujours frais.",contact_eyebrow:"Une question ?",contact_title:"Contactez-nous",contact_p:"Notre équipe est disponible pour toute question sur votre commande ou nos produits.",contact_zone_t:"Zone de livraison",contact_zone_v:"Uniquement quartier de Moka, Maurice",contact_phone_t:"Téléphone",contact_hours_t:"Créneau de livraison",contact_hours_v:"Tous les jours, entre 11h et 14h",footer_tag:"Le pain garni, livré à Moka.",footer_legal:"© 2026 Bondipain.com — Tous droits réservés.",pm_qty:"Quantité",pm_sides_t:"Accompagnements",pm_sides_h:"Ajoutez des accompagnements (optionnel)",pm_drinks_t:"Boissons",pm_drinks_h:"Choisissez vos boissons (optionnel)",pm_add:"Ajouter au panier",cart_title:"Mon panier",cart_empty:"Votre panier est vide.",cart_remove:"Retirer",cart_subtotal:"Sous-total",cart_delivery:"Livraison",cart_delivery_free:"Offerte",cart_total:"Total",cart_checkout:"Passer la commande",cart_with:"avec",checkout_title:"Finaliser ma commande",co_notice:"Commande à passer au moins 48h à l'avance · Livraison uniquement à Moka, entre 11h et 14h.",co_day_t:"Jour de livraison",co_day_h:"Choisissez un jour disponible (délai de 48h respecté).",co_info_t:"Vos coordonnées",co_name:"Nom complet",co_phone:"Téléphone",co_email:"Email (pour le suivi)",co_addr_t:"Adresse de livraison",co_addr:"Rue / résidence / repères (Moka)",co_moka_confirm:"Je confirme que mon adresse se situe dans le quartier de Moka.",co_pay_t:"Mode de paiement",co_pay_cash_t:"Espèces à la livraison",co_pay_cash_d:"Payez en liquide au livreur à la réception de votre commande.",co_pay_juice_t:"Juice by MCB (mobile money)",co_pay_juice_d:"Payez à l'avance via l'application Juice by MCB.",co_juice_box:"Envoyez le montant via <b>Juice by MCB</b> au numéro marchand <b>+230 5xxx xxxx</b> et indiquez votre numéro de commande en référence.",co_place:"Confirmer la commande",co_summary:"Récapitulatif",err_required:"Ce champ est requis",err_email:"Email invalide",err_day:"Veuillez choisir un jour de livraison",err_moka:"Veuillez confirmer la zone de Moka",confirm_title:"Commande confirmée !",confirm_msg:"Merci pour votre commande. Conservez votre numéro de commande ci-dessous.",confirm_email_note:"Un récapitulatif vous sera envoyé par email (bientôt disponible).",confirm_for:"Livraison le",confirm_pay:"Paiement",confirm_total:"Total",confirm_close:"Fermer",months:["jan.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],days:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],currency:"Rs"},en:{topbar:"Orders delivered within 48h · Delivery between 11am and 2pm",nav_home:"Home",nav_menu:"Our breads",nav_about:"About",nav_contact:"Contact",hero_eyebrow:"Welcome",hero_title:"To Bondipain",hero_sub:"Homemade stuffed bread, delivered to your door in Moka.",hero_cta:"Order now",hero_cta2:"Learn more",info_strip:"To guarantee availability, please order at least 48h before delivery.",menu_eyebrow:"Our menu",menu_title:"Our stuffed breads",menu_sub:"Pick your bread, then add your sides and drinks.",choose:"Choose",steps_eyebrow:"How it works",steps_title:"Order in 4 steps",about_eyebrow:"Our story",about_title:"Artisan bread, delivered across Moka",about_p1:"Bondipain prepares generous stuffed breads every day using fresh, local ingredients.",about_p2:"We deliver only within the Moka area, for a local service and always-fresh products.",contact_eyebrow:"A question?",contact_title:"Get in touch",contact_p:"Our team is available for any question about your order or our products.",contact_zone_t:"Delivery area",contact_zone_v:"Moka area only, Mauritius",contact_phone_t:"Phone",contact_hours_t:"Delivery window",contact_hours_v:"Every day, between 11am and 2pm",footer_tag:"Stuffed bread, delivered in Moka.",footer_legal:"© 2026 Bondipain.com — All rights reserved.",pm_qty:"Quantity",pm_sides_t:"Sides",pm_sides_h:"Add some sides (optional)",pm_drinks_t:"Drinks",pm_drinks_h:"Choose your drinks (optional)",pm_add:"Add to cart",cart_title:"My cart",cart_empty:"Your cart is empty.",cart_remove:"Remove",cart_subtotal:"Subtotal",cart_delivery:"Delivery",cart_delivery_free:"Free",cart_total:"Total",cart_checkout:"Checkout",cart_with:"with",checkout_title:"Complete my order",co_notice:"Order at least 48h in advance · Delivery in Moka only, between 11am and 2pm.",co_day_t:"Delivery day",co_day_h:"Pick an available day (48h lead time respected).",co_info_t:"Your details",co_name:"Full name",co_phone:"Phone",co_email:"Email (for tracking)",co_addr_t:"Delivery address",co_addr:"Street / residence / landmarks (Moka)",co_moka_confirm:"I confirm my address is within the Moka area.",co_pay_t:"Payment method",co_pay_cash_t:"Cash on delivery",co_pay_cash_d:"Pay the driver in cash when your order arrives.",co_pay_juice_t:"Juice by MCB (mobile money)",co_pay_juice_d:"Pay in advance via the Juice by MCB app.",co_juice_box:"Send the amount via <b>Juice by MCB</b> to merchant number <b>+230 5xxx xxxx</b> and add your order number as reference.",co_place:"Confirm order",co_summary:"Summary",err_required:"This field is required",err_email:"Invalid email",err_day:"Please choose a delivery day",err_moka:"Please confirm the Moka area",confirm_title:"Order confirmed!",confirm_msg:"Thank you for your order. Keep your order number below.",confirm_email_note:"A summary will be emailed to you (coming soon).",confirm_for:"Delivery on",confirm_pay:"Payment",confirm_total:"Total",confirm_close:"Close",months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],currency:"Rs"}};
+const MENU=[{id:"poisson",name:{fr:"Pain Poisson",en:"Fish Bread"},desc:{fr:"Pain garni au poisson frais, légumes croquants et sauce maison.",en:"Stuffed bread with fresh fish, crunchy vegetables and house sauce."},price:150,img:"https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",tag:{fr:"Poisson",en:"Fish"}},{id:"viande",name:{fr:"Pain Viande",en:"Meat Bread"},desc:{fr:"Pain généreux à la viande mijotée, oignons confits et épices.",en:"Generous bread with slow-cooked meat, caramelised onions and spices."},price:170,img:"https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=800&q=80",tag:{fr:"Viande",en:"Meat"}},{id:"vege",name:{fr:"Pain Végé",en:"Veggie Bread"},desc:{fr:"Pain garni de légumes grillés, houmous et herbes fraîches.",en:"Bread filled with grilled vegetables, hummus and fresh herbs."},price:140,img:"https://images.unsplash.com/photo-1540713434306-58505cf1b6fc?auto=format&fit=crop&w=800&q=80",tag:{fr:"Végétarien",en:"Veggie"}}];
+const SIDES=[{id:"chips",name:{fr:"Chips",en:"Chips"},price:50},{id:"frites",name:{fr:"Frites",en:"Fries"},price:60},{id:"salade",name:{fr:"Salade",en:"Salad"},price:45},{id:"sauce",name:{fr:"Sauce extra",en:"Extra sauce"},price:20}];
+const DRINKS=[{id:"coca",name:{fr:"Coca-Cola",en:"Coca-Cola"},price:40},{id:"soda",name:{fr:"Soda",en:"Soda"},price:35},{id:"eau",name:{fr:"Eau",en:"Water"},price:25},{id:"jus",name:{fr:"Jus de fruit",en:"Fruit juice"},price:45}];
+const STEPS=[{fr:["Choisissez votre pain","Poisson, viande ou végé"],en:["Choose your bread","Fish, meat or veggie"]},{fr:["Ajoutez sides & boissons","Chips, sauce, coca…"],en:["Add sides & drinks","Chips, sauce, soda…"]},{fr:["Commandez 48h avant","Choisissez votre jour"],en:["Order 48h ahead","Pick your day"]},{fr:["Livré à Moka","Entre 11h et 14h"],en:["Delivered in Moka","Between 11am and 2pm"]}];
+const ABOUT_FEATURES={fr:["Ingrédients frais et locaux","Préparé le jour de la livraison","Livraison de proximité à Moka","Paiement espèces ou Juice by MCB"],en:["Fresh, local ingredients","Made on delivery day","Local delivery in Moka","Pay by cash or Juice by MCB"]};
+let lang=localStorage.getItem("bp_lang")||"fr",cart=JSON.parse(localStorage.getItem("bp_cart")||"[]"),currentProduct=null,cfg=null,checkout={day:null,pay:"cash"};
+const t=k=>I18N[lang][k]!==undefined?I18N[lang][k]:k,money=n=>`${t("currency")} ${n}`,S=s=>document.querySelector(s);
+const LOGO="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARGVYSWZNTQAqAAAACAABh2kABAAAAAEAAAAaAAAAAAADoAEAAwAAAAEAAQAAoAIABAAAAAEAAADIoAMABAAAAAEAAADIAAAAAJtbPZUAADfSSURBVHgB7Z0JtFzFmd/rdgsJYQkksQghhPYFSWwSYt9tiM14sMfLDGMnnrHxxJNJxuY4iXNmkpwzyZkT58SJl3h8nLEdL+MVjwMztvEGHsBmETsItEtISEIgEIhdElL3zf/3VVfr9n39Wu/d9x7S7a46anW/u1TV/er764IUiBToQIHK2/8RI1IgUiABJPJApEAHCkSAdCBOPBUpEAESeiBSoAMFIkA6ECeeihSIAIk8ECnQgQIRIB2IE09FCkSARB6IFOhAgQiQDsSJpyIFIkAiD0QKdKBABEgH4sRTkQIRIJEHIgU6UCACJPJAJFAHAAAAAA==" ;
+document.querySelectorAll('.logo-img').forEach(i=>i.src=LOGO);
+{const fav=document.getElementById('favicon');if(fav)fav.href=LOGO;}
+function applyI18n(){document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.getAttribute('data-i18n')));document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));}
+function setLang(l){lang=l;localStorage.setItem('bp_lang',l);renderAll();if(S('#productModal').classList.contains('open')&&currentProduct){renderProductBody();S('#pmTitle').textContent=currentProduct.name[lang];}if(S('#cartDrawer').classList.contains('open'))renderCart();if(S('#checkoutModal').classList.contains('open'))renderCheckout();}
+function renderAll(){applyI18n();renderMenu();renderSteps();renderAboutFeatures();updateCartCount();}
+function renderMenu(){S('#menuGrid').innerHTML=MENU.map(p=>`<div class="card"><div class="ph"><img src="${p.img}" alt="${p.name[lang]}" loading="lazy" /><span class="tag">${p.tag[lang]}</span></div><div class="body"><h3>${p.name[lang]}</h3><p class="desc">${p.desc[lang]}</p><div class="price-row"><span class="price">${money(p.price)}</span><button class="btn btn-primary" onclick="openProduct('${p.id}')">${t('choose')}</button></div><div class="avail"><span class="dot"></span>${lang==='fr'?'Disponible · commande 48h à l\'avance':'Available · order 48h ahead'}</div></div></div>`).join('');}
+function renderSteps(){S('#stepsGrid').innerHTML=STEPS.map((s,i)=>`<div class="step"><div class="num">0${i+1}</div><h4>${s[lang][0]}</h4><p>${s[lang][1]}</p></div>`).join('');}
+function renderAboutFeatures(){const check='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>';S('#aboutFeatures').innerHTML=ABOUT_FEATURES[lang].map(f=>`<li>${check}<span>${f}</span></li>`).join('');}
+function openProduct(id){currentProduct=MENU.find(p=>p.id===id);cfg={qty:1,sides:{},drinks:{}};SIDES.forEach(s=>cfg.sides[s.id]=0);DRINKS.forEach(d=>cfg.drinks[d.id]=0);S('#pmTitle').textContent=currentProduct.name[lang];renderProductBody();openModal('#productModal');}
+function renderProductBody(){const p=currentProduct;const sideRow=(item,kind)=>`<div class="opt-row"><div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div><div class="stepper"><button onclick="stepOpt('${kind}','${item.id}',-1)">−</button><span class="q" id="q_${kind}_${item.id}">${cfg[kind][item.id]}</span><button onclick="stepOpt('${kind}','${item.id}',1)">+</button></div></div>`;S('#pmBody').innerHTML=`<div style="display:flex;gap:14px;margin-bottom:20px;"><img src="${p.img}" alt="" style="width:96px;height:96px;border-radius:12px;object-fit:cover;" /><div><div style="font-family:'Rubik';font-weight:800;font-size:18px;">${money(p.price)}</div><p style="color:var(--muted);font-size:14px;margin-top:4px;">${p.desc[lang]}</p></div></div><div class="opt-group"><label class="gl">${t('pm_qty')}</label><div class="stepper" style="margin-top:6px;"><button onclick="stepQty(-1)">−</button><span class="q" id="q_main" style="font-size:18px;">${cfg.qty}</span><button onclick="stepQty(1)">+</button></div></div><div class="opt-group"><label class="gl">${t('pm_sides_t')}</label><div class="hint">${t('pm_sides_h')}</div>${SIDES.map(s=>sideRow(s,'sides')).join('')}</div><div class="opt-group"><label class="gl">${t('pm_drinks_t')}</label><div class="hint">${t('pm_drinks_h')}</div>${DRINKS.map(d=>sideRow(d,'drinks')).join('')}</div>`;updatePmButton();}
+function stepQty(d){cfg.qty=Math.max(1,cfg.qty+d);S('#q_main').textContent=cfg.qty;updatePmButton();}
+function stepOpt(kind,id,d){cfg[kind][id]=Math.max(0,Math.min(9,cfg[kind][id]+d));S(`#q_${kind}_${id}`).textContent=cfg[kind][id];updatePmButton();}
+function configLineTotal(){let extras=0;SIDES.forEach(s=>extras+=cfg.sides[s.id]*s.price);DRINKS.forEach(d=>extras+=cfg.drinks[d.id]*d.price);return(currentProduct.price+extras)*cfg.qty;}
+function updatePmButton(){S('#pmAdd').textContent=`${t('pm_add')} · ${money(configLineTotal())}`;}
+function addConfiguredToCart(){const sides=SIDES.filter(s=>cfg.sides[s.id]>0).map(s=>({id:s.id,name:s.name,qty:cfg.sides[s.id],price:s.price}));const drinks=DRINKS.filter(d=>cfg.drinks[d.id]>0).map(d=>({id:d.id,name:d.name,qty:cfg.drinks[d.id],price:d.price}));cart.push({uid:Date.now()+"_"+Math.floor(Math.random()*9999),pid:currentProduct.id,name:currentProduct.name,img:currentProduct.img,base:currentProduct.price,qty:cfg.qty,sides,drinks,lineTotal:configLineTotal()});saveCart();closeAll();openCart();}
+function saveCart(){localStorage.setItem('bp_cart',JSON.stringify(cart));updateCartCount();}
+function updateCartCount(){const n=cart.reduce((s,i)=>s+i.qty,0);const el=S('#cartCount');el.textContent=n;el.classList.toggle('hidden',n===0);}
+function cartSubtotal(){return cart.reduce((s,i)=>s+i.lineTotal,0);}
+function extrasLabel(item){const parts=[...item.sides,...item.drinks].map(x=>`${x.qty}× ${x.name[lang]}`);return parts.length?`${t('cart_with')} ${parts.join(', ')}`:'';
+}
+function renderCart(){const body=S('#cartBody'),foot=S('#cartFoot');if(!cart.length){body.innerHTML=`<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg><p>${t('cart_empty')}</p></div>`;foot.innerHTML='';return;}body.innerHTML=cart.map(item=>`<div class="cart-line"><img src="${item.img}" alt="" /><div class="ci-main"><div class="ci-title">${item.qty}× ${item.name[lang]}</div>${extrasLabel(item)?`<div class="ci-extras">${extrasLabel(item)}</div>`:''}<div class="ci-bottom"><span class="ci-price">${money(item.lineTotal)}</span><button class="ci-remove" onclick="removeLine('${item.uid}')">${t('cart_remove')}</button></div></div></div>`).join('');foot.innerHTML=`<div class="totals"><span>${t('cart_subtotal')}</span><span>${money(cartSubtotal())}</span></div><div class="totals"><span>${t('cart_delivery')}</span><span>${t('cart_delivery_free')}</span></div><div class="totals grand"><span>${t('cart_total')}</span><span>${money(cartSubtotal())}</span></div><button class="btn btn-primary btn-block" onclick="goCheckout()">${t('cart_checkout')}</button>`;}
+function removeLine(uid){cart=cart.filter(i=>i.uid!==uid);saveCart();renderCart();}
+function availableDays(){const now=new Date();const earliest=now.getTime()+48*3600*1000;const days=[];for(let i=0;i<16&&days.length<7;i++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i,11,0,0,0);if(d.getTime()>=earliest)days.push(d);}return days;}
+function goCheckout(){if(!cart.length)return;checkout={day:null,pay:'cash'};closeDrawerOnly();renderCheckout();openModal('#checkoutModal');}
+function renderCheckout(){const days=availableDays();S('#checkoutBody').innerHTML=`<div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><span>${t('co_notice')}</span></div><div class="opt-group"><label class="gl">${t('co_day_t')}</label><div class="hint">${t('co_day_h')}</div><div class="day-grid" id="dayGrid">${days.map(d=>`<button class="day-opt${checkout.day===d.getTime()?' selected':''}" data-time="${d.getTime()}" onclick="pickDay(${d.getTime()})"><div class="dow">${t('days')[d.getDay()]}</div><div class="dnum">${d.getDate()}</div><div class="mon">${t('months')[d.getMonth()]}</div></button>`).join('')}</div><div class="field" id="dayErrWrap" style="margin-top:8px;"><div class="err">${t('err_day')}</div></div></div><div class="opt-group"><label class="gl">${t('co_info_t')}</label><div class="field" id="f_name"><label>${t('co_name')}</label><input id="i_name" type="text" /><div class="err">${t('err_required')}</div></div><div class="two-col"><div class="field" id="f_phone"><label>${t('co_phone')}</label><input id="i_phone" type="tel" /><div class="err">${t('err_required')}</div></div><div class="field" id="f_email"><label>${t('co_email')}</label><input id="i_email" type="email" /><div class="err">${t('err_email')}</div></div></div></div><div class="opt-group"><label class="gl">${t('co_addr_t')}</label><div class="field" id="f_addr"><label>${t('co_addr')}</label><textarea id="i_addr" rows="2"></textarea><div class="err">${t('err_required')}</div></div><label class="pay-opt" id="mokaWrap" style="margin-top:4px;"><input type="checkbox" id="i_moka" /><div><div class="pt" style="font-size:14px;">${t('co_moka_confirm')}</div></div></label><div class="field" id="f_moka"><div class="err">${t('err_moka')}</div></div></div><div class="opt-group"><label class="gl">${t('co_pay_t')}</label><label class="pay-opt selected" id="pay_cash" onclick="pickPay('cash')"><input type="radio" name="pay" value="cash" checked /><div><div class="pt">${t('co_pay_cash_t')}</div><div class="pd">${t('co_pay_cash_d')}</div></div></label><label class="pay-opt" id="pay_juice" onclick="pickPay('juice')"><input type="radio" name="pay" value="juice" /><div><div class="pt">${t('co_pay_juice_t')}</div><div class="pd">${t('co_pay_juice_d')}</div></div></label><div class="juice-box" id="juiceBox">${t('co_juice_box')}</div></div><div class="opt-group"><label class="gl">${t('co_summary')}</label><div class="confirm-recap" style="margin-top:8px;"><div class="r"><span>${t('cart_subtotal')}</span><b>${money(cartSubtotal())}</b></div><div class="r"><span>${t('cart_delivery')}</span><b>${t('cart_delivery_free')}</b></div><div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t('cart_total')}</span><b>${money(cartSubtotal())}</b></div></div></div>`;S('#placeOrderBtn').textContent=`${t('co_place')} · ${money(cartSubtotal())}`;}
+function pickDay(time){checkout.day=time;document.querySelectorAll('.day-opt').forEach(b=>b.classList.toggle('selected',+b.dataset.time===time));S('#dayErrWrap').classList.remove('invalid');}
+function pickPay(p){checkout.pay=p;S('#pay_cash').classList.toggle('selected',p==='cash');S('#pay_juice').classList.toggle('selected',p==='juice');S('#pay_cash').querySelector('input').checked=p==='cash';S('#pay_juice').querySelector('input').checked=p==='juice';S('#juiceBox').classList.toggle('show',p==='juice');}
+function placeOrder(){let ok=true;const setErr=(sel,bad)=>{S(sel).classList.toggle('invalid',bad);if(bad)ok=false;};const name=S('#i_name').value.trim(),phone=S('#i_phone').value.trim(),email=S('#i_email').value.trim(),addr=S('#i_addr').value.trim(),moka=S('#i_moka').checked;setErr('#f_name',!name);setErr('#f_phone',!phone);setErr('#f_email',!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));setErr('#f_addr',!addr);setErr('#f_moka',!moka);if(!checkout.day){S('#dayErrWrap').classList.add('invalid');ok=false;}if(!ok){S('#checkoutModal').scrollTo({top:0,behavior:'smooth'});return;}const orderNum=makeOrderNumber();const dayDate=new Date(checkout.day);const dayStr=`${t('days')[dayDate.getDay()]} ${dayDate.getDate()} ${t('months')[dayDate.getMonth()]}`;const payLabel=checkout.pay==='cash'?t('co_pay_cash_t'):t('co_pay_juice_t');const order={num:orderNum,name,phone,email,addr,day:checkout.day,pay:checkout.pay,items:cart,total:cartSubtotal(),createdAt:Date.now()};const history=JSON.parse(localStorage.getItem('bp_orders')||'[]');history.push(order);localStorage.setItem('bp_orders',JSON.stringify(history));cart=[];saveCart();renderConfirmation(orderNum,dayStr,payLabel,order.total,email);closeAll();openModal('#confirmModal');}
+function makeOrderNumber(){const d=new Date();const p=n=>String(n).padStart(2,'0');const rand=Math.floor(1000+Math.random()*9000);return `BP-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${rand}`;}
+function renderConfirmation(num,dayStr,payLabel,total,email){S('#confirmBody').innerHTML=`<div class="confirm-wrap"><div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5"/></svg></div><h3>${t('confirm_title')}</h3><p style="color:var(--muted);margin-top:8px;">${t('confirm_msg')}</p><div class="ordernum">${num}</div><div class="confirm-recap"><div class="r"><span>${t('confirm_for')}</span><b>${dayStr} · 11h–14h</b></div><div class="r"><span>${t('confirm_pay')}</span><b>${payLabel}</b></div><div class="r"><span>${t('confirm_total')}</span><b>${money(total)}</b></div><div class="r"><span>Email</span><b>${email}</b></div></div><p style="color:var(--muted);font-size:13px;margin-top:14px;">${t('confirm_email_note')}</p></div>`;}
+function openModal(sel){S('#overlay').classList.add('open');S(sel).classList.add('open');document.body.style.overflow='hidden';}
+function openCart(){renderCart();S('#overlay').classList.add('open');S('#cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawerOnly(){S('#cartDrawer').classList.remove('open');}
+function closeAll(){S('#overlay').classList.remove('open');document.querySelectorAll('.modal,.drawer').forEach(m=>m.classList.remove('open'));document.body.style.overflow='';}
+function toggleMobileNav(open){S('#mobileNav').classList.toggle('open',open);document.body.style.overflow=open?'hidden':'';}
+window.addEventListener('scroll',()=>S('#header').classList.toggle('scrolled',window.scrollY>10));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAll();toggleMobileNav(false);}});
+renderAll();
+</script>
+</body>
+</html>
