@@ -27,25 +27,42 @@
       --shadow-md:    0 8px 30px rgba(60,40,15,.12);
       --radius:       16px;
     }
-    body { font-family: 'Barlow', sans-serif; font-weight: 500; background: var(--cream); color: var(--ink); overflow-x: hidden; line-height: 1.5; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 500;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
     h1,h2,h3,h4 { font-family: 'Rubik', sans-serif; line-height: 1.1; }
     img { max-width: 100%; display: block; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
     a { color: inherit; text-decoration: none; }
     .container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 22px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Rubik', sans-serif; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 999px; transition: all .18s ease; white-space: nowrap; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Rubik', sans-serif; font-weight: 600; font-size: 15px;
+      padding: 12px 22px; border-radius: 999px; transition: all .18s ease; white-space: nowrap;
+    }
     .btn-primary { background: var(--brand); color: #fff; box-shadow: var(--shadow-sm); }
     .btn-primary:hover { background: var(--brand-strong); transform: translateY(-1px); }
     .btn-ghost { background: #fff; color: var(--ink); border: 1.5px solid var(--line); }
     .btn-ghost:hover { border-color: var(--brand); color: var(--brand-deep); }
     .btn-block { width: 100%; }
     .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    /* ── TOP UTILITY BAR ── */
     .topbar { background: var(--brand); color: #fff; font-size: 13.5px; font-weight: 600; }
     .topbar .container { display: flex; align-items: center; justify-content: center; position: relative; min-height: 38px; gap: 10px; text-align: center; }
     .topbar .promo { display:flex; align-items:center; gap:8px; }
     .lang-switch { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); display: flex; gap: 2px; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px; }
     .lang-switch button { color: #fff; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; opacity: .8; }
     .lang-switch button.active { background: #fff; color: var(--brand-deep); opacity: 1; }
+
+    /* ── HEADER ── */
     header.site { position: sticky; top: 0; z-index: 50; background: var(--cream); border-bottom: 1px solid var(--line); transition: box-shadow .2s; }
     header.site.scrolled { box-shadow: var(--shadow-sm); }
     .nav { display: flex; align-items: center; justify-content: space-between; min-height: 74px; gap: 16px; }
@@ -53,7 +70,7 @@
     .brand img { width: 50px; height: 50px; border-radius: 50%; }
     .brand .name { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--brand-deep); letter-spacing: -.5px; }
     .nav-links { display: flex; gap: 28px; }
-    .nav-links a { font-family: 'Rubik'; font-weight: 500; font-size: 15px; color: var(--ink); }
+    .nav-links a { font-family: 'Rubik'; font-weight: 500; font-size: 15px; color: var(--ink); position: relative; }
     .nav-links a:hover { color: var(--brand-deep); }
     .nav-right { display: flex; align-items: center; gap: 14px; }
     .icon-btn { position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #fff; border: 1.5px solid var(--line); transition: border-color .15s; }
@@ -61,6 +78,8 @@
     .icon-btn svg { width: 21px; height: 21px; stroke: var(--ink); }
     .cart-count { position: absolute; top: -5px; right: -5px; background: var(--brand-deep); color: #fff; font-size: 11px; font-weight: 800; font-family: 'Rubik'; min-width: 19px; height: 19px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; }
     .menu-toggle { display: none; }
+
+    /* ── HERO ── */
     .hero { position: relative; min-height: 520px; display: grid; place-items: center; text-align: center; color: #fff; overflow: hidden; }
     .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(30,18,5,.35) 0%, rgba(30,18,5,.55) 100%); z-index: 1; }
     .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -69,14 +88,20 @@
     .hero h1 { font-size: clamp(44px, 8vw, 92px); font-weight: 900; letter-spacing: -2px; text-shadow: 0 4px 24px rgba(0,0,0,.4); }
     .hero p.sub { font-size: 19px; margin: 14px auto 28px; max-width: 520px; font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
     .hero .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── INFO STRIP ── */
     .info-strip { background: var(--ink); color: #fff; padding: 18px 0; }
     .info-strip .container { display: flex; align-items: center; justify-content: center; gap: 14px; text-align: center; font-size: 14.5px; font-weight: 500; }
     .info-strip svg { width: 26px; height: 26px; stroke: var(--brand); flex-shrink: 0; }
+
+    /* ── SECTION HEADINGS ── */
     section.block { padding: 72px 0; }
     .section-head { text-align: center; max-width: 620px; margin: 0 auto 46px; }
     .section-head .eyebrow { font-family: 'Caveat'; font-size: 26px; color: var(--brand-deep); font-weight: 700; }
     .section-head h2 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -1px; margin-top: 2px; }
     .section-head p { color: var(--muted); margin-top: 12px; font-size: 16px; }
+
+    /* ── MENU CARDS ── */
     .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
     .card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--line); display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
     .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
@@ -91,6 +116,8 @@
     .card .price { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--ink); }
     .card .avail { font-size: 12.5px; color: var(--muted); margin-top: 10px; display: flex; align-items: center; gap: 6px; }
     .card .avail .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-ok); }
+
+    /* ── ABOUT ── */
     .about { background: var(--cream-2); }
     .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 50px; align-items: center; }
     .about-grid img { border-radius: var(--radius); box-shadow: var(--shadow-md); aspect-ratio: 4/3; object-fit: cover; width: 100%; }
@@ -100,11 +127,15 @@
     .feature-list { list-style: none; margin-top: 22px; display: grid; gap: 14px; }
     .feature-list li { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; }
     .feature-list svg { width: 24px; height: 24px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
+
+    /* ── STEPS ── */
     .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 10px; }
     .step { text-align: center; padding: 10px; }
     .step .num { font-family: 'Rubik'; font-weight: 900; font-size: 46px; color: var(--brand-soft); line-height: 1; }
     .step h4 { font-size: 17px; font-weight: 700; margin: 6px 0 6px; }
     .step p { color: var(--muted); font-size: 14px; }
+
+    /* ── CONTACT ── */
     .contact { background: var(--ink); color: #fff; }
     .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
     .contact h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
@@ -115,12 +146,17 @@
     .contact-info svg { width: 24px; height: 24px; stroke: var(--brand); flex-shrink: 0; }
     .contact-info b { font-family: 'Rubik'; }
     .contact-info span { display: block; color: #c9bfb4; font-size: 14px; }
+
+    /* ── FOOTER ── */
     footer.site { background: #1B1814; color: #cbbfb2; padding: 44px 0 28px; font-size: 14px; }
     .foot-grid { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
     .foot-grid .brand .name { color: #fff; }
     footer.site .legal { width: 100%; border-top: 1px solid rgba(255,255,255,.1); margin-top: 28px; padding-top: 18px; text-align: center; color: #8c8175; font-size: 13px; }
+
+    /* ── MODAL / DRAWER SYSTEM ── */
     .overlay { position: fixed; inset: 0; background: rgba(25,15,5,.5); backdrop-filter: blur(2px); z-index: 100; opacity: 0; visibility: hidden; transition: opacity .25s; }
     .overlay.open { opacity: 1; visibility: visible; }
+
     .modal { position: fixed; z-index: 110; left: 50%; top: 50%; transform: translate(-50%, -46%); width: min(560px, 94vw); max-height: 90vh; overflow-y: auto; background: var(--cream); border-radius: 20px; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transition: all .25s; }
     .modal.open { opacity: 1; visibility: visible; transform: translate(-50%, -50%); }
     .modal-head { position: sticky; top: 0; background: var(--cream); padding: 20px 24px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); z-index: 2; }
@@ -129,12 +165,16 @@
     .modal-close svg { width: 18px; height: 18px; stroke: var(--ink); }
     .modal-body { padding: 22px 24px; }
     .modal-foot { position: sticky; bottom: 0; background: var(--cream); padding: 16px 24px; border-top: 1px solid var(--line); }
+
+    /* drawer (cart) */
     .drawer { position: fixed; z-index: 110; top: 0; right: 0; height: 100%; width: min(440px, 100vw); background: var(--cream); box-shadow: var(--shadow-md); display: flex; flex-direction: column; transform: translateX(100%); transition: transform .3s ease; }
     .drawer.open { transform: translateX(0); }
     .drawer-head { padding: 20px 22px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
     .drawer-head h3 { font-size: 21px; font-weight: 800; }
     .drawer-body { flex: 1; overflow-y: auto; padding: 18px 22px; }
     .drawer-foot { padding: 18px 22px; border-top: 1px solid var(--line); background: var(--cream-2); }
+
+    /* product modal pieces */
     .opt-group { margin-bottom: 22px; }
     .opt-group > label.gl { font-family: 'Rubik'; font-weight: 700; font-size: 15px; display: block; margin-bottom: 4px; }
     .opt-group .hint { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
@@ -145,6 +185,15 @@
     .stepper button { width: 30px; height: 30px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-deep); font-weight: 800; font-size: 18px; display: grid; place-items: center; line-height: 1; }
     .stepper button:hover { background: var(--brand); color: #fff; }
     .stepper .q { min-width: 18px; text-align: center; font-family: 'Rubik'; font-weight: 700; }
+    .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+    .item-opt { display: flex; align-items: center; gap: 12px; padding: 11px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; transition: all .15s; }
+    .item-opt:hover { border-color: var(--brand); }
+    .item-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
+    .item-opt input[type=radio] { width: 18px; height: 18px; accent-color: var(--brand-strong); flex-shrink: 0; }
+    .item-opt .it { flex: 1; font-weight: 600; }
+    .item-opt .ip { font-family: 'Rubik'; font-weight: 800; color: var(--brand-deep); font-size: 14px; }
+
+    /* cart line */
     .cart-line { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
     .cart-line img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
     .cart-line .ci-main { flex: 1; min-width: 0; }
@@ -155,8 +204,11 @@
     .cart-line .ci-remove { color: var(--danger); font-size: 12.5px; font-weight: 600; }
     .cart-empty { text-align: center; color: var(--muted); padding: 50px 20px; }
     .cart-empty svg { width: 56px; height: 56px; stroke: var(--line); margin: 0 auto 14px; }
+
     .totals { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 14.5px; color: var(--muted); }
     .totals.grand { font-size: 19px; color: var(--ink); font-family: 'Rubik'; font-weight: 800; margin: 10px 0 16px; }
+
+    /* forms */
     .field { margin-bottom: 16px; }
     .field label { font-family: 'Rubik'; font-weight: 600; font-size: 13.5px; display: block; margin-bottom: 6px; }
     .field input, .field textarea, .field select { width: 100%; font-family: inherit; font-size: 15px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 11px; background: #fff; color: var(--ink); }
@@ -165,6 +217,8 @@
     .field.invalid input, .field.invalid textarea, .field.invalid select { border-color: var(--danger); }
     .field.invalid .err { display: block; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* day picker */
     .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
     .day-opt { border: 1.5px solid var(--line); border-radius: 12px; background: #fff; padding: 12px 6px; text-align: center; transition: all .15s; }
     .day-opt:hover { border-color: var(--brand); }
@@ -172,6 +226,8 @@
     .day-opt .dow { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
     .day-opt .dnum { font-family: 'Rubik'; font-weight: 800; font-size: 22px; margin: 2px 0; }
     .day-opt .mon { font-size: 12px; color: var(--muted); }
+
+    /* payment */
     .pay-opt { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; margin-bottom: 10px; cursor: pointer; transition: all .15s; }
     .pay-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
     .pay-opt input { margin-top: 3px; accent-color: var(--brand-strong); width: 18px; height: 18px; }
@@ -179,8 +235,12 @@
     .pay-opt .pd { font-size: 13px; color: var(--muted); margin-top: 2px; }
     .juice-box { display: none; background: #fff; border: 1.5px dashed var(--brand); border-radius: 12px; padding: 14px; margin: 4px 0 14px; font-size: 14px; }
     .juice-box.show { display: block; }
+    .juice-box b { font-family: 'Rubik'; }
+
     .notice { background: var(--brand-soft); border-radius: 12px; padding: 13px 15px; font-size: 13.5px; color: var(--brand-deep); display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px; }
     .notice svg { width: 20px; height: 20px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
+
+    /* confirmation */
     .confirm-wrap { text-align: center; padding: 12px 6px 6px; }
     .confirm-check { width: 78px; height: 78px; border-radius: 50%; background: var(--green-ok); display: grid; place-items: center; margin: 0 auto 18px; }
     .confirm-check svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 3; }
@@ -189,9 +249,28 @@
     .confirm-recap { text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 8px; font-size: 14px; }
     .confirm-recap .r { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; }
     .confirm-recap .r b { font-family: 'Rubik'; }
+
     .hidden { display: none !important; }
-    @media (max-width: 900px) { .menu-grid { grid-template-columns: 1fr 1fr; } .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; } .steps { grid-template-columns: 1fr 1fr; gap: 28px; } }
-    @media (max-width: 680px) { .nav-links { display: none; } .menu-toggle { display: grid; } .menu-grid { grid-template-columns: 1fr; } .info-strip .container { font-size: 13px; } .two-col { grid-template-columns: 1fr; } .brand .name { font-size: 19px; } .topbar .promo { font-size: 12px; } .lang-switch { position: static; transform: none; } .topbar .container { flex-direction: column; padding: 8px 22px; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .menu-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+    @media (max-width: 680px) {
+      .nav-links { display: none; }
+      .menu-toggle { display: grid; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .info-strip .container { font-size: 13px; }
+      .two-col { grid-template-columns: 1fr; }
+      .brand .name { font-size: 19px; }
+      .topbar .promo { font-size: 12px; }
+      .lang-switch { position: static; transform: none; }
+      .topbar .container { flex-direction: column; padding: 8px 22px; }
+    }
+
+    /* mobile nav sheet */
     .mobile-nav { position: fixed; inset: 0; z-index: 120; background: var(--cream); transform: translateX(100%); transition: transform .3s; display: flex; flex-direction: column; padding: 22px; }
     .mobile-nav.open { transform: translateX(0); }
     .mobile-nav a { font-family: 'Rubik'; font-weight: 600; font-size: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
@@ -199,70 +278,873 @@
   </style>
 </head>
 <body>
-  <div class="topbar"><div class="container"><div class="promo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="topbar"></span></div><div class="lang-switch"><button data-lang="fr" onclick="setLang('fr')">FR</button><button data-lang="en" onclick="setLang('en')">EN</button></div></div></div>
-  <header class="site" id="header"><div class="container nav"><a href="#top" class="brand"><img class="logo-img" alt="Bondipain" /><span class="name">Bondipain</span></a><nav class="nav-links"><a href="#top" data-i18n="nav_home"></a><a href="#menu" data-i18n="nav_menu"></a><a href="#about" data-i18n="nav_about"></a><a href="#contact" data-i18n="nav_contact"></a></nav><div class="nav-right"><button class="icon-btn" onclick="openCart()" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H3"/></svg><span class="cart-count hidden" id="cartCount">0</span></button><button class="menu-toggle icon-btn" onclick="toggleMobileNav(true)" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div></header>
-  <div class="mobile-nav" id="mobileNav"><div class="mn-head"><span style="font-family:'Rubik';font-weight:800;color:var(--brand-deep);font-size:22px;">Bondipain</span><button class="modal-close" onclick="toggleMobileNav(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><a href="#top" onclick="toggleMobileNav(false)" data-i18n="nav_home"></a><a href="#menu" onclick="toggleMobileNav(false)" data-i18n="nav_menu"></a><a href="#about" onclick="toggleMobileNav(false)" data-i18n="nav_about"></a><a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a></div>
+
+  <!-- TOP UTILITY BAR -->
+  <div class="topbar">
+    <div class="container">
+      <div class="promo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span data-i18n="topbar"></span>
+      </div>
+      <div class="lang-switch">
+        <button data-lang="fr" onclick="setLang('fr')">FR</button>
+        <button data-lang="en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site" id="header">
+    <div class="container nav">
+      <a href="#top" class="brand">
+        <img class="logo-img" alt="Bondipain" />
+        <span class="name">Bondipain</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#top" data-i18n="nav_home"></a>
+        <a href="#menu" data-i18n="nav_menu"></a>
+        <a href="#about" data-i18n="nav_about"></a>
+        <a href="#contact" data-i18n="nav_contact"></a>
+      </nav>
+      <div class="nav-right">
+        <button class="icon-btn" onclick="openCart()" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H3"/></svg>
+          <span class="cart-count hidden" id="cartCount">0</span>
+        </button>
+        <button class="menu-toggle icon-btn" onclick="toggleMobileNav(true)" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mn-head">
+      <span class="name" style="font-family:'Rubik';font-weight:800;color:var(--brand-deep);font-size:22px;">Bondipain</span>
+      <button class="modal-close" onclick="toggleMobileNav(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <a href="#top" onclick="toggleMobileNav(false)" data-i18n="nav_home"></a>
+    <a href="#menu" onclick="toggleMobileNav(false)" data-i18n="nav_menu"></a>
+    <a href="#about" onclick="toggleMobileNav(false)" data-i18n="nav_about"></a>
+    <a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a>
+  </div>
+
   <span id="top"></span>
-  <section class="hero"><img class="bg" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80" alt="Sandwich" /><div class="hero-content"><div class="eyebrow" data-i18n="hero_eyebrow"></div><h1 data-i18n="hero_title"></h1><p class="sub" data-i18n="hero_sub"></p><div class="btn-row"><a href="#menu" class="btn btn-primary" data-i18n="hero_cta"></a><a href="#about" class="btn btn-ghost" data-i18n="hero_cta2"></a></div></div></section>
-  <div class="info-strip"><div class="container"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><span data-i18n="info_strip"></span></div></div>
-  <section class="block" id="menu"><div class="container"><div class="section-head"><div class="eyebrow" data-i18n="menu_eyebrow"></div><h2 data-i18n="menu_title"></h2><p data-i18n="menu_sub"></p></div><div class="menu-grid" id="menuGrid"></div></div></section>
-  <section class="block" style="padding-top:0;"><div class="container"><div class="section-head"><div class="eyebrow" data-i18n="steps_eyebrow"></div><h2 data-i18n="steps_title"></h2></div><div class="steps" id="stepsGrid"></div></div></section>
-  <section class="block about" id="about"><div class="container about-grid"><img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" /><div class="about-text"><div class="eyebrow" data-i18n="about_eyebrow"></div><h2 data-i18n="about_title"></h2><p data-i18n="about_p1"></p><p data-i18n="about_p2"></p><ul class="feature-list" id="aboutFeatures"></ul></div></div></section>
-  <section class="block contact" id="contact"><div class="container contact-grid"><div><div class="eyebrow" data-i18n="contact_eyebrow"></div><h2 data-i18n="contact_title"></h2><p data-i18n="contact_p"></p></div><div class="contact-info"><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><div><b data-i18n="contact_zone_t"></b><span data-i18n="contact_zone_v"></span></div></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><div><b data-i18n="contact_phone_t"></b><span>+230 5xxx xxxx</span></div></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><div><b>Email</b><span>hello@bondipain.com</span></div></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><div><b data-i18n="contact_hours_t"></b><span data-i18n="contact_hours_v"></span></div></div></div></div></section>
-  <footer class="site"><div class="container foot-grid"><a href="#top" class="brand"><img class="logo-img" alt="Bondipain" style="width:42px;height:42px;border-radius:50%;" /><span class="name" style="font-family:'Rubik';font-weight:800;font-size:20px;">Bondipain</span></a><span data-i18n="footer_tag"></span><div class="legal" data-i18n="footer_legal"></div></div></footer>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img class="bg" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80" alt="Sandwich" />
+    <div class="hero-content">
+      <div class="eyebrow" data-i18n="hero_eyebrow"></div>
+      <h1 data-i18n="hero_title"></h1>
+      <p class="sub" data-i18n="hero_sub"></p>
+      <div class="btn-row">
+        <a href="#menu" class="btn btn-primary" data-i18n="hero_cta"></a>
+        <a href="#about" class="btn btn-ghost" data-i18n="hero_cta2"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="container">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+      <span data-i18n="info_strip"></span>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section class="block" id="menu">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow" data-i18n="menu_eyebrow"></div>
+        <h2 data-i18n="menu_title"></h2>
+        <p data-i18n="menu_sub"></p>
+      </div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="block" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow" data-i18n="steps_eyebrow"></div>
+        <h2 data-i18n="steps_title"></h2>
+      </div>
+      <div class="steps" id="stepsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="block about" id="about">
+    <div class="container about-grid">
+      <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" />
+      <div class="about-text">
+        <div class="eyebrow" data-i18n="about_eyebrow"></div>
+        <h2 data-i18n="about_title"></h2>
+        <p data-i18n="about_p1"></p>
+        <p data-i18n="about_p2"></p>
+        <ul class="feature-list" id="aboutFeatures"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="block contact" id="contact">
+    <div class="container contact-grid">
+      <div>
+        <div class="eyebrow" data-i18n="contact_eyebrow"></div>
+        <h2 data-i18n="contact_title"></h2>
+        <p data-i18n="contact_p"></p>
+      </div>
+      <div class="contact-info">
+        <div class="row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div><b data-i18n="contact_zone_t"></b><span data-i18n="contact_zone_v"></span></div>
+        </div>
+        <div class="row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+          <div><b data-i18n="contact_phone_t"></b><span>+230 5xxx xxxx</span></div>
+        </div>
+        <div class="row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <div><b>Email</b><span>hello@bondipain.com</span></div>
+        </div>
+        <div class="row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+          <div><b data-i18n="contact_hours_t"></b><span data-i18n="contact_hours_v"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site">
+    <div class="container foot-grid">
+      <a href="#top" class="brand">
+        <img class="logo-img" alt="Bondipain" style="width:42px;height:42px;border-radius:50%;" />
+        <span class="name" style="font-family:'Rubik';font-weight:800;font-size:20px;">Bondipain</span>
+      </a>
+      <span data-i18n="footer_tag"></span>
+      <div class="legal" data-i18n="footer_legal"></div>
+    </div>
+  </footer>
+
+  <!-- ===== OVERLAY ===== -->
   <div class="overlay" id="overlay" onclick="closeAll()"></div>
-  <div class="modal" id="productModal" role="dialog"><div class="modal-head"><h3 id="pmTitle"></h3><button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div class="modal-body" id="pmBody"></div><div class="modal-foot"><button class="btn btn-primary btn-block" id="pmAdd" onclick="addConfiguredToCart()"></button></div></div>
-  <div class="drawer" id="cartDrawer" role="dialog"><div class="drawer-head"><h3 data-i18n="cart_title"></h3><button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div class="drawer-body" id="cartBody"></div><div class="drawer-foot" id="cartFoot"></div></div>
-  <div class="modal" id="checkoutModal" role="dialog"><div class="modal-head"><h3 data-i18n="checkout_title"></h3><button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div class="modal-body" id="checkoutBody"></div><div class="modal-foot"><button class="btn btn-primary btn-block" id="placeOrderBtn" onclick="placeOrder()"></button></div></div>
-  <div class="modal" id="confirmModal" role="dialog"><div class="modal-body" id="confirmBody"></div><div class="modal-foot"><button class="btn btn-primary btn-block" onclick="closeAll()" data-i18n="confirm_close"></button></div></div>
-<script>
-const I18N={fr:{topbar:"Commandes livrées en 48h · Livraison entre 11h et 14h",nav_home:"Accueil",nav_menu:"Nos pains",nav_about:"À propos",nav_contact:"Contact",hero_eyebrow:"Bienvenue",hero_title:"Chez Bondipain",hero_sub:"Le pain garni, fait maison et livré chez vous à Moka.",hero_cta:"Commander",hero_cta2:"En savoir plus",info_strip:"Pour garantir la disponibilité, merci de commander au moins 48h avant la livraison.",menu_eyebrow:"Notre carte",menu_title:"Nos pains garnis",menu_sub:"Choisissez votre pain, ajoutez vos accompagnements et vos boissons.",choose:"Choisir",steps_eyebrow:"Comment ça marche",steps_title:"Commander en 4 étapes",about_eyebrow:"Notre histoire",about_title:"Du pain artisanal, livré dans le quartier de Moka",about_p1:"Bondipain prépare chaque jour des pains garnis généreux à partir d'ingrédients frais et locaux.",about_p2:"Nous livrons uniquement dans le quartier de Moka, pour un service de proximité et des produits toujours frais.",contact_eyebrow:"Une question ?",contact_title:"Contactez-nous",contact_p:"Notre équipe est disponible pour toute question sur votre commande ou nos produits.",contact_zone_t:"Zone de livraison",contact_zone_v:"Uniquement quartier de Moka, Maurice",contact_phone_t:"Téléphone",contact_hours_t:"Créneau de livraison",contact_hours_v:"Tous les jours, entre 11h et 14h",footer_tag:"Le pain garni, livré à Moka.",footer_legal:"© 2026 Bondipain.com — Tous droits réservés.",pm_qty:"Quantité",pm_sides_t:"Accompagnements",pm_sides_h:"Ajoutez des accompagnements (optionnel)",pm_drinks_t:"Boissons",pm_drinks_h:"Choisissez vos boissons (optionnel)",pm_add:"Ajouter au panier",cart_title:"Mon panier",cart_empty:"Votre panier est vide.",cart_remove:"Retirer",cart_subtotal:"Sous-total",cart_delivery:"Livraison",cart_delivery_free:"Offerte",cart_total:"Total",cart_checkout:"Passer la commande",cart_with:"avec",checkout_title:"Finaliser ma commande",co_notice:"Commande à passer au moins 48h à l'avance · Livraison uniquement à Moka, entre 11h et 14h.",co_day_t:"Jour de livraison",co_day_h:"Choisissez un jour disponible (délai de 48h respecté).",co_info_t:"Vos coordonnées",co_name:"Nom complet",co_phone:"Téléphone",co_email:"Email (pour le suivi)",co_addr_t:"Adresse de livraison",co_addr:"Rue / résidence / repères (Moka)",co_moka_confirm:"Je confirme que mon adresse se situe dans le quartier de Moka.",co_pay_t:"Mode de paiement",co_pay_cash_t:"Espèces à la livraison",co_pay_cash_d:"Payez en liquide au livreur à la réception de votre commande.",co_pay_juice_t:"Juice by MCB (mobile money)",co_pay_juice_d:"Payez à l'avance via l'application Juice by MCB.",co_juice_box:"Envoyez le montant via <b>Juice by MCB</b> au numéro marchand <b>+230 5xxx xxxx</b> et indiquez votre numéro de commande en référence.",co_place:"Confirmer la commande",co_summary:"Récapitulatif",err_required:"Ce champ est requis",err_email:"Email invalide",err_day:"Veuillez choisir un jour de livraison",err_moka:"Veuillez confirmer la zone de Moka",confirm_title:"Commande confirmée !",confirm_msg:"Merci pour votre commande. Conservez votre numéro de commande ci-dessous.",confirm_email_note:"Un récapitulatif vous sera envoyé par email (bientôt disponible).",confirm_for:"Livraison le",confirm_pay:"Paiement",confirm_total:"Total",confirm_close:"Fermer",months:["jan.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],days:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],currency:"Rs"},en:{topbar:"Orders delivered within 48h · Delivery between 11am and 2pm",nav_home:"Home",nav_menu:"Our breads",nav_about:"About",nav_contact:"Contact",hero_eyebrow:"Welcome",hero_title:"To Bondipain",hero_sub:"Homemade stuffed bread, delivered to your door in Moka.",hero_cta:"Order now",hero_cta2:"Learn more",info_strip:"To guarantee availability, please order at least 48h before delivery.",menu_eyebrow:"Our menu",menu_title:"Our stuffed breads",menu_sub:"Pick your bread, then add your sides and drinks.",choose:"Choose",steps_eyebrow:"How it works",steps_title:"Order in 4 steps",about_eyebrow:"Our story",about_title:"Artisan bread, delivered across Moka",about_p1:"Bondipain prepares generous stuffed breads every day using fresh, local ingredients.",about_p2:"We deliver only within the Moka area, for a local service and always-fresh products.",contact_eyebrow:"A question?",contact_title:"Get in touch",contact_p:"Our team is available for any question about your order or our products.",contact_zone_t:"Delivery area",contact_zone_v:"Moka area only, Mauritius",contact_phone_t:"Phone",contact_hours_t:"Delivery window",contact_hours_v:"Every day, between 11am and 2pm",footer_tag:"Stuffed bread, delivered in Moka.",footer_legal:"© 2026 Bondipain.com — All rights reserved.",pm_qty:"Quantity",pm_sides_t:"Sides",pm_sides_h:"Add some sides (optional)",pm_drinks_t:"Drinks",pm_drinks_h:"Choose your drinks (optional)",pm_add:"Add to cart",cart_title:"My cart",cart_empty:"Your cart is empty.",cart_remove:"Remove",cart_subtotal:"Subtotal",cart_delivery:"Delivery",cart_delivery_free:"Free",cart_total:"Total",cart_checkout:"Checkout",cart_with:"with",checkout_title:"Complete my order",co_notice:"Order at least 48h in advance · Delivery in Moka only, between 11am and 2pm.",co_day_t:"Delivery day",co_day_h:"Pick an available day (48h lead time respected).",co_info_t:"Your details",co_name:"Full name",co_phone:"Phone",co_email:"Email (for tracking)",co_addr_t:"Delivery address",co_addr:"Street / residence / landmarks (Moka)",co_moka_confirm:"I confirm my address is within the Moka area.",co_pay_t:"Payment method",co_pay_cash_t:"Cash on delivery",co_pay_cash_d:"Pay the driver in cash when your order arrives.",co_pay_juice_t:"Juice by MCB (mobile money)",co_pay_juice_d:"Pay in advance via the Juice by MCB app.",co_juice_box:"Send the amount via <b>Juice by MCB</b> to merchant number <b>+230 5xxx xxxx</b> and add your order number as reference.",co_place:"Confirm order",co_summary:"Summary",err_required:"This field is required",err_email:"Invalid email",err_day:"Please choose a delivery day",err_moka:"Please confirm the Moka area",confirm_title:"Order confirmed!",confirm_msg:"Thank you for your order. Keep your order number below.",confirm_email_note:"A summary will be emailed to you (coming soon).",confirm_for:"Delivery on",confirm_pay:"Payment",confirm_total:"Total",confirm_close:"Close",months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],currency:"Rs"}};
-const MENU=[{id:"poisson",name:{fr:"Pain Poisson",en:"Fish Bread"},desc:{fr:"Pain garni au poisson frais, légumes croquants et sauce maison.",en:"Stuffed bread with fresh fish, crunchy vegetables and house sauce."},price:150,img:"https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",tag:{fr:"Poisson",en:"Fish"}},{id:"viande",name:{fr:"Pain Viande",en:"Meat Bread"},desc:{fr:"Pain généreux à la viande mijotée, oignons confits et épices.",en:"Generous bread with slow-cooked meat, caramelised onions and spices."},price:170,img:"https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=800&q=80",tag:{fr:"Viande",en:"Meat"}},{id:"vege",name:{fr:"Pain Végé",en:"Veggie Bread"},desc:{fr:"Pain garni de légumes grillés, houmous et herbes fraîches.",en:"Bread filled with grilled vegetables, hummus and fresh herbs."},price:140,img:"https://images.unsplash.com/photo-1540713434306-58505cf1b6fc?auto=format&fit=crop&w=800&q=80",tag:{fr:"Végétarien",en:"Veggie"}}];
-const SIDES=[{id:"chips",name:{fr:"Chips",en:"Chips"},price:50},{id:"frites",name:{fr:"Frites",en:"Fries"},price:60},{id:"salade",name:{fr:"Salade",en:"Salad"},price:45},{id:"sauce",name:{fr:"Sauce extra",en:"Extra sauce"},price:20}];
-const DRINKS=[{id:"coca",name:{fr:"Coca-Cola",en:"Coca-Cola"},price:40},{id:"soda",name:{fr:"Soda",en:"Soda"},price:35},{id:"eau",name:{fr:"Eau",en:"Water"},price:25},{id:"jus",name:{fr:"Jus de fruit",en:"Fruit juice"},price:45}];
-const STEPS=[{fr:["Choisissez votre pain","Poisson, viande ou végé"],en:["Choose your bread","Fish, meat or veggie"]},{fr:["Ajoutez sides & boissons","Chips, sauce, coca…"],en:["Add sides & drinks","Chips, sauce, soda…"]},{fr:["Commandez 48h avant","Choisissez votre jour"],en:["Order 48h ahead","Pick your day"]},{fr:["Livré à Moka","Entre 11h et 14h"],en:["Delivered in Moka","Between 11am and 2pm"]}];
-const ABOUT_FEATURES={fr:["Ingrédients frais et locaux","Préparé le jour de la livraison","Livraison de proximité à Moka","Paiement espèces ou Juice by MCB"],en:["Fresh, local ingredients","Made on delivery day","Local delivery in Moka","Pay by cash or Juice by MCB"]};
-let lang=localStorage.getItem("bp_lang")||"fr",cart=JSON.parse(localStorage.getItem("bp_cart")||"[]"),currentProduct=null,cfg=null,checkout={day:null,pay:"cash"};
-const t=k=>I18N[lang][k]!==undefined?I18N[lang][k]:k,money=n=>`${t("currency")} ${n}`,S=s=>document.querySelector(s);
-const LOGO="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARGVYSWZNTQAqAAAACAABh2kABAAAAAEAAAAaAAAAAAADoAEAAwAAAAEAAQAAoAIABAAAAAEAAADIoAMABAAAAAEAAADIAAAAAJtbPZUAADfSSURBVHgB7Z0JtFzFmd/rdgsJYQkksQghhPYFSWwSYt9tiM14sMfLDGMnnrHxxJNJxuY4iXNmkpwzyZkT58SJl3h8nLEdL+MVjwMztvEGHsBmETsItEtISEIgEIhdElL3zf/3VVfr9n39Wu/d9x7S7a46anW/u1TV/er764IUiBToQIHK2/8RI1IgUiABJPJApEAHCkSAdCBOPBUpEAESeiBSoAMFIkA6ECeeihSIAIk8ECnQgQIRIB2IE09FCkSARB6IFOhAgQiQDsSJpyIFIkAiD0QKdKBABEgH4sRTkQIRIJEHIgU6UCACJPJAJFAHAAAAAA==" ;
-document.querySelectorAll('.logo-img').forEach(i=>i.src=LOGO);
-{const fav=document.getElementById('favicon');if(fav)fav.href=LOGO;}
-function applyI18n(){document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.getAttribute('data-i18n')));document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));}
-function setLang(l){lang=l;localStorage.setItem('bp_lang',l);renderAll();if(S('#productModal').classList.contains('open')&&currentProduct){renderProductBody();S('#pmTitle').textContent=currentProduct.name[lang];}if(S('#cartDrawer').classList.contains('open'))renderCart();if(S('#checkoutModal').classList.contains('open'))renderCheckout();}
-function renderAll(){applyI18n();renderMenu();renderSteps();renderAboutFeatures();updateCartCount();}
-function renderMenu(){S('#menuGrid').innerHTML=MENU.map(p=>`<div class="card"><div class="ph"><img src="${p.img}" alt="${p.name[lang]}" loading="lazy" /><span class="tag">${p.tag[lang]}</span></div><div class="body"><h3>${p.name[lang]}</h3><p class="desc">${p.desc[lang]}</p><div class="price-row"><span class="price">${money(p.price)}</span><button class="btn btn-primary" onclick="openProduct('${p.id}')">${t('choose')}</button></div><div class="avail"><span class="dot"></span>${lang==='fr'?'Disponible · commande 48h à l\'avance':'Available · order 48h ahead'}</div></div></div>`).join('');}
-function renderSteps(){S('#stepsGrid').innerHTML=STEPS.map((s,i)=>`<div class="step"><div class="num">0${i+1}</div><h4>${s[lang][0]}</h4><p>${s[lang][1]}</p></div>`).join('');}
-function renderAboutFeatures(){const check='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>';S('#aboutFeatures').innerHTML=ABOUT_FEATURES[lang].map(f=>`<li>${check}<span>${f}</span></li>`).join('');}
-function openProduct(id){currentProduct=MENU.find(p=>p.id===id);cfg={qty:1,sides:{},drinks:{}};SIDES.forEach(s=>cfg.sides[s.id]=0);DRINKS.forEach(d=>cfg.drinks[d.id]=0);S('#pmTitle').textContent=currentProduct.name[lang];renderProductBody();openModal('#productModal');}
-function renderProductBody(){const p=currentProduct;const sideRow=(item,kind)=>`<div class="opt-row"><div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div><div class="stepper"><button onclick="stepOpt('${kind}','${item.id}',-1)">−</button><span class="q" id="q_${kind}_${item.id}">${cfg[kind][item.id]}</span><button onclick="stepOpt('${kind}','${item.id}',1)">+</button></div></div>`;S('#pmBody').innerHTML=`<div style="display:flex;gap:14px;margin-bottom:20px;"><img src="${p.img}" alt="" style="width:96px;height:96px;border-radius:12px;object-fit:cover;" /><div><div style="font-family:'Rubik';font-weight:800;font-size:18px;">${money(p.price)}</div><p style="color:var(--muted);font-size:14px;margin-top:4px;">${p.desc[lang]}</p></div></div><div class="opt-group"><label class="gl">${t('pm_qty')}</label><div class="stepper" style="margin-top:6px;"><button onclick="stepQty(-1)">−</button><span class="q" id="q_main" style="font-size:18px;">${cfg.qty}</span><button onclick="stepQty(1)">+</button></div></div><div class="opt-group"><label class="gl">${t('pm_sides_t')}</label><div class="hint">${t('pm_sides_h')}</div>${SIDES.map(s=>sideRow(s,'sides')).join('')}</div><div class="opt-group"><label class="gl">${t('pm_drinks_t')}</label><div class="hint">${t('pm_drinks_h')}</div>${DRINKS.map(d=>sideRow(d,'drinks')).join('')}</div>`;updatePmButton();}
-function stepQty(d){cfg.qty=Math.max(1,cfg.qty+d);S('#q_main').textContent=cfg.qty;updatePmButton();}
-function stepOpt(kind,id,d){cfg[kind][id]=Math.max(0,Math.min(9,cfg[kind][id]+d));S(`#q_${kind}_${id}`).textContent=cfg[kind][id];updatePmButton();}
-function configLineTotal(){let extras=0;SIDES.forEach(s=>extras+=cfg.sides[s.id]*s.price);DRINKS.forEach(d=>extras+=cfg.drinks[d.id]*d.price);return(currentProduct.price+extras)*cfg.qty;}
-function updatePmButton(){S('#pmAdd').textContent=`${t('pm_add')} · ${money(configLineTotal())}`;}
-function addConfiguredToCart(){const sides=SIDES.filter(s=>cfg.sides[s.id]>0).map(s=>({id:s.id,name:s.name,qty:cfg.sides[s.id],price:s.price}));const drinks=DRINKS.filter(d=>cfg.drinks[d.id]>0).map(d=>({id:d.id,name:d.name,qty:cfg.drinks[d.id],price:d.price}));cart.push({uid:Date.now()+"_"+Math.floor(Math.random()*9999),pid:currentProduct.id,name:currentProduct.name,img:currentProduct.img,base:currentProduct.price,qty:cfg.qty,sides,drinks,lineTotal:configLineTotal()});saveCart();closeAll();openCart();}
-function saveCart(){localStorage.setItem('bp_cart',JSON.stringify(cart));updateCartCount();}
-function updateCartCount(){const n=cart.reduce((s,i)=>s+i.qty,0);const el=S('#cartCount');el.textContent=n;el.classList.toggle('hidden',n===0);}
-function cartSubtotal(){return cart.reduce((s,i)=>s+i.lineTotal,0);}
-function extrasLabel(item){const parts=[...item.sides,...item.drinks].map(x=>`${x.qty}× ${x.name[lang]}`);return parts.length?`${t('cart_with')} ${parts.join(', ')}`:'';
-}
-function renderCart(){const body=S('#cartBody'),foot=S('#cartFoot');if(!cart.length){body.innerHTML=`<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg><p>${t('cart_empty')}</p></div>`;foot.innerHTML='';return;}body.innerHTML=cart.map(item=>`<div class="cart-line"><img src="${item.img}" alt="" /><div class="ci-main"><div class="ci-title">${item.qty}× ${item.name[lang]}</div>${extrasLabel(item)?`<div class="ci-extras">${extrasLabel(item)}</div>`:''}<div class="ci-bottom"><span class="ci-price">${money(item.lineTotal)}</span><button class="ci-remove" onclick="removeLine('${item.uid}')">${t('cart_remove')}</button></div></div></div>`).join('');foot.innerHTML=`<div class="totals"><span>${t('cart_subtotal')}</span><span>${money(cartSubtotal())}</span></div><div class="totals"><span>${t('cart_delivery')}</span><span>${t('cart_delivery_free')}</span></div><div class="totals grand"><span>${t('cart_total')}</span><span>${money(cartSubtotal())}</span></div><button class="btn btn-primary btn-block" onclick="goCheckout()">${t('cart_checkout')}</button>`;}
-function removeLine(uid){cart=cart.filter(i=>i.uid!==uid);saveCart();renderCart();}
-function availableDays(){const now=new Date();const earliest=now.getTime()+48*3600*1000;const days=[];for(let i=0;i<16&&days.length<7;i++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i,11,0,0,0);if(d.getTime()>=earliest)days.push(d);}return days;}
-function goCheckout(){if(!cart.length)return;checkout={day:null,pay:'cash'};closeDrawerOnly();renderCheckout();openModal('#checkoutModal');}
-function renderCheckout(){const days=availableDays();S('#checkoutBody').innerHTML=`<div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><span>${t('co_notice')}</span></div><div class="opt-group"><label class="gl">${t('co_day_t')}</label><div class="hint">${t('co_day_h')}</div><div class="day-grid" id="dayGrid">${days.map(d=>`<button class="day-opt${checkout.day===d.getTime()?' selected':''}" data-time="${d.getTime()}" onclick="pickDay(${d.getTime()})"><div class="dow">${t('days')[d.getDay()]}</div><div class="dnum">${d.getDate()}</div><div class="mon">${t('months')[d.getMonth()]}</div></button>`).join('')}</div><div class="field" id="dayErrWrap" style="margin-top:8px;"><div class="err">${t('err_day')}</div></div></div><div class="opt-group"><label class="gl">${t('co_info_t')}</label><div class="field" id="f_name"><label>${t('co_name')}</label><input id="i_name" type="text" /><div class="err">${t('err_required')}</div></div><div class="two-col"><div class="field" id="f_phone"><label>${t('co_phone')}</label><input id="i_phone" type="tel" /><div class="err">${t('err_required')}</div></div><div class="field" id="f_email"><label>${t('co_email')}</label><input id="i_email" type="email" /><div class="err">${t('err_email')}</div></div></div></div><div class="opt-group"><label class="gl">${t('co_addr_t')}</label><div class="field" id="f_addr"><label>${t('co_addr')}</label><textarea id="i_addr" rows="2"></textarea><div class="err">${t('err_required')}</div></div><label class="pay-opt" id="mokaWrap" style="margin-top:4px;"><input type="checkbox" id="i_moka" /><div><div class="pt" style="font-size:14px;">${t('co_moka_confirm')}</div></div></label><div class="field" id="f_moka"><div class="err">${t('err_moka')}</div></div></div><div class="opt-group"><label class="gl">${t('co_pay_t')}</label><label class="pay-opt selected" id="pay_cash" onclick="pickPay('cash')"><input type="radio" name="pay" value="cash" checked /><div><div class="pt">${t('co_pay_cash_t')}</div><div class="pd">${t('co_pay_cash_d')}</div></div></label><label class="pay-opt" id="pay_juice" onclick="pickPay('juice')"><input type="radio" name="pay" value="juice" /><div><div class="pt">${t('co_pay_juice_t')}</div><div class="pd">${t('co_pay_juice_d')}</div></div></label><div class="juice-box" id="juiceBox">${t('co_juice_box')}</div></div><div class="opt-group"><label class="gl">${t('co_summary')}</label><div class="confirm-recap" style="margin-top:8px;"><div class="r"><span>${t('cart_subtotal')}</span><b>${money(cartSubtotal())}</b></div><div class="r"><span>${t('cart_delivery')}</span><b>${t('cart_delivery_free')}</b></div><div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t('cart_total')}</span><b>${money(cartSubtotal())}</b></div></div></div>`;S('#placeOrderBtn').textContent=`${t('co_place')} · ${money(cartSubtotal())}`;}
-function pickDay(time){checkout.day=time;document.querySelectorAll('.day-opt').forEach(b=>b.classList.toggle('selected',+b.dataset.time===time));S('#dayErrWrap').classList.remove('invalid');}
-function pickPay(p){checkout.pay=p;S('#pay_cash').classList.toggle('selected',p==='cash');S('#pay_juice').classList.toggle('selected',p==='juice');S('#pay_cash').querySelector('input').checked=p==='cash';S('#pay_juice').querySelector('input').checked=p==='juice';S('#juiceBox').classList.toggle('show',p==='juice');}
-function placeOrder(){let ok=true;const setErr=(sel,bad)=>{S(sel).classList.toggle('invalid',bad);if(bad)ok=false;};const name=S('#i_name').value.trim(),phone=S('#i_phone').value.trim(),email=S('#i_email').value.trim(),addr=S('#i_addr').value.trim(),moka=S('#i_moka').checked;setErr('#f_name',!name);setErr('#f_phone',!phone);setErr('#f_email',!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));setErr('#f_addr',!addr);setErr('#f_moka',!moka);if(!checkout.day){S('#dayErrWrap').classList.add('invalid');ok=false;}if(!ok){S('#checkoutModal').scrollTo({top:0,behavior:'smooth'});return;}const orderNum=makeOrderNumber();const dayDate=new Date(checkout.day);const dayStr=`${t('days')[dayDate.getDay()]} ${dayDate.getDate()} ${t('months')[dayDate.getMonth()]}`;const payLabel=checkout.pay==='cash'?t('co_pay_cash_t'):t('co_pay_juice_t');const order={num:orderNum,name,phone,email,addr,day:checkout.day,pay:checkout.pay,items:cart,total:cartSubtotal(),createdAt:Date.now()};const history=JSON.parse(localStorage.getItem('bp_orders')||'[]');history.push(order);localStorage.setItem('bp_orders',JSON.stringify(history));cart=[];saveCart();renderConfirmation(orderNum,dayStr,payLabel,order.total,email);closeAll();openModal('#confirmModal');}
-function makeOrderNumber(){const d=new Date();const p=n=>String(n).padStart(2,'0');const rand=Math.floor(1000+Math.random()*9000);return `BP-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${rand}`;}
-function renderConfirmation(num,dayStr,payLabel,total,email){S('#confirmBody').innerHTML=`<div class="confirm-wrap"><div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5"/></svg></div><h3>${t('confirm_title')}</h3><p style="color:var(--muted);margin-top:8px;">${t('confirm_msg')}</p><div class="ordernum">${num}</div><div class="confirm-recap"><div class="r"><span>${t('confirm_for')}</span><b>${dayStr} · 11h–14h</b></div><div class="r"><span>${t('confirm_pay')}</span><b>${payLabel}</b></div><div class="r"><span>${t('confirm_total')}</span><b>${money(total)}</b></div><div class="r"><span>Email</span><b>${email}</b></div></div><p style="color:var(--muted);font-size:13px;margin-top:14px;">${t('confirm_email_note')}</p></div>`;}
-function openModal(sel){S('#overlay').classList.add('open');S(sel).classList.add('open');document.body.style.overflow='hidden';}
-function openCart(){renderCart();S('#overlay').classList.add('open');S('#cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
-function closeDrawerOnly(){S('#cartDrawer').classList.remove('open');}
-function closeAll(){S('#overlay').classList.remove('open');document.querySelectorAll('.modal,.drawer').forEach(m=>m.classList.remove('open'));document.body.style.overflow='';}
-function toggleMobileNav(open){S('#mobileNav').classList.toggle('open',open);document.body.style.overflow=open?'hidden':'';}
-window.addEventListener('scroll',()=>S('#header').classList.toggle('scrolled',window.scrollY>10));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAll();toggleMobileNav(false);}});
-renderAll();
-</script>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal" id="productModal" role="dialog">
+    <div class="modal-head">
+      <h3 id="pmTitle"></h3>
+      <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body" id="pmBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-primary btn-block" id="pmAdd" onclick="addConfiguredToCart()"></button>
+    </div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="drawer" id="cartDrawer" role="dialog">
+    <div class="drawer-head">
+      <h3 data-i18n="cart_title"></h3>
+      <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="drawer-body" id="cartBody"></div>
+    <div class="drawer-foot" id="cartFoot"></div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal" id="checkoutModal" role="dialog">
+    <div class="modal-head">
+      <h3 data-i18n="checkout_title"></h3>
+      <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body" id="checkoutBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-primary btn-block" id="placeOrderBtn" onclick="placeOrder()"></button>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION MODAL -->
+  <div class="modal" id="confirmModal" role="dialog">
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-primary btn-block" onclick="closeAll()" data-i18n="confirm_close"></button>
+    </div>
+  </div>
+
+  <script>
+  /* ============================================================
+     i18n DICTIONARY
+  ============================================================ */
+  const I18N = {
+    fr: {
+      topbar: "Commandes livrées en 48h · Livraison entre 11h et 14h",
+      nav_home: "Accueil", nav_menu: "Nos plats", nav_about: "À propos", nav_contact: "Contact",
+      hero_eyebrow: "Bienvenue",
+      hero_title: "Chez Bondipain",
+      hero_sub: "Le pain garni, fait maison et livré chez vous à Moka.",
+      hero_cta: "Commander", hero_cta2: "En savoir plus",
+      info_strip: "Commandes acceptées jusqu'à 16h–17h · Minimum 48h à l'avance · Zone de Moka uniquement",
+      menu_eyebrow: "Notre carte",
+      menu_title: "Nos plats",
+      menu_sub: "5 catégories, plus de 20 recettes. Commandez 48h avant, livraison entre 11h et 14h.",
+      choose: "Voir la carte",
+      pm_choose: "Choisissez votre plat",
+      pm_choose_h: "Sélectionnez une option ci-dessous",
+      pm_choose_first: "Choisissez un plat d'abord",
+      steps_eyebrow: "Comment ça marche",
+      steps_title: "Commander en 4 étapes",
+      about_eyebrow: "Notre histoire",
+      about_title: "Du pain artisanal, livré dans le quartier de Moka",
+      about_p1: "Bondipain prépare chaque jour des pains garnis généreux à partir d'ingrédients frais et locaux.",
+      about_p2: "Nous livrons uniquement dans le quartier de Moka, pour un service de proximité et des produits toujours frais.",
+      contact_eyebrow: "Une question ?",
+      contact_title: "Contactez-nous",
+      contact_p: "Notre équipe est disponible pour toute question sur votre commande ou nos produits.",
+      contact_zone_t: "Zone de livraison", contact_zone_v: "Uniquement quartier de Moka, Maurice",
+      contact_phone_t: "Téléphone",
+      contact_hours_t: "Créneau de livraison", contact_hours_v: "Tous les jours, entre 11h et 14h",
+      footer_tag: "Le pain garni, livré à Moka.",
+      footer_legal: "© 2026 Bondipain.com — Tous droits réservés.",
+      pm_qty: "Quantité",
+      pm_sides_t: "Accompagnements", pm_sides_h: "Ajoutez des accompagnements (optionnel)",
+      pm_drinks_t: "Boissons", pm_drinks_h: "Choisissez vos boissons (optionnel)",
+      pm_add: "Ajouter au panier",
+      cart_title: "Mon panier",
+      cart_empty: "Votre panier est vide.",
+      cart_remove: "Retirer",
+      cart_subtotal: "Sous-total",
+      cart_delivery: "Livraison",
+      cart_delivery_free: "Offerte",
+      cart_total: "Total",
+      cart_checkout: "Passer la commande",
+      cart_with: "avec",
+      checkout_title: "Finaliser ma commande",
+      co_notice: "Commande à passer au moins 48h à l'avance · Livraison uniquement à Moka, entre 11h et 14h.",
+      co_day_t: "Jour de livraison",
+      co_day_h: "Choisissez un jour disponible (délai de 48h respecté).",
+      co_info_t: "Vos coordonnées",
+      co_name: "Nom complet", co_phone: "Téléphone", co_email: "Email (pour le suivi)",
+      co_addr_t: "Adresse de livraison",
+      co_addr: "Rue / résidence / repères (Moka)",
+      co_moka_confirm: "Je confirme que mon adresse se situe dans le quartier de Moka.",
+      co_pay_t: "Mode de paiement",
+      co_pay_cash_t: "Espèces à la livraison",
+      co_pay_cash_d: "Payez en liquide au livreur à la réception de votre commande.",
+      co_pay_juice_t: "Juice by MCB (mobile money)",
+      co_pay_juice_d: "Payez à l'avance via l'application Juice by MCB.",
+      co_juice_box: "Envoyez le montant via <b>Juice by MCB</b> au numéro marchand <b>+230 5xxx xxxx</b> et indiquez votre numéro de commande en référence. Votre commande sera confirmée à réception du paiement.",
+      co_place: "Confirmer la commande",
+      co_summary: "Récapitulatif",
+      err_required: "Ce champ est requis",
+      err_email: "Email invalide",
+      err_day: "Veuillez choisir un jour de livraison",
+      err_moka: "Veuillez confirmer la zone de Moka",
+      confirm_title: "Commande confirmée !",
+      confirm_msg: "Merci pour votre commande. Conservez votre numéro de commande ci-dessous.",
+      confirm_email_note: "Un récapitulatif vous sera envoyé par email (suivi par email bientôt disponible).",
+      confirm_for: "Livraison le",
+      confirm_pay: "Paiement",
+      confirm_total: "Total",
+      confirm_close: "Fermer",
+      months: ["jan.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
+      days: ["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
+      currency: "Rs"
+    },
+    en: {
+      topbar: "Orders delivered within 48h · Delivery between 11am and 2pm",
+      nav_home: "Home", nav_menu: "Our menu", nav_about: "About", nav_contact: "Contact",
+      hero_eyebrow: "Welcome",
+      hero_title: "To Bondipain",
+      hero_sub: "Homemade stuffed bread, delivered to your door in Moka.",
+      hero_cta: "Order now", hero_cta2: "Learn more",
+      info_strip: "Orders accepted until 4–5pm · Minimum 48h in advance · Moka area only",
+      menu_eyebrow: "Our menu",
+      menu_title: "Our dishes",
+      menu_sub: "5 categories, over 20 recipes. Order 48h ahead, delivery between 11am and 2pm.",
+      choose: "View menu",
+      pm_choose: "Choose your dish",
+      pm_choose_h: "Select an option below",
+      pm_choose_first: "Choose a dish first",
+      steps_eyebrow: "How it works",
+      steps_title: "Order in 4 steps",
+      about_eyebrow: "Our story",
+      about_title: "Artisan bread, delivered across Moka",
+      about_p1: "Bondipain prepares generous stuffed breads every day using fresh, local ingredients.",
+      about_p2: "We deliver only within the Moka area, for a local service and always-fresh products.",
+      contact_eyebrow: "A question?",
+      contact_title: "Get in touch",
+      contact_p: "Our team is available for any question about your order or our products.",
+      contact_zone_t: "Delivery area", contact_zone_v: "Moka area only, Mauritius",
+      contact_phone_t: "Phone",
+      contact_hours_t: "Delivery window", contact_hours_v: "Every day, between 11am and 2pm",
+      footer_tag: "Stuffed bread, delivered in Moka.",
+      footer_legal: "© 2026 Bondipain.com — All rights reserved.",
+      pm_qty: "Quantity",
+      pm_sides_t: "Sides", pm_sides_h: "Add some sides (optional)",
+      pm_drinks_t: "Drinks", pm_drinks_h: "Choose your drinks (optional)",
+      pm_add: "Add to cart",
+      cart_title: "My cart",
+      cart_empty: "Your cart is empty.",
+      cart_remove: "Remove",
+      cart_subtotal: "Subtotal",
+      cart_delivery: "Delivery",
+      cart_delivery_free: "Free",
+      cart_total: "Total",
+      cart_checkout: "Checkout",
+      cart_with: "with",
+      checkout_title: "Complete my order",
+      co_notice: "Order at least 48h in advance · Delivery in Moka only, between 11am and 2pm.",
+      co_day_t: "Delivery day",
+      co_day_h: "Pick an available day (48h lead time respected).",
+      co_info_t: "Your details",
+      co_name: "Full name", co_phone: "Phone", co_email: "Email (for tracking)",
+      co_addr_t: "Delivery address",
+      co_addr: "Street / residence / landmarks (Moka)",
+      co_moka_confirm: "I confirm my address is within the Moka area.",
+      co_pay_t: "Payment method",
+      co_pay_cash_t: "Cash on delivery",
+      co_pay_cash_d: "Pay the driver in cash when your order arrives.",
+      co_pay_juice_t: "Juice by MCB (mobile money)",
+      co_pay_juice_d: "Pay in advance via the Juice by MCB app.",
+      co_juice_box: "Send the amount via <b>Juice by MCB</b> to merchant number <b>+230 5xxx xxxx</b> and add your order number as reference. Your order is confirmed once payment is received.",
+      co_place: "Confirm order",
+      co_summary: "Summary",
+      err_required: "This field is required",
+      err_email: "Invalid email",
+      err_day: "Please choose a delivery day",
+      err_moka: "Please confirm the Moka area",
+      confirm_title: "Order confirmed!",
+      confirm_msg: "Thank you for your order. Keep your order number below.",
+      confirm_email_note: "A summary will be emailed to you (email tracking coming soon).",
+      confirm_for: "Delivery on",
+      confirm_pay: "Payment",
+      confirm_total: "Total",
+      confirm_close: "Close",
+      months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+      days: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+      currency: "Rs"
+    }
+  };
+
+  /* ============================================================
+     DATA
+  ============================================================ */
+  const CATEGORIES = [
+    {
+      id: "veg",
+      name: { fr: "🌿 Pain Veg", en: "🌿 Veg Bread" },
+      desc: { fr: "14 garnitures végétariennes au choix.", en: "14 vegetarian fillings to choose from." },
+      img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+      tag: { fr: "Végétarien", en: "Vegetarian" },
+      from: 130,
+      items: [
+        { id: "v1",  name: { fr: "Chopsuey Teocon",        en: "Chopsuey Teocon"       }, price: 130 },
+        { id: "v2",  name: { fr: "Saute Légumes",           en: "Sautéed Vegetables"    }, price: 130 },
+        { id: "v3",  name: { fr: "Salade Gateau Piment",    en: "Chilli Cake Salad"     }, price: 130 },
+        { id: "v4",  name: { fr: "Chatini Pomme de Terre",  en: "Potato Chatini"        }, price: 130 },
+        { id: "v5",  name: { fr: "Saute Bringelle Poivron", en: "Aubergine & Pepper"    }, price: 130 },
+        { id: "v6",  name: { fr: "Achard Légumes",          en: "Vegetable Achard"      }, price: 130 },
+        { id: "v7",  name: { fr: "Catless Veg",             en: "Veg Cutlet"            }, price: 130 },
+        { id: "v8",  name: { fr: "Tandoorie Teocon",        en: "Tandoori Teocon"       }, price: 130 },
+        { id: "v9",  name: { fr: "Vindaye Gateau Piment",   en: "Chilli Cake Vindaye"   }, price: 130 },
+        { id: "v10", name: { fr: "Vindaye Pomme de Terre",  en: "Potato Vindaye"        }, price: 130 },
+        { id: "v11", name: { fr: "Vindaye Teocon",          en: "Teocon Vindaye"        }, price: 130 },
+        { id: "v12", name: { fr: "Teocon Pané",             en: "Breaded Teocon"        }, price: 130 },
+        { id: "v13", name: { fr: "Salade Bringelle",        en: "Aubergine Salad"       }, price: 130 },
+        { id: "v14", name: { fr: "Vindaye Bringelle",       en: "Aubergine Vindaye"     }, price: 130 },
+      ]
+    },
+    {
+      id: "nonveg",
+      name: { fr: "🍗 Pain Non-Veg", en: "🍗 Non-Veg Bread" },
+      desc: { fr: "Poulet à Rs 170 · Poisson à Rs 185.", en: "Chicken Rs 170 · Fish Rs 185." },
+      img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      tag: { fr: "Poulet & Poisson", en: "Chicken & Fish" },
+      from: 145,
+      items: [
+        { id: "nv1", name: { fr: "Poulet Tandoorie",      en: "Tandoori Chicken"      }, price: 170 },
+        { id: "nv2", name: { fr: "Roti de Poulet",        en: "Chicken Roti"          }, price: 170 },
+        { id: "nv3", name: { fr: "Poulet Croustillant",   en: "Crispy Chicken"        }, price: 170 },
+        { id: "nv4", name: { fr: "Saute Poulet",          en: "Chicken Sauté"         }, price: 170 },
+        { id: "nv5", name: { fr: "Poulet Satay",          en: "Chicken Satay"         }, price: 170 },
+        { id: "nv6", name: { fr: "Poisson Pané",          en: "Breaded Fish"          }, price: 185 },
+        { id: "nv7", name: { fr: "Tikka Poisson",         en: "Fish Tikka"            }, price: 185 },
+        { id: "nv8", name: { fr: "Saute Poisson",         en: "Fish Sauté"            }, price: 185 },
+        { id: "nv9", name: { fr: "Pain Saucisse Poulet",  en: "Chicken Sausage Bread" }, price: 145 },
+      ]
+    },
+    {
+      id: "ancienne",
+      name: { fr: "🥖 Pain à l'Ancienne", en: "🥖 Traditional Bread" },
+      desc: { fr: "Recette traditionnelle mauricienne.", en: "Traditional Mauritian recipe." },
+      img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+      tag: { fr: "Spécial", en: "Special" },
+      from: 250,
+      items: [
+        { id: "a1", name: { fr: "Pain à l'Ancienne", en: "Traditional Bread" }, price: 250 },
+      ]
+    },
+    {
+      id: "menujour",
+      name: { fr: "🍽️ Menu du Jour", en: "🍽️ Daily Special" },
+      desc: { fr: "Mine ou riz frite au poulet.", en: "Chicken fried noodles or fried rice." },
+      img: "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
+      tag: { fr: "Du jour", en: "Daily" },
+      from: 220,
+      items: [
+        { id: "mj1", name: { fr: "Mine Frite Poulet", en: "Chicken Fried Noodles" }, price: 220 },
+        { id: "mj2", name: { fr: "Riz Frite Poulet",  en: "Chicken Fried Rice"   }, price: 220 },
+      ]
+    },
+    {
+      id: "briani",
+      name: { fr: "🍛 Briani du Vendredi", en: "🍛 Friday Biryani" },
+      desc: { fr: "Disponible le vendredi uniquement.", en: "Available on Fridays only." },
+      img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80",
+      tag: { fr: "Vendredi", en: "Friday" },
+      from: 190,
+      items: [
+        { id: "b1", name: { fr: "Briani Veg",    en: "Veg Biryani"     }, price: 190 },
+        { id: "b2", name: { fr: "Briani Poulet", en: "Chicken Biryani" }, price: 220 },
+      ]
+    },
+  ];
+
+  const DRINKS = [
+    { id: "coca", name: { fr: "Coca-Cola",    en: "Coca-Cola"   }, price: 40 },
+    { id: "soda", name: { fr: "Soda",         en: "Soda"        }, price: 35 },
+    { id: "eau",  name: { fr: "Eau",          en: "Water"       }, price: 25 },
+    { id: "jus",  name: { fr: "Jus de fruit", en: "Fruit juice" }, price: 45 }
+  ];
+
+  const STEPS = [
+    { fr: ["Choisissez une catégorie", "Veg, Non-Veg, Briani…"], en: ["Choose a category",  "Veg, Non-Veg, Biryani…"] },
+    { fr: ["Sélectionnez votre plat",  "Parmi nos 20+ recettes"], en: ["Select your dish",   "From our 20+ recipes"]   },
+    { fr: ["Commandez 48h avant",      "Limite commande 16h–17h"],en: ["Order 48h ahead",    "Order deadline 4–5pm"]   },
+    { fr: ["Livré à Moka",             "Entre 11h et 14h"],       en: ["Delivered in Moka",  "Between 11am and 2pm"]   }
+  ];
+
+  const ABOUT_FEATURES = {
+    fr: ["Ingrédients frais et locaux", "Préparé le jour de la livraison", "Livraison de proximité à Moka", "Paiement espèces ou Juice by MCB"],
+    en: ["Fresh, local ingredients", "Made on delivery day", "Local delivery in Moka", "Pay by cash or Juice by MCB"]
+  };
+
+  /* ============================================================
+     STATE
+  ============================================================ */
+  let lang = localStorage.getItem("bp_lang") || "fr";
+  let cart = JSON.parse(localStorage.getItem("bp_cart") || "[]");
+  let currentCat = null;
+  let cfg = null;
+  let checkout = { day: null, pay: "cash" };
+
+  const t = (k) => (I18N[lang][k] !== undefined ? I18N[lang][k] : k);
+  const money = (n) => `${t("currency")} ${n}`;
+  const $ = (s) => document.querySelector(s);
+
+  /* ============================================================
+     RENDER STATIC i18n
+  ============================================================ */
+  function applyI18n() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll(".lang-switch button").forEach(b =>
+      b.classList.toggle("active", b.dataset.lang === lang));
+  }
+
+  function setLang(l) {
+    lang = l; localStorage.setItem("bp_lang", l);
+    /* logo inlined as data URI */
+  const LOGO = "data:image/png;base64,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";
+  document.querySelectorAll('.logo-img').forEach(i => i.src = LOGO);
+  { const fav = document.getElementById('favicon'); if (fav) fav.href = LOGO; }
+
+  renderAll();
+    if ($("#productModal").classList.contains("open") && currentCat) { renderCategoryBody(); $("#pmTitle").textContent = currentCat.name[lang]; }
+    if ($("#cartDrawer").classList.contains("open")) renderCart();
+    if ($("#checkoutModal").classList.contains("open")) renderCheckout();
+  }
+
+  function renderAll() {
+    applyI18n();
+    renderMenu();
+    renderSteps();
+    renderAboutFeatures();
+    updateCartCount();
+  }
+
+  function renderMenu() {
+    $("#menuGrid").innerHTML = CATEGORIES.map(c => `
+      <div class="card">
+        <div class="ph">
+          <img src="${c.img}" alt="${c.name[lang]}" loading="lazy" />
+          <span class="tag">${c.tag[lang]}</span>
+        </div>
+        <div class="body">
+          <h3>${c.name[lang]}</h3>
+          <p class="desc">${c.desc[lang]}</p>
+          <div class="price-row">
+            <span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>
+            <button class="btn btn-primary" onclick="openCategory('${c.id}')">${t("choose")}</button>
+          </div>
+          <div class="avail"><span class="dot"></span>${c.items.length} ${lang==="fr"?"plats · commande 48h avant":"dishes · order 48h ahead"}</div>
+        </div>
+      </div>`).join("");
+  }
+
+  function renderSteps() {
+    $("#stepsGrid").innerHTML = STEPS.map((s, i) => `
+      <div class="step">
+        <div class="num">0${i+1}</div>
+        <h4>${s[lang][0]}</h4>
+        <p>${s[lang][1]}</p>
+      </div>`).join("");
+  }
+
+  function renderAboutFeatures() {
+    const check = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>`;
+    $("#aboutFeatures").innerHTML = ABOUT_FEATURES[lang].map(f => `<li>${check}<span>${f}</span></li>`).join("");
+  }
+
+  /* ============================================================
+     CATEGORY MODAL
+  ============================================================ */
+  function openCategory(id) {
+    currentCat = CATEGORIES.find(c => c.id === id);
+    cfg = { qty: 1, selectedItem: currentCat.items.length === 1 ? currentCat.items[0].id : null, drinks: {} };
+    DRINKS.forEach(d => cfg.drinks[d.id] = 0);
+    $("#pmTitle").textContent = currentCat.name[lang];
+    renderCategoryBody();
+    openModal("#productModal");
+  }
+
+  function renderCategoryBody() {
+    const c = currentCat;
+    const sel = cfg.selectedItem;
+    const drinkRow = (item) => `
+      <div class="opt-row">
+        <div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div>
+        <div class="stepper">
+          <button onclick="stepOpt('drinks','${item.id}',-1)">−</button>
+          <span class="q" id="q_drinks_${item.id}">${cfg.drinks[item.id]}</span>
+          <button onclick="stepOpt('drinks','${item.id}',1)">+</button>
+        </div>
+      </div>`;
+    $("#pmBody").innerHTML = `
+      <div class="opt-group">
+        <label class="gl">${t("pm_choose")}</label>
+        <div class="hint">${t("pm_choose_h")}</div>
+        <div class="item-list">
+          ${c.items.map(item => `
+            <label class="item-opt${sel===item.id?" selected":""}" onclick="selectItem('${item.id}')">
+              <input type="radio" name="catitem" value="${item.id}" ${sel===item.id?"checked":""} />
+              <span class="it">${item.name[lang]}</span>
+              <span class="ip">${money(item.price)}</span>
+            </label>`).join("")}
+        </div>
+      </div>
+      <div class="opt-group">
+        <label class="gl">${t("pm_qty")}</label>
+        <div class="stepper" style="margin-top:6px;">
+          <button onclick="stepQty(-1)">−</button>
+          <span class="q" id="q_main" style="font-size:18px;">${cfg.qty}</span>
+          <button onclick="stepQty(1)">+</button>
+        </div>
+      </div>
+      <div class="opt-group">
+        <label class="gl">${t("pm_drinks_t")}</label>
+        <div class="hint">${t("pm_drinks_h")}</div>
+        ${DRINKS.map(d => drinkRow(d)).join("")}
+      </div>`;
+    updatePmButton();
+  }
+
+  function selectItem(id) {
+    cfg.selectedItem = id;
+    document.querySelectorAll(".item-opt").forEach(el => {
+      const v = el.querySelector("input").value;
+      el.classList.toggle("selected", v === id);
+      el.querySelector("input").checked = v === id;
+    });
+    updatePmButton();
+  }
+
+  function stepQty(d) { cfg.qty = Math.max(1, cfg.qty + d); $("#q_main").textContent = cfg.qty; updatePmButton(); }
+  function stepOpt(kind, id, d) {
+    cfg[kind][id] = Math.max(0, Math.min(9, cfg[kind][id] + d));
+    $(`#q_${kind}_${id}`).textContent = cfg[kind][id];
+    updatePmButton();
+  }
+
+  function configLineTotal() {
+    if (!cfg.selectedItem) return 0;
+    const item = currentCat.items.find(i => i.id === cfg.selectedItem);
+    let extras = 0;
+    DRINKS.forEach(d => extras += cfg.drinks[d.id] * d.price);
+    return (item.price + extras) * cfg.qty;
+  }
+
+  function updatePmButton() {
+    const btn = $("#pmAdd");
+    btn.disabled = !cfg.selectedItem;
+    btn.textContent = cfg.selectedItem
+      ? `${t("pm_add")} · ${money(configLineTotal())}`
+      : t("pm_choose_first");
+  }
+
+  function addConfiguredToCart() {
+    if (!cfg.selectedItem) return;
+    const item = currentCat.items.find(i => i.id === cfg.selectedItem);
+    const drinks = DRINKS.filter(d => cfg.drinks[d.id] > 0).map(d => ({ id: d.id, name: d.name, qty: cfg.drinks[d.id], price: d.price }));
+    cart.push({
+      uid: Date.now() + "_" + Math.floor(Math.random()*9999),
+      pid: cfg.selectedItem, name: item.name, img: currentCat.img,
+      base: item.price, qty: cfg.qty, sides: [], drinks,
+      lineTotal: configLineTotal()
+    });
+    saveCart();
+    closeAll();
+    openCart();
+  }
+
+  /* ============================================================
+     CART
+  ============================================================ */
+  function saveCart() { localStorage.setItem("bp_cart", JSON.stringify(cart)); updateCartCount(); }
+  function updateCartCount() {
+    const n = cart.reduce((s, i) => s + i.qty, 0);
+    const el = $("#cartCount");
+    el.textContent = n; el.classList.toggle("hidden", n === 0);
+  }
+  function cartSubtotal() { return cart.reduce((s, i) => s + i.lineTotal, 0); }
+
+  function extrasLabel(item) {
+    const parts = [...item.sides, ...item.drinks].map(x => `${x.qty}× ${x.name[lang]}`);
+    return parts.length ? `${t("cart_with")} ${parts.join(", ")}` : "";
+  }
+
+  function renderCart() {
+    const body = $("#cartBody"), foot = $("#cartFoot");
+    if (!cart.length) {
+      body.innerHTML = `<div class="cart-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+        <p>${t("cart_empty")}</p></div>`;
+      foot.innerHTML = "";
+      return;
+    }
+    body.innerHTML = cart.map(item => `
+      <div class="cart-line">
+        <img src="${item.img}" alt="" />
+        <div class="ci-main">
+          <div class="ci-title">${item.qty}× ${item.name[lang]}</div>
+          ${extrasLabel(item) ? `<div class="ci-extras">${extrasLabel(item)}</div>` : ""}
+          <div class="ci-bottom">
+            <span class="ci-price">${money(item.lineTotal)}</span>
+            <button class="ci-remove" onclick="removeLine('${item.uid}')">${t("cart_remove")}</button>
+          </div>
+        </div>
+      </div>`).join("");
+    foot.innerHTML = `
+      <div class="totals"><span>${t("cart_subtotal")}</span><span>${money(cartSubtotal())}</span></div>
+      <div class="totals"><span>${t("cart_delivery")}</span><span>${t("cart_delivery_free")}</span></div>
+      <div class="totals grand"><span>${t("cart_total")}</span><span>${money(cartSubtotal())}</span></div>
+      <button class="btn btn-primary btn-block" onclick="goCheckout()">${t("cart_checkout")}</button>`;
+  }
+
+  function removeLine(uid) { cart = cart.filter(i => i.uid !== uid); saveCart(); renderCart(); }
+
+  /* ============================================================
+     CHECKOUT
+  ============================================================ */
+  function availableDays() {
+    const now = new Date();
+    const earliest = now.getTime() + 48 * 3600 * 1000; // 48h
+    const days = [];
+    for (let i = 0; i < 16 && days.length < 7; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, 11, 0, 0, 0);
+      if (d.getTime() >= earliest) days.push(d);
+    }
+    return days;
+  }
+
+  function goCheckout() {
+    if (!cart.length) return;
+    checkout = { day: null, pay: "cash" };
+    closeDrawerOnly();
+    renderCheckout();
+    openModal("#checkoutModal");
+  }
+
+  function renderCheckout() {
+    const days = availableDays();
+    $("#checkoutBody").innerHTML = `
+      <div class="notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+        <span>${t("co_notice")}</span>
+      </div>
+
+      <div class="opt-group">
+        <label class="gl">${t("co_day_t")}</label>
+        <div class="hint">${t("co_day_h")}</div>
+        <div class="day-grid" id="dayGrid">
+          ${days.map((d) => `
+            <button class="day-opt${checkout.day===d.getTime()?' selected':''}" data-time="${d.getTime()}" onclick="pickDay(${d.getTime()})">
+              <div class="dow">${t("days")[d.getDay()]}</div>
+              <div class="dnum">${d.getDate()}</div>
+              <div class="mon">${t("months")[d.getMonth()]}</div>
+            </button>`).join("")}
+        </div>
+        <div class="field" id="dayErrWrap" style="margin-top:8px;"><div class="err">${t("err_day")}</div></div>
+      </div>
+
+      <div class="opt-group">
+        <label class="gl">${t("co_info_t")}</label>
+        <div class="field" id="f_name"><label>${t("co_name")}</label><input id="i_name" type="text" /><div class="err">${t("err_required")}</div></div>
+        <div class="two-col">
+          <div class="field" id="f_phone"><label>${t("co_phone")}</label><input id="i_phone" type="tel" /><div class="err">${t("err_required")}</div></div>
+          <div class="field" id="f_email"><label>${t("co_email")}</label><input id="i_email" type="email" /><div class="err">${t("err_email")}</div></div>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <label class="gl">${t("co_addr_t")}</label>
+        <div class="field" id="f_addr"><label>${t("co_addr")}</label><textarea id="i_addr" rows="2"></textarea><div class="err">${t("err_required")}</div></div>
+        <label class="pay-opt" id="mokaWrap" style="margin-top:4px;">
+          <input type="checkbox" id="i_moka" />
+          <div><div class="pt" style="font-size:14px;">${t("co_moka_confirm")}</div></div>
+        </label>
+        <div class="field" id="f_moka"><div class="err">${t("err_moka")}</div></div>
+      </div>
+
+      <div class="opt-group">
+        <label class="gl">${t("co_pay_t")}</label>
+        <label class="pay-opt selected" id="pay_cash" onclick="pickPay('cash')">
+          <input type="radio" name="pay" value="cash" checked />
+          <div><div class="pt">${t("co_pay_cash_t")}</div><div class="pd">${t("co_pay_cash_d")}</div></div>
+        </label>
+        <label class="pay-opt" id="pay_juice" onclick="pickPay('juice')">
+          <input type="radio" name="pay" value="juice" />
+          <div><div class="pt">${t("co_pay_juice_t")}</div><div class="pd">${t("co_pay_juice_d")}</div></div>
+        </label>
+        <div class="juice-box" id="juiceBox">${t("co_juice_box")}</div>
+      </div>
+
+      <div class="opt-group">
+        <label class="gl">${t("co_summary")}</label>
+        <div class="confirm-recap" style="margin-top:8px;">
+          <div class="r"><span>${t("cart_subtotal")}</span><b>${money(cartSubtotal())}</b></div>
+          <div class="r"><span>${t("cart_delivery")}</span><b>${t("cart_delivery_free")}</b></div>
+          <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t("cart_total")}</span><b>${money(cartSubtotal())}</b></div>
+        </div>
+      </div>`;
+    $("#placeOrderBtn").textContent = `${t("co_place")} · ${money(cartSubtotal())}`;
+  }
+
+  function pickDay(time) {
+    checkout.day = time;
+    document.querySelectorAll(".day-opt").forEach(b => b.classList.toggle("selected", +b.dataset.time === time));
+    $("#dayErrWrap").classList.remove("invalid");
+  }
+  function pickPay(p) {
+    checkout.pay = p;
+    $("#pay_cash").classList.toggle("selected", p === "cash");
+    $("#pay_juice").classList.toggle("selected", p === "juice");
+    $("#pay_cash").querySelector("input").checked = p === "cash";
+    $("#pay_juice").querySelector("input").checked = p === "juice";
+    $("#juiceBox").classList.toggle("show", p === "juice");
+  }
+
+  function placeOrder() {
+    let ok = true;
+    const setErr = (sel, bad) => { $(sel).classList.toggle("invalid", bad); if (bad) ok = false; };
+    const name = $("#i_name").value.trim();
+    const phone = $("#i_phone").value.trim();
+    const email = $("#i_email").value.trim();
+    const addr = $("#i_addr").value.trim();
+    const moka = $("#i_moka").checked;
+
+    setErr("#f_name", !name);
+    setErr("#f_phone", !phone);
+    setErr("#f_email", !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    setErr("#f_addr", !addr);
+    setErr("#f_moka", !moka);
+    if (!checkout.day) { $("#dayErrWrap").classList.add("invalid"); ok = false; }
+
+    if (!ok) { $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" }); return; }
+
+    const orderNum = makeOrderNumber();
+    const dayDate = new Date(checkout.day);
+    const dayStr = `${t("days")[dayDate.getDay()]} ${dayDate.getDate()} ${t("months")[dayDate.getMonth()]}`;
+    const payLabel = checkout.pay === "cash" ? t("co_pay_cash_t") : t("co_pay_juice_t");
+
+    const order = { num: orderNum, name, phone, email, addr, day: checkout.day, pay: checkout.pay, items: cart, total: cartSubtotal(), createdAt: Date.now() };
+    const history = JSON.parse(localStorage.getItem("bp_orders") || "[]");
+    history.push(order); localStorage.setItem("bp_orders", JSON.stringify(history));
+
+    cart = []; saveCart();
+
+    renderConfirmation(orderNum, dayStr, payLabel, order.total, email);
+    closeAll();
+    openModal("#confirmModal");
+  }
+
+  function makeOrderNumber() {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, "0");
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `BP-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${rand}`;
+  }
+
+  function renderConfirmation(num, dayStr, payLabel, total, email) {
+    $("#confirmBody").innerHTML = `
+      <div class="confirm-wrap">
+        <div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h3>${t("confirm_title")}</h3>
+        <p style="color:var(--muted);margin-top:8px;">${t("confirm_msg")}</p>
+        <div class="ordernum">${num}</div>
+        <div class="confirm-recap">
+          <div class="r"><span>${t("confirm_for")}</span><b>${dayStr} · 11h–14h</b></div>
+          <div class="r"><span>${t("confirm_pay")}</span><b>${payLabel}</b></div>
+          <div class="r"><span>${t("confirm_total")}</span><b>${money(total)}</b></div>
+          <div class="r"><span>Email</span><b>${email}</b></div>
+        </div>
+        <p style="color:var(--muted);font-size:13px;margin-top:14px;">${t("confirm_email_note")}</p>
+      </div>`;
+  }
+
+  /* ============================================================
+     MODAL / DRAWER CONTROLS
+  ============================================================ */
+  function openModal(sel) { $("#overlay").classList.add("open"); $(sel).classList.add("open"); document.body.style.overflow = "hidden"; }
+  function openCart() { renderCart(); $("#overlay").classList.add("open"); $("#cartDrawer").classList.add("open"); document.body.style.overflow = "hidden"; }
+  function closeDrawerOnly() { $("#cartDrawer").classList.remove("open"); }
+  function closeAll() {
+    $("#overlay").classList.remove("open");
+    document.querySelectorAll(".modal, .drawer").forEach(m => m.classList.remove("open"));
+    document.body.style.overflow = "";
+  }
+  function toggleMobileNav(open) {
+    $("#mobileNav").classList.toggle("open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+
+  window.addEventListener("scroll", () => {
+    $("#header").classList.toggle("scrolled", window.scrollY > 10);
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeAll(); toggleMobileNav(false); } });
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  renderAll();
+  </script>
 </body>
 </html>
