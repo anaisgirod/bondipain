@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bondipain — Admin</title>
+<link rel="icon" type="image/png" href="./logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand:       #F2A24C;
+    --brand-deep:  #C9711B;
+    --brand-soft:  #FBE5CC;
+    --cream:       #FFF8F1;
+    --cream-2:     #FDF1E5;
+    --ink:         #2A2622;
+    --muted:       #837A70;
+    --line:        #EFE3D5;
+    --green:       #2E7D52;
+    --green-soft:  #E8F5E9;
+    --danger:      #C0392B;
+    --shadow:      0 2px 12px rgba(60,40,15,.09);
+    --radius:      14px;
+  }
+  body { font-family: 'Barlow', sans-serif; font-weight: 500; background: #F5F0EB; color: var(--ink); min-height: 100vh; }
+  h1,h2,h3,h4 { font-family: 'Rubik', sans-serif; }
+  .hidden { display: none !important; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  input { font-family: inherit; }
+
+  .login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .login-card { background: #fff; border-radius: 20px; box-shadow: var(--shadow); padding: 40px 36px; width: 100%; max-width: 420px; }
+  .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .login-logo span { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--brand-deep); }
+  .login-logo .badge { background: var(--brand-soft); color: var(--brand-deep); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .login-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+  .login-card p { color: var(--muted); font-size: 14.5px; margin-bottom: 28px; }
+  .field { margin-bottom: 16px; }
+  .field label { font-family: 'Rubik'; font-weight: 600; font-size: 13px; display: block; margin-bottom: 6px; }
+  .field input { width: 100%; font-size: 15px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+  .field input:focus { outline: none; border-color: var(--brand); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Rubik'; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 999px; transition: all .18s; white-space: nowrap; cursor: pointer; border: none; }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover { background: var(--brand-deep); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--brand); color: var(--brand-deep); }
+  .btn-block { width: 100%; }
+  .login-err { color: var(--danger); font-size: 13px; margin-bottom: 12px; display: none; }
+  .login-err.show { display: block; }
+
+  .dash-header { background: #fff; border-bottom: 1px solid var(--line); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .dash-logo { display: flex; align-items: center; gap: 10px; }
+  .dash-logo span { font-family: 'Rubik'; font-weight: 800; font-size: 20px; color: var(--brand-deep); }
+  .dash-logo .badge { background: var(--brand-soft); color: var(--brand-deep); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .dash-body { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+  .save-banner { position: sticky; top: 66px; z-index: 5; background: var(--green-soft); color: var(--green); font-weight: 600; font-size: 14px; padding: 10px 16px; border-radius: 10px; margin-bottom: 18px; display: none; align-items: center; gap: 8px; }
+  .save-banner.show { display: flex; }
+
+  .cat-section { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden; }
+  .cat-head { padding: 16px 20px; border-bottom: 1px solid var(--line); font-family: 'Rubik'; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .prod-row { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .prod-row:last-child { border-bottom: none; }
+
+  .photo-wrap { position: relative; width: 56px; height: 56px; border-radius: 10px; overflow: hidden; background: var(--cream-2); border: 1.5px dashed var(--line); flex-shrink: 0; cursor: pointer; }
+  .photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-wrap .ph-placeholder { width: 100%; height: 100%; display: grid; place-items: center; color: var(--muted); }
+  .photo-wrap .ph-placeholder svg { width: 20px; height: 20px; stroke: var(--muted); }
+  .photo-wrap input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo-wrap .ph-loading { position: absolute; inset: 0; background: rgba(255,255,255,.75); display: grid; place-items: center; font-size: 10px; font-weight: 700; color: var(--brand-deep); }
+
+  .prod-fields { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 8px; }
+  .name-inputs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .name-input { flex: 1; min-width: 140px; font-size: 13.5px; padding: 7px 10px; border: 1.5px solid var(--line); border-radius: 8px; }
+  .name-input:focus { outline: none; border-color: var(--brand); }
+  .name-input.inactive { color: var(--muted); text-decoration: line-through; }
+  .row-controls { display: flex; align-items: center; gap: 12px; }
+
+  .price-input-wrap { display: flex; align-items: center; gap: 6px; }
+  .price-input-wrap span { color: var(--muted); font-size: 13px; }
+  .price-input { width: 76px; font-size: 14.5px; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 8px; text-align: right; }
+  .price-input:focus { outline: none; border-color: var(--brand); }
+  .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+  .toggle input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .toggle .track { position: absolute; inset: 0; background: var(--line); border-radius: 999px; transition: background .15s; }
+  .toggle .thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform .15s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .toggle input:checked + .track { background: var(--green); }
+  .toggle input:checked + .track + .thumb { transform: translateX(18px); }
+  .save-row-btn { font-family: 'Rubik'; font-weight: 700; font-size: 12.5px; color: var(--brand-deep); padding: 6px 12px; border-radius: 999px; background: var(--brand-soft); opacity: 0; transition: opacity .15s; margin-left: auto; }
+  .save-row-btn.dirty { opacity: 1; }
+  .empty { text-align: center; color: var(--muted); padding: 40px; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span>Bondipain</span>
+      <span class="badge">Admin</span>
+    </div>
+    <h2>Panneau admin</h2>
+    <p>Connectez-vous pour modifier les prix du menu.</p>
+    <div class="login-err" id="loginErr">Email ou mot de passe incorrect.</div>
+    <div class="field">
+      <label>Email</label>
+      <input id="i_login_email" type="email" autocomplete="email" />
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input id="i_login_pwd" type="password" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">Se connecter</button>
+  </div>
+</div>
+
+<!-- ===== ADMIN ===== -->
+<div id="adminScreen" class="hidden">
+  <header class="dash-header">
+    <div class="dash-logo">
+      <span>Bondipain</span>
+      <span class="badge">Admin</span>
+    </div>
+    <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()">Déconnexion</button>
+  </header>
+
+  <div class="dash-body">
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:6px">Gestion des prix</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Modifiez un prix ou désactivez un plat en rupture — les changements sont visibles immédiatement sur le site.</p>
+    <div class="save-banner" id="saveBanner">✓ Enregistré</div>
+    <div id="catalog"><p class="empty">Chargement…</p></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
+const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
+const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const ADMIN_EMAIL = "hello@bondipain.com";
+
+/* Noms/catégories affichés dans le panneau (les prix, eux, viennent de Supabase) */
+const CATALOG = [
+  { label: "🌿 Pain Veg", items: [
+    { id: "v1",  name: "Chopsuey Teocon" }, { id: "v2",  name: "Saute Légumes" },
+    { id: "v3",  name: "Salade Gateau Piment" }, { id: "v4",  name: "Chatini Pomme de Terre" },
+    { id: "v5",  name: "Saute Bringelle Poivron" }, { id: "v6",  name: "Achard Légumes" },
+    { id: "v7",  name: "Catless Veg" }, { id: "v8",  name: "Tandoorie Teocon" },
+    { id: "v9",  name: "Vindaye Gateau Piment" }, { id: "v10", name: "Vindaye Pomme de Terre" },
+    { id: "v11", name: "Vindaye Teocon" }, { id: "v12", name: "Teocon Pané" },
+    { id: "v13", name: "Salade Bringelle" }, { id: "v14", name: "Vindaye Bringelle" },
+  ]},
+  { label: "🍗 Pain Non-Veg", items: [
+    { id: "nv1", name: "Poulet Tandoorie" }, { id: "nv2", name: "Roti de Poulet" },
+    { id: "nv3", name: "Poulet Croustillant" }, { id: "nv4", name: "Saute Poulet" },
+    { id: "nv5", name: "Poulet Satay" }, { id: "nv6", name: "Poisson Pané" },
+    { id: "nv7", name: "Tikka Poisson" }, { id: "nv8", name: "Saute Poisson" },
+    { id: "nv9", name: "Pain Saucisse Poulet" },
+  ]},
+  { label: "🥖 Pain à l'Ancienne", items: [
+    { id: "a1", name: "Pain à l'Ancienne" },
+  ]},
+  { label: "🍽️ Menu du Jour", items: [
+    { id: "mj1", name: "Mine Frite Poulet" }, { id: "mj2", name: "Riz Frite Poulet" },
+  ]},
+  { label: "🍛 Briani du Vendredi", items: [
+    { id: "b1", name: "Briani Veg" }, { id: "b2", name: "Briani Poulet" },
+  ]},
+  { label: "🥤 Boissons", items: [
+    { id: "coca", name: "Coca-Cola" }, { id: "soda", name: "Soda" },
+    { id: "eau", name: "Eau" }, { id: "jus", name: "Jus de fruit" },
+  ]},
+];
+
+let products = {};
+
+async function doLogin() {
+  const email = document.getElementById("i_login_email").value.trim();
+  const pwd   = document.getElementById("i_login_pwd").value;
+  const btn   = document.getElementById("loginBtn");
+  const err   = document.getElementById("loginErr");
+  err.classList.remove("show");
+  btn.disabled = true; btn.textContent = "Connexion…";
+
+  const { data, error } = await _supa.auth.signInWithPassword({ email, password: pwd });
+  if (error || !data.session) {
+    err.textContent = error?.message === "Email not confirmed"
+      ? "Confirmez d'abord votre email."
+      : "Email ou mot de passe incorrect.";
+    err.classList.add("show");
+    btn.disabled = false; btn.textContent = "Se connecter";
+    return;
+  }
+  if (data.session.user.email !== ADMIN_EMAIL) {
+    err.textContent = "Ce compte n'a pas accès au panneau admin.";
+    err.classList.add("show");
+    await _supa.auth.signOut();
+    btn.disabled = false; btn.textContent = "Se connecter";
+    return;
+  }
+  await initAdmin();
+}
+
+async function doLogout() {
+  await _supa.auth.signOut();
+  document.getElementById("loginScreen").classList.remove("hidden");
+  document.getElementById("adminScreen").classList.add("hidden");
+  document.getElementById("loginBtn").disabled = false;
+  document.getElementById("loginBtn").textContent = "Se connecter";
+}
+
+async function initAdmin() {
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("adminScreen").classList.remove("hidden");
+  await loadProducts();
+}
+
+async function loadProducts() {
+  const { data, error } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url");
+  if (error) {
+    document.getElementById("catalog").innerHTML = `<p class="empty">Erreur de chargement : ${error.message}</p>`;
+    return;
+  }
+  products = Object.fromEntries((data || []).map(p => [p.id, p]));
+  renderCatalog();
+}
+
+function renderCatalog() {
+  document.getElementById("catalog").innerHTML = CATALOG.map(cat => `
+    <div class="cat-section">
+      <div class="cat-head">${cat.label}</div>
+      ${cat.items.map(item => {
+        const p = products[item.id] || { price: "", active: true, name_fr: item.name, name_en: "", image_url: "" };
+        const photoInner = p.image_url
+          ? `<img src="${p.image_url}" alt="" />`
+          : `<span class="ph-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m4 17 5-5 4 4 3-3 4 4"/></svg></span>`;
+        return `<div class="prod-row" data-id="${item.id}">
+          <label class="photo-wrap" title="Changer la photo">
+            <span class="photo-inner">${photoInner}</span>
+            <input type="file" accept="image/*" onchange="onPhotoSelected('${item.id}', this.files[0])" />
+          </label>
+          <div class="prod-fields">
+            <div class="name-inputs">
+              <input class="name-input ${p.active ? "" : "inactive"}" data-field="name_fr" placeholder="Nom (FR)" value="${p.name_fr || ""}" oninput="onFieldChange('${item.id}')" />
+              <input class="name-input ${p.active ? "" : "inactive"}" data-field="name_en" placeholder="Nom (EN)" value="${p.name_en || ""}" oninput="onFieldChange('${item.id}')" />
+            </div>
+            <div class="row-controls">
+              <label class="toggle" title="${p.active ? "Disponible" : "Indisponible"}">
+                <input type="checkbox" ${p.active ? "checked" : ""} onchange="onFieldChange('${item.id}')" />
+                <span class="track"></span><span class="thumb"></span>
+              </label>
+              <div class="price-input-wrap">
+                <input class="price-input" data-field="price" type="number" min="0" step="5" value="${p.price}" oninput="onFieldChange('${item.id}')" />
+                <span>Rs</span>
+              </div>
+              <button class="save-row-btn" id="save-${item.id}" onclick="saveProduct('${item.id}')">Enregistrer</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`).join("");
+}
+
+function onFieldChange(id) {
+  document.getElementById(`save-${id}`)?.classList.add("dirty");
+}
+
+async function onPhotoSelected(id, file) {
+  if (!file) return;
+  const row = document.querySelector(`.prod-row[data-id="${id}"]`);
+  const wrap = row.querySelector(".photo-wrap");
+  const loading = document.createElement("div");
+  loading.className = "ph-loading";
+  loading.textContent = "…";
+  wrap.appendChild(loading);
+
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `${id}-${Date.now()}.${ext}`;
+  const { error: upErr } = await _supa.storage.from("products").upload(path, file, { upsert: true });
+  if (upErr) {
+    alert("Erreur d'upload : " + upErr.message);
+    loading.remove();
+    return;
+  }
+  const { data: pub } = _supa.storage.from("products").getPublicUrl(path);
+  const imageUrl = pub.publicUrl;
+
+  const { error: saveErr } = await _supa.from("products").upsert({ id, image_url: imageUrl, updated_at: new Date().toISOString() });
+  loading.remove();
+  if (saveErr) {
+    alert("Erreur d'enregistrement : " + saveErr.message);
+    return;
+  }
+  products[id] = { ...(products[id] || { id, price: 0, active: true }), image_url: imageUrl };
+  wrap.querySelector(".photo-inner").innerHTML = `<img src="${imageUrl}" alt="" />`;
+  flashSaved();
+}
+
+async function saveProduct(id) {
+  const row = document.querySelector(`.prod-row[data-id="${id}"]`);
+  const price = parseInt(row.querySelector('[data-field="price"]').value, 10);
+  const active = row.querySelector(".toggle input").checked;
+  const name_fr = row.querySelector('[data-field="name_fr"]').value.trim();
+  const name_en = row.querySelector('[data-field="name_en"]').value.trim();
+  if (!Number.isFinite(price) || price < 0) { alert("Prix invalide."); return; }
+  if (!name_fr) { alert("Le nom (FR) est obligatoire."); return; }
+
+  const btn = document.getElementById(`save-${id}`);
+  btn.textContent = "…";
+  const { error } = await _supa.from("products").upsert({ id, price, active, name_fr, name_en, updated_at: new Date().toISOString() });
+  if (error) {
+    alert("Erreur : " + error.message);
+    btn.textContent = "Enregistrer";
+    return;
+  }
+  products[id] = { ...(products[id] || { id }), price, active, name_fr, name_en };
+  btn.classList.remove("dirty");
+  btn.textContent = "Enregistrer";
+  row.querySelectorAll(".name-input").forEach(el => el.classList.toggle("inactive", !active));
+  flashSaved();
+}
+
+function flashSaved() {
+  const banner = document.getElementById("saveBanner");
+  banner.classList.add("show");
+  clearTimeout(flashSaved._t);
+  flashSaved._t = setTimeout(() => banner.classList.remove("show"), 1800);
+}
+
+/* Auto-login (session persistante) */
+_supa.auth.getSession().then(({ data: { session } }) => {
+  if (session && session.user.email === ADMIN_EMAIL) initAdmin();
+});
+</script>
+</body>
+</html>

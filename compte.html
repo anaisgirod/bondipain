@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bondipain — Mon compte</title>
+<link rel="icon" type="image/png" href="./logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand:       #F2A24C;
+    --brand-deep:  #C9711B;
+    --brand-soft:  #FBE5CC;
+    --cream:       #FFF8F1;
+    --cream-2:     #FDF1E5;
+    --ink:         #2A2622;
+    --muted:       #837A70;
+    --line:        #EFE3D5;
+    --green:       #2E7D52;
+    --green-soft:  #E8F5E9;
+    --danger:      #C0392B;
+    --shadow:      0 2px 12px rgba(60,40,15,.09);
+    --shadow-md:   0 8px 30px rgba(60,40,15,.12);
+    --radius:      14px;
+  }
+  body { font-family: 'Barlow', sans-serif; font-weight: 500; background: #F5F0EB; color: var(--ink); min-height: 100vh; }
+  h1,h2,h3,h4 { font-family: 'Rubik', sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  .hidden { display: none !important; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 22px 20px 0; }
+  .topbar .brand { display: flex; align-items: center; gap: 10px; }
+  .topbar img { width: 40px; height: 40px; border-radius: 50%; }
+  .topbar span { font-family: 'Rubik'; font-weight: 800; font-size: 21px; color: var(--brand-deep); }
+
+  .wrap { min-height: calc(100vh - 84px); display: grid; place-items: center; padding: 24px; }
+  .card { background: #fff; border-radius: 22px; box-shadow: var(--shadow-md); padding: 38px 34px; width: 100%; max-width: 440px; }
+
+  /* Segment toggle B2C / B2B */
+  .segment { display: flex; background: var(--cream-2); border-radius: 999px; padding: 4px; margin-bottom: 26px; }
+  .segment button { flex: 1; padding: 10px 12px; border-radius: 999px; font-family: 'Rubik'; font-weight: 700; font-size: 14px; color: var(--muted); transition: all .18s; }
+  .segment button.active { background: var(--brand); color: #fff; box-shadow: 0 2px 8px rgba(242,162,76,.4); }
+
+  h2.title { font-size: 23px; font-weight: 800; margin-bottom: 4px; }
+  p.sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+  .mode-tabs { display: flex; gap: 18px; margin-bottom: 20px; border-bottom: 1.5px solid var(--line); }
+  .mode-tabs button { padding: 8px 2px 12px; font-family: 'Rubik'; font-weight: 600; font-size: 14.5px; color: var(--muted); border-bottom: 2.5px solid transparent; margin-bottom: -1.5px; }
+  .mode-tabs button.active { color: var(--brand-deep); border-color: var(--brand-deep); }
+
+  .field { margin-bottom: 15px; }
+  .field label { font-family: 'Rubik'; font-weight: 600; font-size: 13px; display: block; margin-bottom: 6px; }
+  .field input { width: 100%; font-family: inherit; font-size: 15px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+  .field input:focus { outline: none; border-color: var(--brand); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Rubik'; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 999px; transition: all .18s; white-space: nowrap; cursor: pointer; border: none; }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover { background: var(--brand-deep); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--brand); color: var(--brand-deep); }
+  .btn-block { width: 100%; }
+
+  .msg { font-size: 13px; margin-bottom: 14px; padding: 10px 12px; border-radius: 10px; display: none; }
+  .msg.show { display: block; }
+  .msg.err { background: #FBE9E7; color: var(--danger); }
+  .msg.ok { background: var(--green-soft); color: var(--green); }
+
+  .foot-link { text-align: center; font-size: 13.5px; color: var(--muted); margin-top: 18px; }
+  .foot-link a { color: var(--brand-deep); font-weight: 700; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+  .back-link:hover { color: var(--brand-deep); }
+
+  /* ── Account (logged-in B2C) view ── */
+  .acct-wrap { max-width: 640px; margin: 0 auto; padding: 20px 20px 60px; }
+  .acct-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .acct-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-family: 'Rubik'; font-weight: 800; font-size: 20px; }
+  .acct-name-row { display: flex; align-items: center; gap: 14px; }
+  .section { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 18px; }
+  .section h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .row:last-child { border-bottom: none; }
+  .row .label { color: var(--muted); }
+  .row .val { font-weight: 600; }
+  .order-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .order-item:last-child { border-bottom: none; }
+  .order-item .oref { font-family: 'Rubik'; font-weight: 700; color: var(--brand-deep); font-size: 13px; }
+  .order-item .odate { font-size: 12px; color: var(--muted); margin: 2px 0 4px; }
+  .order-item .ototal { font-weight: 700; font-size: 14px; }
+  .empty { text-align: center; color: var(--muted); padding: 24px 0; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="index.html">
+    <img src="./logo.png" alt="Bondipain" />
+    <span>Bondipain</span>
+  </a>
+</div>
+
+<!-- ===== LOGIN / SIGNUP PORTAL ===== -->
+<div class="wrap" id="portalScreen">
+  <div class="card">
+    <div class="segment">
+      <button class="active" id="segB2C" onclick="setSegment('b2c')">Particulier</button>
+      <button id="segB2B" onclick="setSegment('b2b')">Entreprise</button>
+    </div>
+
+    <!-- B2C -->
+    <div id="panelB2C">
+      <h2 class="title">Espace client</h2>
+      <p class="sub">Connectez-vous pour retrouver votre historique de commandes.</p>
+
+      <div class="mode-tabs">
+        <button class="active" id="tabLogin" onclick="setMode('login')">Se connecter</button>
+        <button id="tabSignup" onclick="setMode('signup')">Créer un compte</button>
+      </div>
+
+      <div class="msg err" id="b2cErr"></div>
+      <div class="msg ok" id="b2cOk"></div>
+
+      <form id="formLogin" onsubmit="return doB2CLogin(event)">
+        <div class="field"><label>Email</label><input id="loginEmail" type="email" required autocomplete="email" /></div>
+        <div class="field"><label>Mot de passe</label><input id="loginPwd" type="password" required autocomplete="current-password" /></div>
+        <button class="btn btn-primary btn-block" id="loginBtn" type="submit">Se connecter</button>
+      </form>
+
+      <form id="formSignup" class="hidden" onsubmit="return doB2CSignup(event)">
+        <div class="field"><label>Nom complet</label><input id="suName" type="text" required autocomplete="name" /></div>
+        <div class="field"><label>Email</label><input id="suEmail" type="email" required autocomplete="email" /></div>
+        <div class="field"><label>Téléphone</label><input id="suPhone" type="tel" required autocomplete="tel" /></div>
+        <div class="field"><label>Mot de passe</label><input id="suPwd" type="password" required minlength="6" autocomplete="new-password" /></div>
+        <button class="btn btn-primary btn-block" id="signupBtn" type="submit">Créer mon compte</button>
+      </form>
+    </div>
+
+    <!-- B2B -->
+    <div id="panelB2B" class="hidden">
+      <h2 class="title">Espace entreprise</h2>
+      <p class="sub">Réservé aux entreprises partenaires Bondipain.</p>
+
+      <div class="msg err" id="b2bErr">Email ou mot de passe incorrect.</div>
+
+      <form onsubmit="return doB2BLogin(event)">
+        <div class="field"><label>Email professionnel</label><input id="b2bEmail" type="email" required autocomplete="email" /></div>
+        <div class="field"><label>Mot de passe</label><input id="b2bPwd" type="password" required autocomplete="current-password" /></div>
+        <button class="btn btn-primary btn-block" id="b2bBtn" type="submit">Se connecter</button>
+      </form>
+      <p class="foot-link">Pas encore partenaire ? <a href="index.html#contact">Contactez-nous</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACCOUNT (logged-in B2C) ===== -->
+<div class="acct-wrap hidden" id="acctScreen">
+  <a class="back-link" href="index.html">← Retour au site</a>
+  <div class="acct-header">
+    <div class="acct-name-row">
+      <div class="acct-avatar" id="acctInitials">?</div>
+      <div>
+        <h2 style="font-size:20px;font-weight:800" id="acctName">—</h2>
+        <div style="font-size:13px;color:var(--muted)" id="acctEmail">—</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doB2CLogout()">Déconnexion</button>
+  </div>
+
+  <div class="section">
+    <h4>Mes informations</h4>
+    <div class="row"><span class="label">Téléphone</span><span class="val" id="acctPhone">—</span></div>
+  </div>
+
+  <div class="section">
+    <h4>Historique de commandes</h4>
+    <div id="acctOrders"><p class="empty">Chargement…</p></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
+const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
+const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const money = (n) => `Rs ${n ?? 0}`;
+
+/* ── Segment / mode toggling ── */
+function setSegment(seg) {
+  document.getElementById("segB2C").classList.toggle("active", seg === "b2c");
+  document.getElementById("segB2B").classList.toggle("active", seg === "b2b");
+  document.getElementById("panelB2C").classList.toggle("hidden", seg !== "b2c");
+  document.getElementById("panelB2B").classList.toggle("hidden", seg !== "b2b");
+}
+
+function setMode(mode) {
+  document.getElementById("tabLogin").classList.toggle("active", mode === "login");
+  document.getElementById("tabSignup").classList.toggle("active", mode === "signup");
+  document.getElementById("formLogin").classList.toggle("hidden", mode !== "login");
+  document.getElementById("formSignup").classList.toggle("hidden", mode !== "signup");
+  hideB2CMsgs();
+}
+
+function hideB2CMsgs() {
+  document.getElementById("b2cErr").classList.remove("show");
+  document.getElementById("b2cOk").classList.remove("show");
+}
+
+/* ── B2C: signup ── */
+async function doB2CSignup(evt) {
+  evt.preventDefault();
+  hideB2CMsgs();
+  const name  = document.getElementById("suName").value.trim();
+  const email = document.getElementById("suEmail").value.trim();
+  const phone = document.getElementById("suPhone").value.trim();
+  const pwd   = document.getElementById("suPwd").value;
+  const btn   = document.getElementById("signupBtn");
+  const err   = document.getElementById("b2cErr");
+  btn.disabled = true; btn.textContent = "Création…";
+
+  const { data, error } = await _supa.auth.signUp({ email, password: pwd });
+  if (error) {
+    err.textContent = error.message.includes("already") ? "Un compte existe déjà avec cet email." : error.message;
+    err.classList.add("show");
+    btn.disabled = false; btn.textContent = "Créer mon compte";
+    return false;
+  }
+
+  const userId = data.user?.id;
+  if (userId) {
+    await _supa.from("customers").upsert({ id: userId, full_name: name, phone, email });
+  }
+
+  if (!data.session) {
+    document.getElementById("b2cOk").textContent = "Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.";
+    document.getElementById("b2cOk").classList.add("show");
+    btn.disabled = false; btn.textContent = "Créer mon compte";
+    setMode("login");
+    return false;
+  }
+
+  await enterAccount();
+  return false;
+}
+
+/* ── B2C: login ── */
+async function doB2CLogin(evt) {
+  evt.preventDefault();
+  hideB2CMsgs();
+  const email = document.getElementById("loginEmail").value.trim();
+  const pwd   = document.getElementById("loginPwd").value;
+  const btn   = document.getElementById("loginBtn");
+  const err   = document.getElementById("b2cErr");
+  btn.disabled = true; btn.textContent = "Connexion…";
+
+  const { data, error } = await _supa.auth.signInWithPassword({ email, password: pwd });
+  if (error || !data.session) {
+    err.textContent = error?.message === "Email not confirmed"
+      ? "Confirmez d'abord votre email : vérifiez votre boîte de réception (et vos spams)."
+      : "Email ou mot de passe incorrect.";
+    err.classList.add("show");
+    btn.disabled = false; btn.textContent = "Se connecter";
+    return false;
+  }
+  await enterAccount();
+  return false;
+}
+
+async function doB2CLogout() {
+  await _supa.auth.signOut();
+  document.getElementById("acctScreen").classList.add("hidden");
+  document.getElementById("portalScreen").classList.remove("hidden");
+  setMode("login");
+}
+
+/* ── B2C: account view ── */
+async function enterAccount() {
+  const { data: { user } } = await _supa.auth.getUser();
+  if (!user) return;
+
+  const { data: rows } = await _supa.from("customers").select("*").eq("id", user.id).limit(1);
+  const customer = rows?.[0] || { full_name: user.email, email: user.email, phone: "—" };
+
+  const initials = (customer.full_name || user.email || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+  document.getElementById("acctInitials").textContent = initials;
+  document.getElementById("acctName").textContent = customer.full_name || user.email;
+  document.getElementById("acctEmail").textContent = user.email;
+  document.getElementById("acctPhone").textContent = customer.phone || "—";
+
+  document.getElementById("portalScreen").classList.add("hidden");
+  document.getElementById("acctScreen").classList.remove("hidden");
+
+  await loadOrders(user.id);
+}
+
+async function loadOrders(userId) {
+  const box = document.getElementById("acctOrders");
+  const { data, error } = await _supa.from("orders")
+    .select("*")
+    .eq("customer_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (error || !data?.length) {
+    box.innerHTML = `<p class="empty">Aucune commande pour le moment.</p>`;
+    return;
+  }
+
+  box.innerHTML = data.map(o => {
+    const date = o.created_at ? new Date(o.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : "—";
+    return `<div class="order-item">
+      <div class="oref">${o.order_ref || "—"}</div>
+      <div class="odate">${date}</div>
+      <div class="ototal">${money(o.order_total)}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ── B2B: login (reuses dashboard.html session) ── */
+async function doB2BLogin(evt) {
+  evt.preventDefault();
+  const email = document.getElementById("b2bEmail").value.trim();
+  const pwd   = document.getElementById("b2bPwd").value;
+  const btn   = document.getElementById("b2bBtn");
+  const err   = document.getElementById("b2bErr");
+  err.classList.remove("show");
+  btn.disabled = true; btn.textContent = "Connexion…";
+
+  const { data, error } = await _supa.auth.signInWithPassword({ email, password: pwd });
+  if (error || !data.session) {
+    err.classList.add("show");
+    btn.disabled = false; btn.textContent = "Se connecter";
+    return false;
+  }
+  window.location.href = "dashboard.html";
+  return false;
+}
+
+/* ── Auto-login on load ── */
+(async function init() {
+  const { data: { session } } = await _supa.auth.getSession();
+  if (!session) return;
+  // Only auto-enter the B2C account view if this user has a customer profile
+  // (B2B employer accounts are routed to dashboard.html instead).
+  const { data: companies } = await _supa.from("companies").select("id").eq("contact_email", session.user.email).limit(1);
+  if (companies?.length) {
+    window.location.href = "dashboard.html";
+    return;
+  }
+  await enterAccount();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bondipain — Portail employeur</title>
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand:       #F2A24C;
+      --brand-deep:  #C9711B;
+      --brand-soft:  #FBE5CC;
+      --cream:       #FFF8F1;
+      --ink:         #2A2622;
+      --muted:       #837A70;
+      --line:        #EFE3D5;
+      --green:       #2E7D52;
+      --green-soft:  #E8F5E9;
+      --danger:      #C0392B;
+      --shadow:      0 2px 12px rgba(60,40,15,.09);
+      --radius:      14px;
+    }
+    body { font-family: 'Barlow', sans-serif; font-weight: 500; background: #F5F0EB; color: var(--ink); min-height: 100vh; }
+    h1,h2,h3,h4 { font-family: 'Rubik', sans-serif; }
+    .hidden { display: none !important; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    .login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    .login-card { background: #fff; border-radius: 20px; box-shadow: var(--shadow); padding: 40px 36px; width: 100%; max-width: 420px; }
+    .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .login-logo span { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--brand-deep); }
+    .login-logo .badge { background: var(--brand-soft); color: var(--brand-deep); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+    .login-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .login-card p { color: var(--muted); font-size: 14.5px; margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label { font-family: 'Rubik'; font-weight: 600; font-size: 13px; display: block; margin-bottom: 6px; }
+    .field input, .field select { width: 100%; font-family: inherit; font-size: 15px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--brand); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Rubik'; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 999px; transition: all .18s; white-space: nowrap; cursor: pointer; border: none; }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: var(--brand-deep); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+    .btn-ghost:hover { border-color: var(--brand); color: var(--brand-deep); }
+    .btn-block { width: 100%; }
+    .login-err { color: var(--danger); font-size: 13px; margin-bottom: 12px; display: none; }
+    .login-err.show { display: block; }
+    .msg { font-size: 13px; margin: 10px 0; padding: 10px 12px; border-radius: 10px; display: none; }
+    .msg.show { display: block; }
+    .msg.err { background: #FBE9E7; color: var(--danger); }
+    .msg.ok { background: var(--green-soft); color: var(--green); }
+
+    .dash-header { background: #fff; border-bottom: 1px solid var(--line); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 66px; }
+    .dash-logo { display: flex; align-items: center; gap: 10px; }
+    .dash-logo span { font-family: 'Rubik'; font-weight: 800; font-size: 20px; color: var(--brand-deep); }
+    .dash-logo .badge { background: var(--brand-soft); color: var(--brand-deep); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+    .company-chip { background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 14px; font-weight: 600; }
+    .company-chip b { color: var(--brand-deep); }
+    .dash-body { max-width: 1000px; margin: 0 auto; padding: 32px 24px; }
+
+    .tabs { display: flex; gap: 6px; background: #fff; border-radius: 999px; padding: 5px; box-shadow: var(--shadow); margin-bottom: 24px; width: fit-content; }
+    .tabs button { padding: 9px 18px; border-radius: 999px; font-family: 'Rubik'; font-weight: 700; font-size: 13.5px; color: var(--muted); }
+    .tabs button.active { background: var(--brand); color: #fff; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .section { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 20px; }
+    .section h4 { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .row-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--cream); border-radius: 10px; font-size: 14px; }
+    .row-item .main { font-weight: 700; flex: 1; }
+    .row-item .sub { color: var(--muted); font-size: 12.5px; }
+    .badge-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--green-soft); color: var(--green); }
+    .badge-status.invited { background: var(--brand-soft); color: var(--brand-deep); }
+    .row-remove { font-size: 12.5px; font-weight: 700; color: var(--danger); padding: 4px 10px; border-radius: 8px; }
+    .row-remove:hover { background: #FBE9E7; }
+    .checkbox-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+    .checkbox-row label { display: flex; align-items: center; gap: 6px; font-size: 13.5px; }
+    .empty { text-align: center; color: var(--muted); padding: 18px 0; font-size: 13.5px; }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo"><span>Bondipain</span><span class="badge">Portail RH</span></div>
+    <h2>Espace employeur</h2>
+    <p>Gérez vos bureaux, vos employés et vos règles de contribution.</p>
+    <div class="login-err" id="loginErr">Email ou mot de passe incorrect.</div>
+    <div class="field"><label>Email professionnel</label><input id="i_login_email" type="email" placeholder="contact@entreprise.com" autocomplete="email" /></div>
+    <div class="field"><label>Mot de passe</label><input id="i_login_pwd" type="password" autocomplete="current-password" /></div>
+    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">Se connecter</button>
+  </div>
+</div>
+
+<!-- ===== PORTAL ===== -->
+<div id="dashScreen" class="hidden">
+  <header class="dash-header">
+    <div class="dash-logo"><span>Bondipain</span><span class="badge">Portail RH</span></div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span class="company-chip">🏢 <b id="companyNameBadge"></b></span>
+      <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="dash-body">
+    <div class="tabs">
+      <button class="active" data-tab="offices" onclick="switchTab('offices')">Bureaux</button>
+      <button data-tab="employees" onclick="switchTab('employees')">Employés</button>
+      <button data-tab="rules" onclick="switchTab('rules')">Règles</button>
+      <button data-tab="export" onclick="switchTab('export')">Export</button>
+    </div>
+
+    <!-- BUREAUX -->
+    <div class="panel active" id="panel-offices">
+      <div class="section">
+        <h4>Bureaux / points de livraison</h4>
+        <div class="row-list" id="officesList"><p class="empty">Chargement…</p></div>
+        <div class="two-col">
+          <div class="field"><label>Nom du bureau</label><input id="of_name" placeholder="Ebène HQ" /></div>
+          <div class="field"><label>Créneau de livraison</label><input id="of_slot" placeholder="11h30 - 13h30" /></div>
+        </div>
+        <div class="field"><label>Adresse</label><input id="of_addr" placeholder="Adresse complète" /></div>
+        <button class="btn btn-primary" onclick="addOffice()">+ Ajouter le bureau</button>
+        <div class="msg" id="officeMsg"></div>
+      </div>
+    </div>
+
+    <!-- EMPLOYÉS -->
+    <div class="panel" id="panel-employees">
+      <div class="section">
+        <h4>Employés</h4>
+        <div class="row-list" id="employeesList"><p class="empty">Chargement…</p></div>
+        <div class="two-col">
+          <div class="field"><label>Email professionnel</label><input id="emp_email" type="email" placeholder="jason@acmecorp.com" /></div>
+          <div class="field"><label>Nom complet</label><input id="emp_name" placeholder="Jason N." /></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Bureau</label><select id="emp_office"></select></div>
+          <div class="field"><label>Département (optionnel)</label><input id="emp_dept" placeholder="Marketing" /></div>
+        </div>
+        <button class="btn btn-primary" id="inviteBtn" onclick="inviteEmployee()">+ Inviter l'employé</button>
+        <div class="msg" id="employeeMsg"></div>
+      </div>
+    </div>
+
+    <!-- RÈGLES -->
+    <div class="panel" id="panel-rules">
+      <div class="section">
+        <h4>Règles de contribution</h4>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">En cas de règles multiples éligibles pour une commande, celle avec la priorité la plus haute s'applique.</p>
+        <div class="row-list" id="rulesList"><p class="empty">Chargement…</p></div>
+
+        <div class="two-col">
+          <div class="field"><label>Nom de la règle</label><input id="ru_name" placeholder="Déjeuner standard" /></div>
+          <div class="field"><label>Priorité</label><input id="ru_priority" type="number" value="0" /></div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label>Mode</label>
+            <select id="ru_mode" onchange="toggleRuleMode()">
+              <option value="fixed">Montant fixe (Rs)</option>
+              <option value="percent">Pourcentage (%)</option>
+            </select>
+          </div>
+          <div class="field" id="ru_amount_wrap"><label>Montant (Rs / repas)</label><input id="ru_amount" type="number" placeholder="150" /></div>
+          <div class="field hidden" id="ru_percent_wrap"><label>Pourcentage</label><input id="ru_percent" type="number" placeholder="50" /></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Plafond journalier (Rs, optionnel)</label><input id="ru_daily_cap" type="number" placeholder="150" /></div>
+          <div class="field"><label>Plafond mensuel (Rs, optionnel)</label><input id="ru_monthly_cap" type="number" placeholder="3000" /></div>
+        </div>
+        <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:8px;">Jours éligibles</label>
+        <div class="checkbox-row" id="ru_days">
+          <label><input type="checkbox" value="mon" checked /> Lun</label>
+          <label><input type="checkbox" value="tue" checked /> Mar</label>
+          <label><input type="checkbox" value="wed" checked /> Mer</label>
+          <label><input type="checkbox" value="thu" checked /> Jeu</label>
+          <label><input type="checkbox" value="fri" checked /> Ven</label>
+          <label><input type="checkbox" value="sat" /> Sam</label>
+          <label><input type="checkbox" value="sun" /> Dim</label>
+        </div>
+        <button class="btn btn-primary" onclick="addRule()">+ Créer la règle</button>
+        <div class="msg" id="ruleMsg"></div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="panel" id="panel-export">
+      <div class="section">
+        <h4>Mode de facturation</h4>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">Comment votre entreprise règle la part employeur.</p>
+        <div class="two-col">
+          <div class="field">
+            <label>Facturation</label>
+            <select id="billing_mode">
+              <option value="invoice">Facture mensuelle</option>
+              <option value="balance">L'entreprise paie le solde</option>
+              <option value="full">L'entreprise paie la totalité</option>
+            </select>
+          </div>
+          <div class="field" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="saveBilling()">Enregistrer</button>
+          </div>
+        </div>
+        <div class="msg" id="billingMsg"></div>
+      </div>
+      <div class="section">
+        <h4>Export des commandes</h4>
+        <div class="two-col">
+          <div class="field"><label>Du</label><input id="ex_from" type="date" /></div>
+          <div class="field"><label>Au</label><input id="ex_to" type="date" /></div>
+        </div>
+        <button class="btn btn-primary" onclick="exportCsv()">Télécharger le CSV</button>
+        <div class="msg" id="exportMsg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
+const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
+const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let company = null;
+let offices = [];
+
+function showMsg(id, text, ok) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = "msg show " + (ok ? "ok" : "err");
+}
+
+/* ── AUTH ── */
+async function doLogin() {
+  const email = document.getElementById("i_login_email").value.trim();
+  const pwd   = document.getElementById("i_login_pwd").value;
+  const btn   = document.getElementById("loginBtn");
+  const err   = document.getElementById("loginErr");
+  err.classList.remove("show");
+  btn.disabled = true; btn.textContent = "Connexion…";
+
+  const { data, error } = await _supa.auth.signInWithPassword({ email, password: pwd });
+  if (error || !data.session) {
+    err.classList.add("show");
+    btn.disabled = false; btn.textContent = "Se connecter";
+    return;
+  }
+  await initPortal();
+}
+
+async function doLogout() {
+  await _supa.auth.signOut();
+  document.getElementById("loginScreen").classList.remove("hidden");
+  document.getElementById("dashScreen").classList.add("hidden");
+  company = null;
+}
+
+async function authHeader() {
+  const { data: { session } } = await _supa.auth.getSession();
+  return { Authorization: `Bearer ${session.access_token}` };
+}
+
+/* ── TABS ── */
+function switchTab(name) {
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + name));
+}
+
+function toggleRuleMode() {
+  const mode = document.getElementById("ru_mode").value;
+  document.getElementById("ru_amount_wrap").classList.toggle("hidden", mode !== "fixed");
+  document.getElementById("ru_percent_wrap").classList.toggle("hidden", mode !== "percent");
+}
+
+/* ── INIT ── */
+async function initPortal() {
+  const { data: { user } } = await _supa.auth.getUser();
+  const { data: companies, error } = await _supa.from("companies").select("*").eq("contact_email", user.email).limit(1);
+  if (error || !companies?.length) {
+    document.getElementById("loginErr").textContent = "Ce compte n'est pas rattaché à une entreprise partenaire.";
+    document.getElementById("loginErr").classList.add("show");
+    document.getElementById("loginBtn").disabled = false;
+    document.getElementById("loginBtn").textContent = "Se connecter";
+    await _supa.auth.signOut();
+    return;
+  }
+  company = companies[0];
+  document.getElementById("companyNameBadge").textContent = company.name;
+  document.getElementById("billing_mode").value = company.billing_mode || "invoice";
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("dashScreen").classList.remove("hidden");
+
+  await Promise.all([loadOffices(), loadEmployees(), loadRules()]);
+}
+
+async function saveBilling() {
+  const mode = document.getElementById("billing_mode").value;
+  const { error } = await _supa.from("companies").update({ billing_mode: mode }).eq("id", company.id);
+  if (error) { showMsg("billingMsg", "Erreur : " + error.message, false); return; }
+  company.billing_mode = mode;
+  showMsg("billingMsg", "Mode de facturation enregistré.", true);
+}
+
+/* ── BUREAUX ── */
+async function loadOffices() {
+  const { data } = await _supa.from("company_offices").select("*").eq("company_id", company.id).order("created_at");
+  offices = data || [];
+  const list = document.getElementById("officesList");
+  list.innerHTML = offices.length ? offices.map(o => `
+    <div class="row-item"><span class="main">${o.name}</span><span class="sub">${o.delivery_slot || ""} ${o.address ? "· " + o.address : ""}</span></div>
+  `).join("") : `<p class="empty">Aucun bureau pour le moment.</p>`;
+
+  const select = document.getElementById("emp_office");
+  select.innerHTML = `<option value="">—</option>` + offices.map(o => `<option value="${o.id}">${o.name}</option>`).join("");
+}
+
+async function addOffice() {
+  const name = document.getElementById("of_name").value.trim();
+  const slot = document.getElementById("of_slot").value.trim();
+  const addr = document.getElementById("of_addr").value.trim();
+  if (!name) { showMsg("officeMsg", "Le nom du bureau est requis.", false); return; }
+
+  const { error } = await _supa.from("company_offices").insert({ company_id: company.id, name, delivery_slot: slot, address: addr });
+  if (error) { showMsg("officeMsg", "Erreur : " + error.message, false); return; }
+
+  document.getElementById("of_name").value = "";
+  document.getElementById("of_slot").value = "";
+  document.getElementById("of_addr").value = "";
+  showMsg("officeMsg", "Bureau ajouté.", true);
+  await loadOffices();
+}
+
+/* ── EMPLOYÉS ── */
+async function loadEmployees() {
+  const { data } = await _supa.from("employees").select("*, company_offices(name)").eq("company_id", company.id).order("created_at", { ascending: false });
+  const list = document.getElementById("employeesList");
+  const active = (data || []).filter(e => e.status !== "removed");
+  list.innerHTML = active.length ? active.map(e => `
+    <div class="row-item">
+      <span class="main">${e.full_name || e.work_email}</span>
+      <span class="sub">${e.work_email}${e.company_offices ? " · " + e.company_offices.name : ""}</span>
+      <span class="badge-status ${e.status === "invited" ? "invited" : ""}">${e.status}</span>
+      <button class="row-remove" onclick="removeEmployee('${e.id}', '${(e.full_name || e.work_email).replace(/'/g, "")}')">Retirer</button>
+    </div>
+  `).join("") : `<p class="empty">Aucun employé actif pour le moment.</p>`;
+}
+
+async function removeEmployee(id, label) {
+  if (!confirm("Retirer " + label + " de l'avantage repas ? Il ne pourra plus commander.")) return;
+  const { error } = await _supa.from("employees").update({ status: "removed" }).eq("id", id);
+  if (error) { showMsg("employeeMsg", "Erreur : " + error.message, false); return; }
+  showMsg("employeeMsg", label + " a été retiré.", true);
+  await loadEmployees();
+}
+
+async function inviteEmployee() {
+  const email = document.getElementById("emp_email").value.trim();
+  const fullName = document.getElementById("emp_name").value.trim();
+  const officeId = document.getElementById("emp_office").value || null;
+  const department = document.getElementById("emp_dept").value.trim();
+  if (!email) { showMsg("employeeMsg", "L'email est requis.", false); return; }
+
+  const btn = document.getElementById("inviteBtn");
+  btn.disabled = true; btn.textContent = "Envoi…";
+
+  try {
+    const res = await fetch("/api/invite-employee", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...(await authHeader()) },
+      body: JSON.stringify({ email, fullName, officeId, department }),
+    });
+    const payload = await res.json();
+    if (!res.ok) throw new Error(payload.error || "Erreur");
+
+    document.getElementById("emp_email").value = "";
+    document.getElementById("emp_name").value = "";
+    document.getElementById("emp_dept").value = "";
+    showMsg("employeeMsg", "Invitation envoyée à " + email + ".", true);
+    await loadEmployees();
+  } catch (err) {
+    showMsg("employeeMsg", "Erreur : " + err.message, false);
+  } finally {
+    btn.disabled = false; btn.textContent = "+ Inviter l'employé";
+  }
+}
+
+/* ── RÈGLES ── */
+async function loadRules() {
+  const { data } = await _supa.from("contribution_rules").select("*").eq("company_id", company.id).order("priority", { ascending: false });
+  const list = document.getElementById("rulesList");
+  list.innerHTML = data?.length ? data.map(r => `
+    <div class="row-item">
+      <span class="main">${r.name || "Règle sans nom"}</span>
+      <span class="sub">${r.mode === "fixed" ? "Rs " + r.amount : r.percent + "%"} · priorité ${r.priority}${r.monthly_cap ? " · plafond Rs " + r.monthly_cap + "/mois" : ""}</span>
+    </div>
+  `).join("") : `<p class="empty">Aucune règle configurée pour le moment.</p>`;
+}
+
+async function addRule() {
+  const name = document.getElementById("ru_name").value.trim();
+  const mode = document.getElementById("ru_mode").value;
+  const priority = Number(document.getElementById("ru_priority").value || 0);
+  const amount = document.getElementById("ru_amount").value ? Number(document.getElementById("ru_amount").value) : null;
+  const percent = document.getElementById("ru_percent").value ? Number(document.getElementById("ru_percent").value) : null;
+  const dailyCap = document.getElementById("ru_daily_cap").value ? Number(document.getElementById("ru_daily_cap").value) : null;
+  const monthlyCap = document.getElementById("ru_monthly_cap").value ? Number(document.getElementById("ru_monthly_cap").value) : null;
+  const days = Array.from(document.querySelectorAll("#ru_days input:checked")).map(i => i.value);
+
+  if (!name) { showMsg("ruleMsg", "Le nom de la règle est requis.", false); return; }
+  if (mode === "fixed" && !amount) { showMsg("ruleMsg", "Le montant fixe est requis.", false); return; }
+  if (mode === "percent" && !percent) { showMsg("ruleMsg", "Le pourcentage est requis.", false); return; }
+
+  const { error } = await _supa.from("contribution_rules").insert({
+    company_id: company.id, name, mode, amount, percent,
+    daily_cap: dailyCap, monthly_cap: monthlyCap,
+    eligible_days: days, priority, active: true,
+  });
+  if (error) { showMsg("ruleMsg", "Erreur : " + error.message, false); return; }
+
+  showMsg("ruleMsg", "Règle créée.", true);
+  await loadRules();
+}
+
+/* ── EXPORT ── */
+async function exportCsv() {
+  const from = document.getElementById("ex_from").value;
+  const to = document.getElementById("ex_to").value;
+  const params = new URLSearchParams();
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+
+  try {
+    const res = await fetch("/api/export-invoice?" + params.toString(), { headers: await authHeader() });
+    if (!res.ok) { const payload = await res.json(); throw new Error(payload.error || "Erreur"); }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `bondipain-${company.name}-facture.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    showMsg("exportMsg", "Erreur : " + err.message, false);
+  }
+}
+
+/* ── AUTO-LOGIN ── */
+(async function init() {
+  const { data: { session } } = await _supa.auth.getSession();
+  if (session) await initPortal();
+})();
+</script>
+</body>
+</html>

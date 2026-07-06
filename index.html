@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -88,6 +89,10 @@
     .hero h1 { font-size: clamp(44px, 8vw, 92px); font-weight: 900; letter-spacing: -2px; text-shadow: 0 4px 24px rgba(0,0,0,.4); }
     .hero p.sub { font-size: 19px; margin: 14px auto 28px; max-width: 520px; font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
     .hero .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-preview { margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .hero-preview .hp-label { font-size: 13px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; opacity: .9; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
+    .hero-preview .hp-chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .hero-preview .hp-chip { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(4px); color: #fff; font-size: 13.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px; }
 
     /* ── INFO STRIP ── */
     .info-strip { background: var(--ink); color: #fff; padding: 18px 0; }
@@ -129,11 +134,15 @@
     .feature-list svg { width: 24px; height: 24px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
 
     /* ── STEPS ── */
-    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 10px; }
-    .step { text-align: center; padding: 10px; }
-    .step .num { font-family: 'Rubik'; font-weight: 900; font-size: 46px; color: var(--brand-soft); line-height: 1; }
-    .step h4 { font-size: 17px; font-weight: 700; margin: 6px 0 6px; }
-    .step p { color: var(--muted); font-size: 14px; }
+    .steps-infog { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; margin-top: 48px; }
+    .steps-infog::before { content:""; position:absolute; top:38px; left:12.5%; right:12.5%; height:2px; background: linear-gradient(90deg, var(--brand) 0%, var(--brand-soft) 100%); z-index:0; }
+    .step-inf { display:flex; flex-direction:column; align-items:center; text-align:center; padding: 0 16px 32px; position:relative; z-index:1; }
+    .step-inf .si-icon { width:76px; height:76px; border-radius:50%; background:var(--brand); display:flex; align-items:center; justify-content:center; margin-bottom:18px; box-shadow:0 4px 18px rgba(242,162,76,.35); }
+    .step-inf .si-icon svg { width:34px; height:34px; stroke:#fff; stroke-width:1.8; fill:none; }
+    .step-inf .si-num { position:absolute; top:-8px; right:calc(50% - 46px); background:var(--brand-deep); color:#fff; font-family:'Rubik'; font-weight:800; font-size:11px; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .step-inf h4 { font-family:'Rubik'; font-weight:700; font-size:16px; margin-bottom:6px; }
+    .step-inf p { color:var(--muted); font-size:13.5px; line-height:1.45; }
+    @media(max-width:640px){ .steps-infog { grid-template-columns:1fr 1fr; } .steps-infog::before { display:none; } }
 
     /* ── CONTACT ── */
     .contact { background: var(--ink); color: #fff; }
@@ -190,7 +199,10 @@
     .item-opt:hover { border-color: var(--brand); }
     .item-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
     .item-opt input[type=radio] { width: 18px; height: 18px; accent-color: var(--brand-strong); flex-shrink: 0; }
+    .item-opt .it-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
     .item-opt .it { flex: 1; font-weight: 600; }
+    .item-opt .it-clickable { cursor: pointer; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+    .item-opt .it-clickable:hover { color: var(--brand-deep); text-decoration-color: var(--brand); }
     .item-opt .ip { font-family: 'Rubik'; font-weight: 800; color: var(--brand-deep); font-size: 14px; }
 
     /* cart line */
@@ -235,7 +247,26 @@
     .pay-opt .pd { font-size: 13px; color: var(--muted); margin-top: 2px; }
     .juice-box { display: none; background: #fff; border: 1.5px dashed var(--brand); border-radius: 12px; padding: 14px; margin: 4px 0 14px; font-size: 14px; }
     .juice-box.show { display: block; }
+
+    /* b2b */
+    .b2b-code-row { display: flex; gap: 8px; align-items: flex-start; }
+    .b2b-code-row .field { margin: 0; flex: 1; }
+    .b2b-success { background: #E8F5E9; border: 1.5px solid #2E7D52; border-radius: 12px; padding: 12px 15px; font-size: 13.5px; color: #2E7D52; display: flex; gap: 10px; align-items: center; }
+    .b2b-success svg { width: 18px; height: 18px; stroke: #2E7D52; flex-shrink: 0; }
+    .b2b-err { color: var(--danger); font-size: 13px; margin-top: 6px; display: none; }
+    .b2b-err.show { display: block; }
     .juice-box b { font-family: 'Rubik'; }
+
+    /* b2e */
+    .b2e-banner { background: #E8F5E9; border: 1.5px solid #2E7D52; border-radius: var(--radius); padding: 14px 18px; margin: 0 0 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font-size: 14px; color: #1E5C38; }
+    .b2e-banner b { font-family: 'Rubik'; }
+    .b2e-banner .b2e-logout { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--danger); }
+    .b2e-line { color: var(--green-ok); }
+    .b2e-filterbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 28px; }
+    .b2e-chips { display: flex; gap: 8px; }
+    .b2e-chip { font-family: 'Rubik'; font-weight: 700; font-size: 13px; padding: 7px 16px; border-radius: 999px; background: #fff; border: 1.5px solid var(--line); color: var(--muted); }
+    .b2e-chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .b2e-cutoff { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--brand-deep); }
 
     .notice { background: var(--brand-soft); border-radius: 12px; padding: 13px 15px; font-size: 13.5px; color: var(--brand-deep); display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px; }
     .notice svg { width: 20px; height: 20px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
@@ -252,11 +283,25 @@
 
     .hidden { display: none !important; }
 
+    /* ── DETAIL MODAL ── */
+    .detail-modal { position:fixed; inset:0; z-index:200; display:flex; align-items:flex-end; justify-content:center; opacity:0; visibility:hidden; transition:opacity .25s; }
+    .detail-modal.open { opacity:1; visibility:visible; }
+    .detail-panel { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:680px; max-height:88vh; overflow-y:auto; padding:28px 28px 40px; transform:translateY(40px); transition:transform .3s ease; }
+    .detail-modal.open .detail-panel { transform:translateY(0); }
+    .detail-panel .dp-img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:16px; margin-bottom:20px; }
+    .detail-panel .dp-tag { display:inline-block; background:var(--brand-soft); color:var(--brand-deep); font-size:12px; font-weight:700; font-family:'Rubik'; padding:4px 12px; border-radius:999px; margin-bottom:12px; }
+    .detail-panel h2 { font-size:26px; font-weight:800; margin-bottom:8px; }
+    .detail-panel .dp-desc { color:var(--muted); font-size:15px; margin-bottom:20px; }
+    .detail-panel .dp-fillings { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px; }
+    .detail-panel .dp-fill { background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:8px 12px; font-size:13.5px; font-weight:500; }
+    .detail-panel .dp-fill .price { color:var(--brand-deep); font-weight:700; font-size:13px; }
+    .detail-overlay { position:absolute; inset:0; background:rgba(0,0,0,.5); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .menu-grid { grid-template-columns: 1fr 1fr; }
       .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; }
-      .steps { grid-template-columns: 1fr 1fr; gap: 28px; }
+      .steps-infog { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 680px) {
       .nav-links { display: none; }
@@ -275,6 +320,45 @@
     .mobile-nav.open { transform: translateX(0); }
     .mobile-nav a { font-family: 'Rubik'; font-weight: 600; font-size: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
     .mobile-nav .mn-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+    /* PROFIL */
+    .profile-modal { position:fixed; inset:0; z-index:150; display:flex; align-items:flex-end; justify-content:center; opacity:0; visibility:hidden; transition:opacity .25s; }
+    .profile-modal.open { opacity:1; visibility:visible; }
+    .profile-panel { background:var(--cream); border-radius:28px 28px 0 0; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; padding:28px 24px 48px; transform:translateY(40px); transition:transform .3s ease; }
+    .profile-modal.open .profile-panel { transform:translateY(0); }
+    .profile-overlay { position:absolute; inset:0; background:rgba(0,0,0,.45); }
+    .profile-avatar { width:64px; height:64px; border-radius:50%; background:var(--brand); display:flex; align-items:center; justify-content:center; font-family:'Rubik'; font-weight:800; font-size:26px; color:#fff; margin-bottom:12px; }
+    .profile-section { background:#fff; border-radius:14px; border:1px solid var(--line); padding:16px; margin-bottom:14px; }
+    .profile-section h4 { font-family:'Rubik'; font-weight:700; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; }
+    .profile-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--line); font-size:14px; }
+    .profile-row:last-child { border-bottom:none; }
+    .profile-row .label { color:var(--muted); }
+    .profile-row .value { font-weight:600; text-align:right; max-width:60%; }
+    .order-hist-item { padding:12px 0; border-bottom:1px solid var(--line); }
+    .order-hist-item:last-child { border-bottom:none; }
+    .order-hist-item .oh-ref { font-family:'Rubik'; font-weight:700; font-size:13px; color:var(--brand-deep); }
+    .order-hist-item .oh-date { font-size:12px; color:var(--muted); margin-bottom:4px; }
+    .order-hist-item .oh-items { font-size:13px; color:var(--ink); margin-bottom:4px; }
+    .order-hist-item .oh-total { font-size:13px; font-weight:700; }
+    .order-hist-item .oh-b2b { font-size:12px; color:var(--green-ok); }
+    .profile-b2b-chip { display:flex; align-items:center; justify-content:space-between; background:var(--cream-2); border:1.5px solid var(--brand-soft); border-radius:10px; padding:10px 14px; }
+    .profile-b2b-chip .chip-code { font-family:'Rubik'; font-weight:800; font-size:17px; color:var(--brand-deep); letter-spacing:.05em; }
+    .profile-b2b-chip .chip-label { font-size:12px; color:var(--muted); }
+  /* POPUP PROMO */
+  .promo-popup { position:fixed; inset:0; z-index:300; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; visibility:hidden; transition:opacity .3s; }
+  .promo-popup.open { opacity:1; visibility:visible; }
+  .promo-overlay { position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(2px); }
+  .promo-box { position:relative; background:#fff; border-radius:24px; overflow:hidden; max-width:420px; width:100%; box-shadow:0 24px 64px rgba(0,0,0,.25); transform:scale(.92) translateY(16px); transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .promo-popup.open .promo-box { transform:scale(1) translateY(0); }
+  .promo-header { background:linear-gradient(135deg, var(--brand-deep) 0%, var(--brand) 100%); padding:32px 28px 24px; text-align:center; color:#fff; }
+  .promo-badge { display:inline-block; background:rgba(255,255,255,.2); border:1.5px solid rgba(255,255,255,.45); border-radius:999px; font-family:'Rubik'; font-weight:800; font-size:13px; letter-spacing:.05em; padding:5px 16px; margin-bottom:14px; }
+  .promo-pct { font-family:'Rubik'; font-weight:900; font-size:72px; line-height:1; color:#fff; }
+  .promo-pct span { font-size:36px; vertical-align:super; }
+  .promo-header h3 { font-size:18px; font-weight:700; margin-top:6px; opacity:.9; }
+  .promo-body { padding:24px 28px 28px; text-align:center; }
+  .promo-body p { color:var(--muted); font-size:14.5px; line-height:1.55; margin-bottom:20px; }
+  .promo-close { position:absolute; top:14px; right:16px; color:rgba(255,255,255,.75); font-size:24px; line-height:1; cursor:pointer; }
+  .promo-close:hover { color:#fff; }
   </style>
 </head>
 <body>
@@ -297,7 +381,7 @@
   <header class="site" id="header">
     <div class="container nav">
       <a href="#top" class="brand">
-        <img class="logo-img" alt="Bondipain" />
+        <img class="logo-img" src="./logo.png" alt="Bondipain" />
         <span class="name">Bondipain</span>
       </a>
       <nav class="nav-links">
@@ -307,6 +391,12 @@
         <a href="#contact" data-i18n="nav_contact"></a>
       </nav>
       <div class="nav-right">
+        <a class="icon-btn" href="compte.html" aria-label="Mon compte" title="Mon compte">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </a>
+        <button class="icon-btn" id="profileBtn" onclick="openProfile()" aria-label="Profile" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </button>
         <button class="icon-btn" onclick="openCart()" aria-label="Cart">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H3"/></svg>
           <span class="cart-count hidden" id="cartCount">0</span>
@@ -328,21 +418,24 @@
     <a href="#menu" onclick="toggleMobileNav(false)" data-i18n="nav_menu"></a>
     <a href="#about" onclick="toggleMobileNav(false)" data-i18n="nav_about"></a>
     <a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a>
+    <a href="#" id="mobileProfileBtn" onclick="toggleMobileNav(false);openProfile()" style="display:none" data-i18n="prof_title"></a>
+    <a href="compte.html">Mon compte</a>
   </div>
 
   <span id="top"></span>
 
   <!-- HERO -->
   <section class="hero">
-    <img class="bg" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80" alt="Sandwich" />
+    <img class="bg" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80" alt="Sandwich baguette" />
     <div class="hero-content">
       <div class="eyebrow" data-i18n="hero_eyebrow"></div>
       <h1 data-i18n="hero_title"></h1>
       <p class="sub" data-i18n="hero_sub"></p>
       <div class="btn-row">
         <a href="#menu" class="btn btn-primary" data-i18n="hero_cta"></a>
-        <a href="#about" class="btn btn-ghost" data-i18n="hero_cta2"></a>
+        <a href="b2e-login.html" class="btn btn-ghost" data-i18n="hero_cta_b2e"></a>
       </div>
+      <div class="hero-preview" id="heroPreview"></div>
     </div>
   </section>
 
@@ -362,6 +455,7 @@
         <h2 data-i18n="menu_title"></h2>
         <p data-i18n="menu_sub"></p>
       </div>
+      <div id="b2eBanner"></div>
       <div class="menu-grid" id="menuGrid"></div>
     </div>
   </section>
@@ -373,14 +467,14 @@
         <div class="eyebrow" data-i18n="steps_eyebrow"></div>
         <h2 data-i18n="steps_title"></h2>
       </div>
-      <div class="steps" id="stepsGrid"></div>
+      <div class="steps-infog" id="stepsGrid"></div>
     </div>
   </section>
 
   <!-- ABOUT -->
   <section class="block about" id="about">
     <div class="container about-grid">
-      <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" />
+      <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" />
       <div class="about-text">
         <div class="eyebrow" data-i18n="about_eyebrow"></div>
         <h2 data-i18n="about_title"></h2>
@@ -406,7 +500,7 @@
         </div>
         <div class="row">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-          <div><b data-i18n="contact_phone_t"></b><span>+230 5xxx xxxx</span></div>
+          <div><b data-i18n="contact_phone_t"></b><span>+230 5492 2393</span></div>
         </div>
         <div class="row">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
@@ -424,7 +518,7 @@
   <footer class="site">
     <div class="container foot-grid">
       <a href="#top" class="brand">
-        <img class="logo-img" alt="Bondipain" style="width:42px;height:42px;border-radius:50%;" />
+        <img class="logo-img" src="./logo.png" alt="Bondipain" style="width:42px;height:42px;border-radius:50%;" />
         <span class="name" style="font-family:'Rubik';font-weight:800;font-size:20px;">Bondipain</span>
       </a>
       <span data-i18n="footer_tag"></span>
@@ -444,6 +538,18 @@
     <div class="modal-body" id="pmBody"></div>
     <div class="modal-foot">
       <button class="btn btn-primary btn-block" id="pmAdd" onclick="addConfiguredToCart()"></button>
+    </div>
+  </div>
+
+  <!-- DISH DETAIL MODAL -->
+  <div class="modal" id="dishModal" role="dialog">
+    <div class="modal-head">
+      <h3 id="dishTitle"></h3>
+      <button class="modal-close" onclick="closeDish()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body" id="dishBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-primary btn-block" id="dishAdd" onclick="addDishToCart()"></button>
     </div>
   </div>
 
@@ -477,22 +583,42 @@
     </div>
   </div>
 
+  <!-- DETAIL MODAL -->
+  <div class="detail-modal" id="detailModal">
+    <div class="detail-overlay" onclick="closeDetail()"></div>
+    <div class="detail-panel" id="detailPanel"></div>
+  </div>
+
   <script>
   /* ============================================================
      i18n DICTIONARY
   ============================================================ */
   const I18N = {
     fr: {
-      topbar: "Commandes livrées en 48h · Livraison entre 11h et 14h",
+      topbar: "Commandes livrées en 24h · Livraison entre 11h et 14h · Livraison gratuite",
       nav_home: "Accueil", nav_menu: "Nos plats", nav_about: "À propos", nav_contact: "Contact",
       hero_eyebrow: "Bienvenue",
       hero_title: "Chez Bondipain",
       hero_sub: "Le pain garni, fait maison et livré chez vous à Moka.",
       hero_cta: "Commander", hero_cta2: "En savoir plus",
-      info_strip: "Commandes acceptées jusqu'à 16h–17h · Minimum 48h à l'avance · Zone de Moka uniquement",
+      hero_cta_b2e: "Commander avec mon avantage entreprise",
+      hero_preview_label: "Au menu aujourd'hui",
+      dish_details: "Détails",
+      b2e_banner_you_pay: "Vous payez",
+      b2e_banner_budget: "utilisé sur",
+      b2e_logout: "Se déconnecter",
+      co_b2e_t: "Votre avantage entreprise",
+      co_b2e_contribution: "Contribution",
+      b2e_filter_all: "Tout",
+      b2e_filter_veg: "Végé",
+      b2e_filter_nonveg: "Non-végé",
+      b2e_cutoff: "Commandez avant 16h pour une livraison le lendemain 11h–14h",
+      b2e_budget_line: "Budget entreprise",
+      b2e_budget_remaining: "restant",
+      info_strip: "Commandes acceptées jusqu'à 16h–17h · Minimum 24h à l'avance · Zone de Moka uniquement",
       menu_eyebrow: "Notre carte",
       menu_title: "Nos plats",
-      menu_sub: "5 catégories, plus de 20 recettes. Commandez 48h avant, livraison entre 11h et 14h.",
+      menu_sub: "5 catégories, plus de 20 recettes. Commandez sous 24h, livraison entre 11h et 14h.",
       choose: "Voir la carte",
       pm_choose: "Choisissez votre plat",
       pm_choose_h: "Sélectionnez une option ci-dessous",
@@ -525,9 +651,9 @@
       cart_checkout: "Passer la commande",
       cart_with: "avec",
       checkout_title: "Finaliser ma commande",
-      co_notice: "Commande à passer au moins 48h à l'avance · Livraison uniquement à Moka, entre 11h et 14h.",
+      co_notice: "Commande à passer au moins 24h à l'avance · Livraison uniquement à Moka, entre 11h et 14h.",
       co_day_t: "Jour de livraison",
-      co_day_h: "Choisissez un jour disponible (délai de 48h respecté).",
+      co_day_h: "Choisissez un jour disponible (délai de 24h respecté).",
       co_info_t: "Vos coordonnées",
       co_name: "Nom complet", co_phone: "Téléphone", co_email: "Email (pour le suivi)",
       co_addr_t: "Adresse de livraison",
@@ -538,7 +664,9 @@
       co_pay_cash_d: "Payez en liquide au livreur à la réception de votre commande.",
       co_pay_juice_t: "Juice by MCB (mobile money)",
       co_pay_juice_d: "Payez à l'avance via l'application Juice by MCB.",
-      co_juice_box: "Envoyez le montant via <b>Juice by MCB</b> au numéro marchand <b>+230 5xxx xxxx</b> et indiquez votre numéro de commande en référence. Votre commande sera confirmée à réception du paiement.",
+      co_pay_card_t: "Carte de crédit / débit",
+      co_pay_card_d: "Paiement sécurisé par carte bancaire (Visa, Mastercard).",
+      co_juice_box: "Envoyez le montant via <b>Juice by MCB</b> au numéro marchand <b>+230 5492 2393</b> et indiquez votre numéro de commande en référence. Votre commande sera confirmée à réception du paiement.",
       co_place: "Confirmer la commande",
       co_summary: "Récapitulatif",
       err_required: "Ce champ est requis",
@@ -552,21 +680,60 @@
       confirm_pay: "Paiement",
       confirm_total: "Total",
       confirm_close: "Fermer",
+      promo_welcome: "Bienvenue chez Bondipain",
+      promo_offer: "de réduction sur votre première commande",
+      promo_until: "Offre valable jusqu'au",
+      promo_cta: "Commander maintenant",
+      promo_skip: "Non merci",
+      prof_title: "Mon profil",
+      prof_hello: "Bonjour",
+      prof_info: "Mes informations",
+      prof_orders_month: "Mes commandes ce mois",
+      prof_no_orders: "Aucune commande ce mois-ci.",
+      prof_b2b_saved: "Code entreprise sauvegardé",
+      prof_reuse: "Réutiliser",
+      prof_clear: "Effacer mes données",
+      prof_edit: "Modifier une commande",
+      prof_sign: "Me connecter / Créer mon compte",
+      co_b2b_t: "Code entreprise (optionnel)",
+      co_b2b_h: "Bénéficiez d'une subvention repas de votre employeur",
+      co_b2b_apply: "Appliquer",
+      co_b2b_ok: "Code valide · Jusqu'à Rs 150 pris en charge par votre employeur",
+      co_b2b_remove: "Retirer",
+      co_b2b_err: "Code entreprise non reconnu",
+      co_b2b_limit: "Limite de 20 repas atteinte pour cette date. Contactez votre responsable RH.",
+      cart_subsidy: "Subvention employeur",
+      confirm_b2b: "Code entreprise",
+      confirm_employee_pays: "Vous payez",
       months: ["jan.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
       days: ["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
       currency: "Rs"
     },
     en: {
-      topbar: "Orders delivered within 48h · Delivery between 11am and 2pm",
+      topbar: "Orders delivered within 24h · Delivery between 11am and 2pm · Free delivery",
       nav_home: "Home", nav_menu: "Our menu", nav_about: "About", nav_contact: "Contact",
       hero_eyebrow: "Welcome",
       hero_title: "To Bondipain",
       hero_sub: "Homemade stuffed bread, delivered to your door in Moka.",
       hero_cta: "Order now", hero_cta2: "Learn more",
-      info_strip: "Orders accepted until 4–5pm · Minimum 48h in advance · Moka area only",
+      hero_cta_b2e: "Order with my company benefit",
+      hero_preview_label: "On today's menu",
+      dish_details: "Details",
+      b2e_banner_you_pay: "You pay",
+      b2e_banner_budget: "used of",
+      b2e_logout: "Log out",
+      co_b2e_t: "Your company benefit",
+      co_b2e_contribution: "Contribution",
+      b2e_filter_all: "All",
+      b2e_filter_veg: "Veg",
+      b2e_filter_nonveg: "Non-veg",
+      b2e_cutoff: "Order before 4pm for next-day delivery 11am–2pm",
+      b2e_budget_line: "Company budget",
+      b2e_budget_remaining: "remaining",
+      info_strip: "Orders accepted until 4–5pm · Minimum 24h in advance · Moka area only",
       menu_eyebrow: "Our menu",
       menu_title: "Our dishes",
-      menu_sub: "5 categories, over 20 recipes. Order 48h ahead, delivery between 11am and 2pm.",
+      menu_sub: "5 categories, over 20 recipes. Order within 24h, delivery between 11am and 2pm.",
       choose: "View menu",
       pm_choose: "Choose your dish",
       pm_choose_h: "Select an option below",
@@ -599,9 +766,9 @@
       cart_checkout: "Checkout",
       cart_with: "with",
       checkout_title: "Complete my order",
-      co_notice: "Order at least 48h in advance · Delivery in Moka only, between 11am and 2pm.",
+      co_notice: "Order at least 24h in advance · Delivery in Moka only, between 11am and 2pm.",
       co_day_t: "Delivery day",
-      co_day_h: "Pick an available day (48h lead time respected).",
+      co_day_h: "Pick an available day (24h lead time respected).",
       co_info_t: "Your details",
       co_name: "Full name", co_phone: "Phone", co_email: "Email (for tracking)",
       co_addr_t: "Delivery address",
@@ -612,7 +779,9 @@
       co_pay_cash_d: "Pay the driver in cash when your order arrives.",
       co_pay_juice_t: "Juice by MCB (mobile money)",
       co_pay_juice_d: "Pay in advance via the Juice by MCB app.",
-      co_juice_box: "Send the amount via <b>Juice by MCB</b> to merchant number <b>+230 5xxx xxxx</b> and add your order number as reference. Your order is confirmed once payment is received.",
+      co_pay_card_t: "Credit / debit card",
+      co_pay_card_d: "Secure card payment (Visa, Mastercard).",
+      co_juice_box: "Send the amount via <b>Juice by MCB</b> to merchant number <b>+230 5492 2393</b> and add your order number as reference. Your order is confirmed once payment is received.",
       co_place: "Confirm order",
       co_summary: "Summary",
       err_required: "This field is required",
@@ -626,11 +795,44 @@
       confirm_pay: "Payment",
       confirm_total: "Total",
       confirm_close: "Close",
+      promo_welcome: "Welcome to Bondipain",
+      promo_offer: "off your first order",
+      promo_until: "Offer valid until",
+      promo_cta: "Order now",
+      promo_skip: "No thanks",
+      prof_title: "My profile",
+      prof_hello: "Hello",
+      prof_info: "My information",
+      prof_orders_month: "My orders this month",
+      prof_no_orders: "No orders this month.",
+      prof_b2b_saved: "Saved company code",
+      prof_reuse: "Reuse",
+      prof_clear: "Clear my data",
+      prof_edit: "Edit order",
+      prof_sign: "Sign in / Create account",
+      co_b2b_t: "Company code (optional)",
+      co_b2b_h: "Get a meal subsidy from your employer",
+      co_b2b_apply: "Apply",
+      co_b2b_ok: "Valid code · Up to Rs 150 covered by your employer",
+      co_b2b_remove: "Remove",
+      co_b2b_err: "Company code not recognised",
+      co_b2b_limit: "20-meal daily limit reached for this date. Please contact your HR manager.",
+      cart_subsidy: "Employer subsidy",
+      confirm_b2b: "Company code",
+      confirm_employee_pays: "You pay",
       months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
       days: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
       currency: "Rs"
     }
   };
+
+  /* ============================================================
+     SUPABASE — remplacer par vos valeurs (Project URL + anon key)
+  ============================================================ */
+  const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
+  const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
+  const _supa = (typeof window !== "undefined" && window.supabase)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
 
   /* ============================================================
      DATA
@@ -640,8 +842,9 @@
       id: "veg",
       name: { fr: "🌿 Pain Veg", en: "🌿 Veg Bread" },
       desc: { fr: "14 garnitures végétariennes au choix.", en: "14 vegetarian fillings to choose from." },
-      img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+      img: "./sandwich-vege.jpg",
       tag: { fr: "Végétarien", en: "Vegetarian" },
+      diet: "veg",
       from: 130,
       items: [
         { id: "v1",  name: { fr: "Chopsuey Teocon",        en: "Chopsuey Teocon"       }, price: 130 },
@@ -664,8 +867,9 @@
       id: "nonveg",
       name: { fr: "🍗 Pain Non-Veg", en: "🍗 Non-Veg Bread" },
       desc: { fr: "Poulet à Rs 170 · Poisson à Rs 185.", en: "Chicken Rs 170 · Fish Rs 185." },
-      img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      img: "./sandwich-nonveg.jpg",
       tag: { fr: "Poulet & Poisson", en: "Chicken & Fish" },
+      diet: "nonveg",
       from: 145,
       items: [
         { id: "nv1", name: { fr: "Poulet Tandoorie",      en: "Tandoori Chicken"      }, price: 170 },
@@ -685,6 +889,7 @@
       desc: { fr: "Recette traditionnelle mauricienne.", en: "Traditional Mauritian recipe." },
       img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
       tag: { fr: "Spécial", en: "Special" },
+      diet: "mixed",
       from: 250,
       items: [
         { id: "a1", name: { fr: "Pain à l'Ancienne", en: "Traditional Bread" }, price: 250 },
@@ -694,8 +899,9 @@
       id: "menujour",
       name: { fr: "🍽️ Menu du Jour", en: "🍽️ Daily Special" },
       desc: { fr: "Mine ou riz frite au poulet.", en: "Chicken fried noodles or fried rice." },
-      img: "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
+      img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
       tag: { fr: "Du jour", en: "Daily" },
+      diet: "nonveg",
       from: 220,
       items: [
         { id: "mj1", name: { fr: "Mine Frite Poulet", en: "Chicken Fried Noodles" }, price: 220 },
@@ -706,8 +912,9 @@
       id: "briani",
       name: { fr: "🍛 Briani du Vendredi", en: "🍛 Friday Biryani" },
       desc: { fr: "Disponible le vendredi uniquement.", en: "Available on Fridays only." },
-      img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80",
+      img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=800&q=80",
       tag: { fr: "Vendredi", en: "Friday" },
+      diet: "mixed",
       from: 190,
       items: [
         { id: "b1", name: { fr: "Briani Veg",    en: "Veg Biryani"     }, price: 190 },
@@ -726,7 +933,7 @@
   const STEPS = [
     { fr: ["Choisissez une catégorie", "Veg, Non-Veg, Briani…"], en: ["Choose a category",  "Veg, Non-Veg, Biryani…"] },
     { fr: ["Sélectionnez votre plat",  "Parmi nos 20+ recettes"], en: ["Select your dish",   "From our 20+ recipes"]   },
-    { fr: ["Commandez 48h avant",      "Limite commande 16h–17h"],en: ["Order 48h ahead",    "Order deadline 4–5pm"]   },
+    { fr: ["Commandez sous 24h",        "Limite commande 16h–17h"],en: ["Order within 24h",  "Order deadline 4–5pm"]   },
     { fr: ["Livré à Moka",             "Entre 11h et 14h"],       en: ["Delivered in Moka",  "Between 11am and 2pm"]   }
   ];
 
@@ -743,6 +950,9 @@
   let currentCat = null;
   let cfg = null;
   let checkout = { day: null, pay: "cash" };
+  let b2b = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
+  let b2eSession = { active: false, employee: null, company: null, office: null, rules: [], budgetUsed: 0 };
+  let menuDiet = "all"; // filtre régime côté menu employé : all | veg | nonveg
 
   const t = (k) => (I18N[lang][k] !== undefined ? I18N[lang][k] : k);
   const money = (n) => `${t("currency")} ${n}`;
@@ -763,7 +973,7 @@
   function setLang(l) {
     lang = l; localStorage.setItem("bp_lang", l);
     /* logo inlined as data URI */
-  const LOGO = "data:image/png;base64,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";
+  const LOGO = "./logo.png";
   document.querySelectorAll('.logo-img').forEach(i => i.src = LOGO);
   { const fav = document.getElementById('favicon'); if (fav) fav.href = LOGO; }
 
@@ -779,31 +989,87 @@
     renderSteps();
     renderAboutFeatures();
     updateCartCount();
+    renderB2EBanner();
+    renderHeroPreview();
+  }
+
+  function renderHeroPreview() {
+    const el = $("#heroPreview");
+    if (!el) return;
+    // Aperçu : un plat représentatif de 3 catégories du jour
+    const picks = ["menujour", "veg", "nonveg"]
+      .map(id => CATEGORIES.find(c => c.id === id))
+      .filter(c => c && c.items.length)
+      .map(c => c.items[0].name[lang]);
+    el.innerHTML = `
+      <div class="hp-label">${t("hero_preview_label")}</div>
+      <div class="hp-chips">${picks.map(n => `<span class="hp-chip">${n}</span>`).join("")}</div>`;
+  }
+
+  // Contribution employeur estimée sur un prix "à partir de" (aperçu par carte).
+  // Le calcul qui fait foi reste côté serveur au paiement.
+  function b2eContributionFor(price) {
+    if (!b2eSession.active || !b2eSession.rules.length) return 0;
+    const rule = b2eSession.rules[0];
+    const raw = rule.mode === "percent" ? price * (rule.percent || 0) / 100 : Math.min(rule.amount || 0, price);
+    const cap = b2eMonthlyCap();
+    const capped = cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
+    return Math.round(capped);
   }
 
   function renderMenu() {
-    $("#menuGrid").innerHTML = CATEGORIES.map(c => `
+    const cats = CATEGORIES.filter(c => {
+      if (!b2eSession.active || menuDiet === "all") return true;
+      if (menuDiet === "veg")    return c.diet === "veg" || c.diet === "mixed";
+      if (menuDiet === "nonveg") return c.diet === "nonveg" || c.diet === "mixed";
+      return true;
+    });
+    $("#menuGrid").innerHTML = cats.map(c => {
+      let priceBlock;
+      if (b2eSession.active) {
+        const contrib = b2eContributionFor(c.from);
+        const youPay = c.from - contrib;
+        priceBlock = `
+          <div class="price">
+            <span style="text-decoration:line-through;color:var(--muted);font-weight:600;font-size:14px;">${money(c.from)}</span>
+            <span class="b2e-line" style="font-weight:700;margin-left:6px;">−${money(contrib)}</span>
+            <div style="font-family:'Rubik';font-weight:800;font-size:17px;color:var(--ink);">${t("b2e_banner_you_pay")} ${money(youPay)}</div>
+          </div>`;
+      } else {
+        priceBlock = `<span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>`;
+      }
+      return `
       <div class="card">
-        <div class="ph">
+        <div class="ph" onclick="openCategory('${c.id}')" style="cursor:pointer">
           <img src="${c.img}" alt="${c.name[lang]}" loading="lazy" />
           <span class="tag">${c.tag[lang]}</span>
         </div>
         <div class="body">
-          <h3>${c.name[lang]}</h3>
+          <h3 onclick="openCategory('${c.id}')" style="cursor:pointer">${c.name[lang]}</h3>
           <p class="desc">${c.desc[lang]}</p>
           <div class="price-row">
-            <span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>
+            ${priceBlock}
             <button class="btn btn-primary" onclick="openCategory('${c.id}')">${t("choose")}</button>
           </div>
-          <div class="avail"><span class="dot"></span>${c.items.length} ${lang==="fr"?"plats · commande 48h avant":"dishes · order 48h ahead"}</div>
+          <div class="avail"><span class="dot"></span>${c.items.length} ${lang==="fr"?"plats · commande sous 24h":"dishes · order within 24h"}<span style="color:var(--green-ok);font-weight:600;margin-left:8px">${lang==="fr"?"· Livraison gratuite":"· Free delivery"}</span></div>
         </div>
-      </div>`).join("");
+      </div>`;
+    }).join("");
   }
 
+  function setMenuDiet(d) { menuDiet = d; renderB2EBanner(); renderMenu(); }
+
   function renderSteps() {
+    const icons = [
+      `<svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>`,
+      `<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="m9 12 2 2 4-4"/></svg>`,
+      `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>`,
+      `<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`
+    ];
     $("#stepsGrid").innerHTML = STEPS.map((s, i) => `
-      <div class="step">
-        <div class="num">0${i+1}</div>
+      <div class="step-inf">
+        <div class="si-num">${i+1}</div>
+        <div class="si-icon">${icons[i]}</div>
         <h4>${s[lang][0]}</h4>
         <p>${s[lang][1]}</p>
       </div>`).join("");
@@ -826,6 +1092,102 @@
     openModal("#productModal");
   }
 
+  /* ── Fiche détaillée d'un plat (photo générique + description) ──
+     Photo : si un visuel a été chargé via l'admin (item.img), on le garde ;
+     sinon on choisit une photo générique selon le type de plat. */
+  const DISH_PHOTOS = {
+    poulet:  "./sandwich-nonveg.jpg",
+    poisson: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80",
+    mine:    "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
+    riz:     "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+    briani:  "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=800&q=80",
+    veg:     "./sandwich-vege.jpg",
+  };
+  function dishPhoto(item, cat) {
+    if (item.img) return item.img;
+    const n = (item.name.fr + " " + item.name.en).toLowerCase();
+    if (n.includes("poisson")) return DISH_PHOTOS.poisson;
+    if (/poulet|satay|roti|saucisse/.test(n)) return DISH_PHOTOS.poulet;
+    if (n.includes("mine")) return DISH_PHOTOS.mine;
+    if (n.includes("riz")) return DISH_PHOTOS.riz;
+    if (cat.id === "briani") return DISH_PHOTOS.briani;
+    if (cat.diet === "veg") return DISH_PHOTOS.veg;
+    return cat.img;
+  }
+  function dishDesc(item, cat) {
+    if (item.desc) return item.desc[lang] || item.desc.fr;
+    return lang === "fr"
+      ? `${item.name.fr} — garniture préparée maison, servie dans notre pain artisanal et livrée fraîche à Moka.`
+      : `${item.name.en} — homemade filling, served in our artisan bread and delivered fresh in Moka.`;
+  }
+
+  let dish = null; // plat actuellement affiché dans la fiche détaillée
+  function openDish(catId, itemId) {
+    const cat = CATEGORIES.find(c => c.id === catId);
+    const item = cat?.items.find(i => i.id === itemId);
+    if (!item) return;
+    const fromCategory = $("#productModal").classList.contains("open");
+    dish = { catId, item, cat, qty: 1, fromCategory };
+    // On masque la liste pendant l'affichage de la fiche (rendu propre, un seul modal visible)
+    if (fromCategory) $("#productModal").classList.remove("open");
+    $("#dishTitle").textContent = item.name[lang];
+    renderDishBody();
+    openModal("#dishModal");
+  }
+  function renderDishBody() {
+    const { item, cat, qty } = dish;
+    const contrib = b2eSession.active ? b2eContributionFor(item.price) : 0;
+    const youPay = item.price - contrib;
+    const priceHtml = b2eSession.active
+      ? `<div style="margin:14px 0;">
+           <span style="text-decoration:line-through;color:var(--muted);font-weight:600;">${money(item.price)}</span>
+           <span class="b2e-line" style="font-weight:700;margin-left:8px;">−${money(contrib)}</span>
+           <div style="font-family:'Rubik';font-weight:800;font-size:22px;margin-top:2px;">${t("b2e_banner_you_pay")} ${money(youPay)}</div>
+         </div>`
+      : `<div style="font-family:'Rubik';font-weight:800;font-size:22px;margin:14px 0;">${money(item.price)}</div>`;
+    $("#dishBody").innerHTML = `
+      <img src="${dishPhoto(item, cat)}" alt="${item.name[lang]}" style="width:100%;height:220px;object-fit:cover;border-radius:12px;" />
+      <h3 style="font-family:'Rubik';font-weight:800;font-size:20px;margin-top:16px;">${item.name[lang]}</h3>
+      <p style="color:var(--muted);margin-top:6px;">${dishDesc(item, cat)}</p>
+      ${priceHtml}
+      <div class="opt-group">
+        <label class="gl">${t("pm_qty")}</label>
+        <div class="stepper" style="margin-top:6px;">
+          <button onclick="stepDishQty(-1)">−</button>
+          <span class="q" id="q_dish" style="font-size:18px;">${qty}</span>
+          <button onclick="stepDishQty(1)">+</button>
+        </div>
+      </div>`;
+    updateDishButton();
+  }
+  // Ferme uniquement la fiche détaillée ; si elle a été ouverte au-dessus de la
+  // liste (carte de commande), on y revient au lieu de tout fermer.
+  function closeDish() {
+    $("#dishModal").classList.remove("open");
+    $("#dishModal").scrollTop = 0;
+    if (dish?.fromCategory) {
+      $("#productModal").classList.add("open"); // retour à la liste
+    } else {
+      closeAll();
+    }
+  }
+  function stepDishQty(d) { dish.qty = Math.max(1, dish.qty + d); $("#q_dish").textContent = dish.qty; updateDishButton(); }
+  function updateDishButton() {
+    $("#dishAdd").textContent = `${t("pm_add")} · ${money(dish.item.price * dish.qty)}`;
+  }
+  function addDishToCart() {
+    const { item, cat, qty } = dish;
+    cart.push({
+      uid: Date.now() + "_" + Math.floor(Math.random()*9999),
+      pid: item.id, name: item.name, img: dishPhoto(item, cat),
+      base: item.price, qty, sides: [], drinks: [],
+      lineTotal: item.price * qty
+    });
+    saveCart();
+    closeAll();
+    openCart();
+  }
+
   function renderCategoryBody() {
     const c = currentCat;
     const sel = cfg.selectedItem;
@@ -846,7 +1208,8 @@
           ${c.items.map(item => `
             <label class="item-opt${sel===item.id?" selected":""}" onclick="selectItem('${item.id}')">
               <input type="radio" name="catitem" value="${item.id}" ${sel===item.id?"checked":""} />
-              <span class="it">${item.name[lang]}</span>
+              <img class="it-thumb" src="${dishPhoto(item, c)}" alt="" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')" style="cursor:pointer" />
+              <span class="it it-clickable" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')">${item.name[lang]}</span>
               <span class="ip">${money(item.price)}</span>
             </label>`).join("")}
         </div>
@@ -906,7 +1269,7 @@
     const drinks = DRINKS.filter(d => cfg.drinks[d.id] > 0).map(d => ({ id: d.id, name: d.name, qty: cfg.drinks[d.id], price: d.price }));
     cart.push({
       uid: Date.now() + "_" + Math.floor(Math.random()*9999),
-      pid: cfg.selectedItem, name: item.name, img: currentCat.img,
+      pid: cfg.selectedItem, name: item.name, img: item.img || currentCat.img,
       base: item.price, qty: cfg.qty, sides: [], drinks,
       lineTotal: configLineTotal()
     });
@@ -953,6 +1316,9 @@
         </div>
       </div>`).join("");
     foot.innerHTML = `
+      <div style="padding:0 0 12px">
+        <button class="btn btn-ghost btn-block" onclick="closeAll();setTimeout(()=>document.getElementById('menu').scrollIntoView({behavior:'smooth'}),300)">${lang==="fr"?"+ Ajouter un autre pain":"+ Add another bread"}</button>
+      </div>
       <div class="totals"><span>${t("cart_subtotal")}</span><span>${money(cartSubtotal())}</span></div>
       <div class="totals"><span>${t("cart_delivery")}</span><span>${t("cart_delivery_free")}</span></div>
       <div class="totals grand"><span>${t("cart_total")}</span><span>${money(cartSubtotal())}</span></div>
@@ -962,11 +1328,136 @@
   function removeLine(uid) { cart = cart.filter(i => i.uid !== uid); saveCart(); renderCart(); }
 
   /* ============================================================
+     B2B
+  ============================================================ */
+  const B2B_DAILY_CAP = 150; // Plafond ticket-resto : 150 Rs par employé par jour
+
+  function employeeAmount() {
+    if (!b2b.valid) return cartSubtotal();
+    const rawSubsidy = Math.round(cartSubtotal() * b2b.subsidyPct / 100);
+    const cappedSubsidy = Math.min(rawSubsidy, B2B_DAILY_CAP);
+    return cartSubtotal() - cappedSubsidy;
+  }
+  function subsidyAmount() { return cartSubtotal() - employeeAmount(); }
+
+  async function applyB2BCode() {
+    const code = ($("#i_b2b")?.value || "").trim().toUpperCase();
+    if (!code) return;
+    const btn = $("#b2bApplyBtn");
+    const err = $("#b2bErr");
+    btn.disabled = true; btn.textContent = "…"; err.classList.remove("show");
+    try {
+      if (!_supa) throw new Error("no supabase");
+      const { data, error } = await _supa.from("companies")
+        .select("id,name,subsidy_pct").eq("promo_code", code).eq("active", true).limit(1);
+      if (error || !data?.length) { err.classList.add("show"); }
+      else {
+        b2b = { code, companyId: data[0].id, companyName: data[0].name, subsidyPct: data[0].subsidy_pct, valid: true };
+        renderCheckout();
+        return;
+      }
+    } catch(e) { err.classList.add("show"); }
+    btn.disabled = false; btn.textContent = t("co_b2b_apply");
+  }
+
+  function removeB2BCode() {
+    b2b = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
+    renderCheckout();
+  }
+
+  /* ============================================================
+     B2E — avantage employé (compte + détection entreprise)
+  ============================================================ */
+  async function initB2ESession() {
+    if (!_supa || localStorage.getItem("bp_b2e_active") !== "1") return;
+    const { data: { session } } = await _supa.auth.getSession();
+    if (!session) { localStorage.removeItem("bp_b2e_active"); return; }
+
+    const { data: employee, error } = await _supa
+      .from("employees")
+      .select("*, companies(id, name), company_offices(id, name, delivery_slot)")
+      .eq("id", session.user.id)
+      .single();
+    if (error || !employee || employee.status === "removed") { localStorage.removeItem("bp_b2e_active"); if (employee?.status === "removed") await _supa.auth.signOut(); return; }
+
+    const { data: rules } = await _supa
+      .from("contribution_rules")
+      .select("*")
+      .eq("company_id", employee.company_id)
+      .eq("active", true)
+      .order("priority", { ascending: false });
+
+    const periodMonth = new Date();
+    const periodStr = `${periodMonth.getFullYear()}-${String(periodMonth.getMonth() + 1).padStart(2, "0")}-01`;
+    const { data: ledger } = await _supa
+      .from("employee_budget_ledger")
+      .select("contributed")
+      .eq("employee_id", employee.id)
+      .eq("period_month", periodStr)
+      .maybeSingle();
+
+    b2eSession = {
+      active: true,
+      employee,
+      company: employee.companies,
+      office: employee.company_offices,
+      rules: rules || [],
+      budgetUsed: ledger?.contributed || 0,
+    };
+    renderAll();
+  }
+
+  function b2eMonthlyCap() {
+    const rule = b2eSession.rules[0];
+    return rule?.monthly_cap ?? null;
+  }
+
+  // Aperçu affiché au client — le calcul qui compte est fait côté serveur dans /api/place-order
+  function b2ePreviewContribution() {
+    if (!b2eSession.active || !b2eSession.rules.length) return 0;
+    const rule = b2eSession.rules[0];
+    const sub = cartSubtotal();
+    const raw = rule.mode === "percent" ? sub * (rule.percent || 0) / 100 : Math.min(rule.amount || 0, sub);
+    const cap = b2eMonthlyCap();
+    return cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
+  }
+
+  function renderB2EBanner() {
+    const el = $("#b2eBanner");
+    if (!el) return;
+    if (!b2eSession.active) { el.innerHTML = ""; return; }
+    const cap = b2eMonthlyCap();
+    const chip = (val, label) => `<button class="b2e-chip${menuDiet===val?' active':''}" onclick="setMenuDiet('${val}')">${label}</button>`;
+    el.innerHTML = `
+      <div class="b2e-banner">
+        <span>${lang === "fr" ? "Vous commandez avec l'avantage" : "You are ordering with the"} <b>${b2eSession.company?.name || ""}</b></span>
+        ${cap != null ? `<span>${money(b2eSession.budgetUsed)} ${t("b2e_banner_budget")} ${money(cap)}</span>` : ""}
+        ${b2eSession.office ? `<span>${b2eSession.office.name}${b2eSession.office.delivery_slot ? " — " + b2eSession.office.delivery_slot : ""}</span>` : ""}
+        <button class="b2e-logout" onclick="b2eLogout()">${t("b2e_logout")}</button>
+      </div>
+      <div class="b2e-filterbar">
+        <div class="b2e-chips">
+          ${chip("all", t("b2e_filter_all"))}
+          ${chip("veg", t("b2e_filter_veg"))}
+          ${chip("nonveg", t("b2e_filter_nonveg"))}
+        </div>
+        <span class="b2e-cutoff">⏱ ${t("b2e_cutoff")}</span>
+      </div>`;
+  }
+
+  async function b2eLogout() {
+    if (_supa) await _supa.auth.signOut();
+    localStorage.removeItem("bp_b2e_active");
+    b2eSession = { active: false, employee: null, company: null, office: null, rules: [], budgetUsed: 0 };
+    renderAll();
+  }
+
+  /* ============================================================
      CHECKOUT
   ============================================================ */
   function availableDays() {
     const now = new Date();
-    const earliest = now.getTime() + 48 * 3600 * 1000; // 48h
+    const earliest = now.getTime() + 24 * 3600 * 1000; // 24h
     const days = [];
     for (let i = 0; i < 16 && days.length < 7; i++) {
       const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, 11, 0, 0, 0);
@@ -985,6 +1476,10 @@
 
   function renderCheckout() {
     const days = availableDays();
+    const sub    = cartSubtotal();
+    const b2eContribution = b2eSession.active ? b2ePreviewContribution() : 0;
+    const empAmt = b2eSession.active ? (sub - b2eContribution) : employeeAmount();
+    const subAmt = subsidyAmount();
     $("#checkoutBody").innerHTML = `
       <div class="notice">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
@@ -1010,7 +1505,11 @@
         <div class="field" id="f_name"><label>${t("co_name")}</label><input id="i_name" type="text" /><div class="err">${t("err_required")}</div></div>
         <div class="two-col">
           <div class="field" id="f_phone"><label>${t("co_phone")}</label><input id="i_phone" type="tel" /><div class="err">${t("err_required")}</div></div>
-          <div class="field" id="f_email"><label>${t("co_email")}</label><input id="i_email" type="email" /><div class="err">${t("err_email")}</div></div>
+          <div style="background:var(--cream-2);border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--line)">
+            <div style="font-family:'Rubik';font-weight:700;font-size:15px;margin-bottom:4px;color:var(--brand-deep)">${lang==="fr"?"📧 Créez votre compte":"📧 Create your account"}</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:10px">${lang==="fr"?"Votre email est requis pour le suivi de commande et les prochaines commandes.":"Your email is required for order tracking and future orders."}</div>
+            <div class="field" id="f_email" style="margin:0"><label>${t("co_email")}</label><input id="i_email" type="email" placeholder="${lang==="fr"?"votre@email.com":"your@email.com"}" /><div class="err">${t("err_email")}</div></div>
+          </div>
         </div>
       </div>
 
@@ -1024,28 +1523,95 @@
         <div class="field" id="f_moka"><div class="err">${t("err_moka")}</div></div>
       </div>
 
+      ${b2eSession.active ? `
+      <div class="opt-group">
+        <label class="gl">${t("co_b2e_t")}</label>
+        <div class="b2b-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>${b2eSession.company?.name || ""}${b2eSession.office ? " · " + b2eSession.office.name : ""}</span>
+        </div>
+        ${b2eMonthlyCap() != null ? (function(){
+          const cap = b2eMonthlyCap();
+          const used = b2eSession.budgetUsed;
+          const remaining = Math.max(0, cap - used);
+          const pct = Math.min(100, Math.round(used / cap * 100));
+          return `
+          <div style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;">
+              <span>${t("b2e_budget_line")}</span>
+              <span><b style="color:var(--ink);">${money(remaining)}</b> ${t("b2e_budget_remaining")}</span>
+            </div>
+            <div style="height:8px;background:var(--line);border-radius:999px;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:var(--brand);"></div>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-top:5px;">${money(used)} / ${money(cap)}</div>
+          </div>`;
+        })() : ""}
+      </div>
+      ` : `
+      <div class="opt-group">
+        <label class="gl">${t("co_b2b_t")}</label>
+        <div class="hint">${t("co_b2b_h")}</div>
+        ${b2b.valid ? `
+          <div class="b2b-success">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>${t("co_b2b_ok").replace("%s", b2b.subsidyPct)} · <b>${b2b.companyName}</b></span>
+            <button onclick="removeB2BCode()" style="margin-left:auto;color:var(--danger);font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;">${t("co_b2b_remove")}</button>
+          </div>
+        ` : `
+          <div class="b2b-code-row">
+            <div class="field"><input id="i_b2b" type="text" placeholder="ex : MOKA-ENT" style="text-transform:uppercase;" /></div>
+            <button id="b2bApplyBtn" class="btn btn-ghost" onclick="applyB2BCode()">${t("co_b2b_apply")}</button>
+          </div>
+          <div class="b2b-err" id="b2bErr">${t("co_b2b_err")}</div>
+        `}
+      </div>
+      `}
+
       <div class="opt-group">
         <label class="gl">${t("co_pay_t")}</label>
-        <label class="pay-opt selected" id="pay_cash" onclick="pickPay('cash')">
-          <input type="radio" name="pay" value="cash" checked />
+        <label class="pay-opt${checkout.pay==="cash"?" selected":""}" id="pay_cash" onclick="pickPay('cash')">
+          <input type="radio" name="pay" value="cash" ${checkout.pay==="cash"?"checked":""} />
           <div><div class="pt">${t("co_pay_cash_t")}</div><div class="pd">${t("co_pay_cash_d")}</div></div>
         </label>
-        <label class="pay-opt" id="pay_juice" onclick="pickPay('juice')">
-          <input type="radio" name="pay" value="juice" />
+        <label class="pay-opt${checkout.pay==="juice"?" selected":""}" id="pay_juice" onclick="pickPay('juice')">
+          <input type="radio" name="pay" value="juice" ${checkout.pay==="juice"?"checked":""} />
           <div><div class="pt">${t("co_pay_juice_t")}</div><div class="pd">${t("co_pay_juice_d")}</div></div>
         </label>
-        <div class="juice-box" id="juiceBox">${t("co_juice_box")}</div>
+        <div class="juice-box${checkout.pay==="juice"?" show":""}" id="juiceBox">${t("co_juice_box")}</div>
+        <label class="pay-opt ${checkout.pay==='card'?'selected':''}" onclick="checkout.pay='card';renderCheckout()">
+          <input type="radio" name="pay" value="card" ${checkout.pay==='card'?'checked':''}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="26" height="26"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          <div><div class="pt">${t("co_pay_card_t")}</div><div class="pd">${t("co_pay_card_d")}</div></div>
+        </label>
       </div>
 
       <div class="opt-group">
         <label class="gl">${t("co_summary")}</label>
         <div class="confirm-recap" style="margin-top:8px;">
-          <div class="r"><span>${t("cart_subtotal")}</span><b>${money(cartSubtotal())}</b></div>
+          <div class="r"><span>${t("cart_subtotal")}</span><b>${money(sub)}</b></div>
+          ${b2eSession.active ? `
+          <div class="r b2e-line"><span>${t("co_b2e_contribution")} · ${b2eSession.company?.name || ""}</span><b>−${money(b2eContribution)}</b></div>
+          ` : b2b.valid ? `
+          <div class="r" style="color:var(--green-ok);"><span>${t("cart_subsidy")} · ${b2b.companyName}</span><b>−${money(subAmt)}</b></div>
+          ` : `
           <div class="r"><span>${t("cart_delivery")}</span><b>${t("cart_delivery_free")}</b></div>
-          <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t("cart_total")}</span><b>${money(cartSubtotal())}</b></div>
+          `}
+          <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;">
+            <span>${b2eSession.active || b2b.valid ? t("confirm_employee_pays") : t("cart_total")}</span>
+            <b>${money(empAmt)}</b>
+          </div>
         </div>
       </div>`;
-    $("#placeOrderBtn").textContent = `${t("co_place")} · ${money(cartSubtotal())}`;
+    // Pré-remplissage depuis le profil sauvegardé
+    const _p = getProfile();
+    if (_p) {
+      if ($("#i_name") && !$("#i_name").value) $("#i_name").value = _p.name || "";
+      if ($("#i_email") && !$("#i_email").value) $("#i_email").value = _p.email || "";
+      if ($("#i_phone") && !$("#i_phone").value) $("#i_phone").value = _p.phone || "";
+      if ($("#i_addr") && !$("#i_addr").value) $("#i_addr").value = _p.addr || "";
+    }
+    $("#placeOrderBtn").textContent = `${t("co_place")} · ${money(empAmt)}`;
   }
 
   function pickDay(time) {
@@ -1055,14 +1621,10 @@
   }
   function pickPay(p) {
     checkout.pay = p;
-    $("#pay_cash").classList.toggle("selected", p === "cash");
-    $("#pay_juice").classList.toggle("selected", p === "juice");
-    $("#pay_cash").querySelector("input").checked = p === "cash";
-    $("#pay_juice").querySelector("input").checked = p === "juice";
-    $("#juiceBox").classList.toggle("show", p === "juice");
+    renderCheckout();
   }
 
-  function placeOrder() {
+  async function placeOrder() {
     let ok = true;
     const setErr = (sel, bad) => { $(sel).classList.toggle("invalid", bad); if (bad) ok = false; };
     const name = $("#i_name").value.trim();
@@ -1080,20 +1642,119 @@
 
     if (!ok) { $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" }); return; }
 
-    const orderNum = makeOrderNumber();
-    const dayDate = new Date(checkout.day);
-    const dayStr = `${t("days")[dayDate.getDay()]} ${dayDate.getDate()} ${t("months")[dayDate.getMonth()]}`;
-    const payLabel = checkout.pay === "cash" ? t("co_pay_cash_t") : t("co_pay_juice_t");
+    if (b2eSession.active) { await placeB2EOrder(name, phone, addr, moka); return; }
 
-    const order = { num: orderNum, name, phone, email, addr, day: checkout.day, pay: checkout.pay, items: cart, total: cartSubtotal(), createdAt: Date.now() };
+    // Vérification limite 20 repas/jour pour les commandes B2B
+    if (b2b.valid && _supa) {
+      const btn = $("#placeOrderBtn");
+      btn.disabled = true;
+      btn.textContent = lang === "fr" ? "Vérification…" : "Checking…";
+      const delivDate = new Date(checkout.day).toISOString().split("T")[0];
+      const { count, error: countErr } = await _supa.from("b2b_orders")
+        .select("id", { count: "exact", head: true })
+        .eq("company_id", b2b.companyId)
+        .eq("delivery_date", delivDate);
+      btn.disabled = false;
+      renderCheckout();
+      if (!countErr && count >= 20) {
+        const errEl = $("#b2bErr");
+        if (errEl) { errEl.textContent = t("co_b2b_limit"); errEl.classList.add("show"); }
+        $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+    }
+
+    const orderNum = makeOrderNumber();
+    const dayDate  = new Date(checkout.day);
+    const dayStr   = `${t("days")[dayDate.getDay()]} ${dayDate.getDate()} ${t("months")[dayDate.getMonth()]}`;
+    const payLabel = checkout.pay === "cash" ? t("co_pay_cash_t") : checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+
+    // Capture amounts before clearing cart
+    const fullAmt  = cartSubtotal();
+    const empAmt   = employeeAmount();
+    const subAmt   = subsidyAmount();
+    const savedB2b = b2b.valid ? { ...b2b } : null;
+
+    const order = { num: orderNum, name, phone, email, addr, day: checkout.day, pay: checkout.pay, items: [...cart], total: empAmt, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subAmt } : null, createdAt: Date.now() };
     const history = JSON.parse(localStorage.getItem("bp_orders") || "[]");
-    history.push(order); localStorage.setItem("bp_orders", JSON.stringify(history));
+    history.push(order);
+    localStorage.setItem("bp_orders", JSON.stringify(history));
+
+    // Enregistrement B2B dans Supabase
+    if (savedB2b && _supa) {
+      _supa.from("b2b_orders").insert({
+        company_id: savedB2b.companyId, employee_name: name, employee_phone: phone,
+        order_ref: orderNum, order_items: cart, order_total: fullAmt,
+        subsidy_amount: subAmt, employee_amount: empAmt,
+        delivery_date: new Date(checkout.day).toISOString().split("T")[0], status: "confirmed"
+      }).then(({ error }) => { if (error) console.warn("B2B sync:", error.message); });
+    }
+
+    // Enregistrement dans l'historique du compte client (si connecté via compte.html)
+    if (_supa) {
+      _supa.auth.getUser().then(({ data: { user } }) => {
+        if (!user) return;
+        _supa.from("orders").insert({
+          customer_id: user.id, order_ref: orderNum, order_items: cart,
+          order_total: fullAmt, payment_method: checkout.pay,
+          delivery_date: new Date(checkout.day).toISOString().split("T")[0], status: "confirmed"
+        }).then(({ error }) => { if (error) console.warn("Account sync:", error.message); });
+      });
+    }
+
+    // Sauvegarde du profil pour les prochaines visites
+    saveProfile(name, phone, email, addr, savedB2b?.code || null);
 
     cart = []; saveCart();
+    b2b  = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
 
-    renderConfirmation(orderNum, dayStr, payLabel, order.total, email);
+    renderConfirmation(orderNum, dayStr, payLabel, empAmt, email, savedB2b, subAmt);
     closeAll();
     openModal("#confirmModal");
+  }
+
+  async function placeB2EOrder(name, phone, addr, moka) {
+    const btn = $("#placeOrderBtn");
+    btn.disabled = true;
+    btn.textContent = lang === "fr" ? "Envoi de la commande…" : "Placing order…";
+
+    const dayDate = new Date(checkout.day);
+    const deliveryDate = dayDate.toISOString().split("T")[0];
+    const { data: { session } } = await _supa.auth.getSession();
+
+    try {
+      const res = await fetch("/api/place-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({
+          items: cart,
+          deliveryDate,
+          paymentMethod: checkout.pay,
+          officeId: b2eSession.office?.id || null,
+        }),
+      });
+      const payload = await res.json();
+      if (!res.ok) throw new Error(payload.error || "Erreur");
+
+      const order = payload.order;
+      const dayStr = `${t("days")[dayDate.getDay()]} ${dayDate.getDate()} ${t("months")[dayDate.getMonth()]}`;
+      const payLabel = checkout.pay === "cash" ? t("co_pay_cash_t") : checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+
+      saveProfile(name, phone, session.user.email, addr, null);
+      cart = []; saveCart();
+      b2eSession.budgetUsed += Number(order.employer_contribution || 0);
+
+      renderConfirmation(order.order_ref, dayStr, payLabel, order.employee_amount, session.user.email,
+        { companyName: b2eSession.company?.name }, order.employer_contribution, order.pickup_code);
+      closeAll();
+      openModal("#confirmModal");
+    } catch (err) {
+      alert(lang === "fr" ? "Erreur lors de la commande. Réessayez." : "Error placing the order. Please retry.");
+      console.warn("place-order:", err.message);
+    } finally {
+      btn.disabled = false;
+      renderCheckout();
+    }
   }
 
   function makeOrderNumber() {
@@ -1103,17 +1764,24 @@
     return `BP-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${rand}`;
   }
 
-  function renderConfirmation(num, dayStr, payLabel, total, email) {
+  function renderConfirmation(num, dayStr, payLabel, total, email, savedB2b, subAmt, pickupCode) {
     $("#confirmBody").innerHTML = `
       <div class="confirm-wrap">
         <div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5"/></svg></div>
         <h3>${t("confirm_title")}</h3>
         <p style="color:var(--muted);margin-top:8px;">${t("confirm_msg")}</p>
         <div class="ordernum">${num}</div>
+        ${pickupCode ? `<div class="ordernum" style="font-size:15px;color:var(--green-ok);">${lang === "fr" ? "Code de retrait" : "Pickup code"} : ${pickupCode}</div>` : ""}
         <div class="confirm-recap">
           <div class="r"><span>${t("confirm_for")}</span><b>${dayStr} · 11h–14h</b></div>
           <div class="r"><span>${t("confirm_pay")}</span><b>${payLabel}</b></div>
-          <div class="r"><span>${t("confirm_total")}</span><b>${money(total)}</b></div>
+          ${savedB2b ? `
+          <div class="r"><span>${t("confirm_b2b")}</span><b>${savedB2b.companyName}</b></div>
+          <div class="r" style="color:var(--green-ok);"><span>${t("cart_subsidy")} · ${savedB2b.companyName}</span><b>−${money(subAmt)}</b></div>
+          ` : ""}
+          <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;">
+            <span>${savedB2b ? t("confirm_employee_pays") : t("confirm_total")}</span><b>${money(total)}</b>
+          </div>
           <div class="r"><span>Email</span><b>${email}</b></div>
         </div>
         <p style="color:var(--muted);font-size:13px;margin-top:14px;">${t("confirm_email_note")}</p>
@@ -1142,9 +1810,243 @@
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeAll(); toggleMobileNav(false); } });
 
   /* ============================================================
+     DETAIL MODAL
+  ============================================================ */
+  function openDetail(id) {
+    const cat = CATEGORIES.find(c => c.id === id);
+    if (!cat) return;
+    const fillingsHtml = cat.items.map(item => `
+      <div class="dp-fill">
+        <div>${item.name[lang]}</div>
+        <div class="price">${money(item.price)}</div>
+      </div>`).join("");
+    $("#detailPanel").innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span class="dp-tag">${cat.tag[lang]}</span>
+        <button onclick="closeDetail()" style="font-size:22px;color:var(--muted);line-height:1">×</button>
+      </div>
+      <img class="dp-img" src="${cat.img}" alt="${cat.name[lang]}">
+      <h2>${cat.name[lang]}</h2>
+      <p class="dp-desc">${cat.desc[lang]}</p>
+      <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;font-family:'Rubik'">${lang==="fr"?"Nos recettes disponibles":"Available recipes"} (${cat.items.length})</h4>
+      <div class="dp-fillings">${fillingsHtml}</div>
+      <button class="btn btn-primary btn-block" onclick="closeDetail();openCategory('${cat.id}')">${t("choose")} ${cat.name[lang]}</button>`;
+    $("#detailModal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeDetail() {
+    $("#detailModal").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  /* ============================================================
+     PROFIL CLIENT
+  ============================================================ */
+  const PROFILE_KEY = "bp_profile";
+
+  function saveProfile(name, phone, email, addr, b2bCode) {
+    const data = { name, phone, email, addr, b2bCode: b2bCode || null, savedAt: new Date().toISOString() };
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+    const btns = [$("#profileBtn"), $("#mobileProfileBtn")];
+    btns.forEach(b => { if (b) b.style.display = ""; });
+  }
+
+  function getProfile() {
+    try { return JSON.parse(localStorage.getItem(PROFILE_KEY)); } catch { return null; }
+  }
+
+  function initProfile() {
+    const p = getProfile();
+    if (!p) return;
+    const btns = [$("#profileBtn"), $("#mobileProfileBtn")];
+    btns.forEach(b => { if (b) b.style.display = ""; });
+  }
+
+  function openProfile() {
+    const p = getProfile();
+    if (!p) return;
+    renderProfilePanel(p);
+    $("#profileModal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeProfile() {
+    $("#profileModal").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function clearProfile() {
+    if (!confirm(lang === "fr" ? "Effacer toutes vos données locales ?" : "Clear all your local data?")) return;
+    localStorage.removeItem(PROFILE_KEY);
+    localStorage.removeItem("bp_orders");
+    closeProfile();
+    [$("#profileBtn"), $("#mobileProfileBtn")].forEach(b => { if (b) b.style.display = "none"; });
+  }
+
+  function reuseB2BCode(code) {
+    closeProfile();
+    setTimeout(() => {
+      openModal("#checkoutModal");
+      setTimeout(() => {
+        const inp = $("#i_b2b");
+        if (inp) { inp.value = code; applyB2BCode(); }
+      }, 350);
+    }, 300);
+  }
+
+  function getMonthOrders() {
+    try {
+      const all = JSON.parse(localStorage.getItem("bp_orders") || "[]");
+      const now = new Date();
+      return all.filter(o => {
+        const d = new Date(o.createdAt);
+        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      }).reverse();
+    } catch { return []; }
+  }
+
+  function renderProfilePanel(p) {
+    const firstName = (p.name || "").split(" ")[0];
+    const initials = (p.name || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+    const orders = getMonthOrders();
+    const monthName = new Date().toLocaleDateString(lang === "fr" ? "fr-FR" : "en-GB", { month: "long", year: "numeric" });
+
+    const ordersHtml = orders.length === 0
+      ? `<p style="color:var(--muted);font-size:14px;padding:8px 0">${t("prof_no_orders")}</p>`
+      : orders.map(o => {
+          const d = new Date(o.day);
+          const dateStr = d.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-GB", { weekday:"short", day:"numeric", month:"short" });
+          const itemsStr = (o.items || []).slice(0,2).map(i => i.name || i.item || JSON.stringify(i)).join(", ") + (o.items?.length > 2 ? "…" : "");
+          return `<div class="order-hist-item">
+            <div class="oh-ref">${o.num}</div>
+            <div class="oh-date">${dateStr} · ${o.pay || ""}</div>
+            <div class="oh-items">${itemsStr}</div>
+            <div class="oh-total">${money(o.total)}${o.b2b ? ` <span class="oh-b2b">· ${o.b2b.company} −${money(o.b2b.subsidy)}</span>` : ""}</div>
+          </div>`;
+        }).join("");
+
+    const b2bHtml = p.b2bCode ? `
+      <div class="profile-section">
+        <h4>${t("prof_b2b_saved")}</h4>
+        <div class="profile-b2b-chip">
+          <div>
+            <div class="chip-code">${p.b2bCode}</div>
+            <div class="chip-label">${lang === "fr" ? "Subvention repas · jusqu'à Rs 150" : "Meal subsidy · up to Rs 150"}</div>
+          </div>
+          <button class="btn btn-primary" style="padding:8px 16px;font-size:13px" onclick="reuseB2BCode('${p.b2bCode}')">${t("prof_reuse")}</button>
+        </div>
+      </div>` : "";
+
+    $("#profilePanel").innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+        <div>
+          <div class="profile-avatar">${initials}</div>
+          <h2 style="font-size:22px;font-weight:800">${t("prof_hello")}, ${firstName} 👋</h2>
+        </div>
+        <button onclick="closeProfile()" style="font-size:26px;color:var(--muted);line-height:1;margin-top:4px">×</button>
+      </div>
+
+      <div class="profile-section">
+        <h4>${t("prof_info")}</h4>
+        <div class="profile-row"><span class="label">${lang==="fr"?"Nom":"Name"}</span><span class="value">${p.name}</span></div>
+        <div class="profile-row"><span class="label">Email</span><span class="value">${p.email}</span></div>
+        <div class="profile-row"><span class="label">${lang==="fr"?"Téléphone":"Phone"}</span><span class="value">${p.phone}</span></div>
+        <div class="profile-row"><span class="label">${lang==="fr"?"Adresse":"Address"}</span><span class="value">${p.addr}</span></div>
+      </div>
+
+      ${b2bHtml}
+
+      <div class="profile-section">
+        <h4>${t("prof_orders_month")} — ${monthName}</h4>
+        ${ordersHtml}
+      </div>
+
+      <button class="btn btn-ghost btn-block" style="margin-top:8px;color:var(--danger);border-color:var(--danger)" onclick="clearProfile()">${t("prof_clear")}</button>
+    `;
+  }
+
+  /* ============================================================
+     CATALOGUE DYNAMIQUE — prix, noms et photos synchronisés depuis
+     Supabase (panneau admin.html). Si la table "products" est
+     injoignable, les valeurs codées en dur ci-dessus restent utilisées.
+  ============================================================ */
+  async function syncPricesFromSupabase() {
+    if (!_supa) return;
+    const { data, error } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url");
+    if (error || !data) return;
+    const byId = Object.fromEntries(data.map(p => [p.id, p]));
+
+    const applyOverrides = (item) => {
+      const o = byId[item.id];
+      if (!o) return;
+      item.price = o.price;
+      if (o.name_fr) item.name.fr = o.name_fr;
+      if (o.name_en) item.name.en = o.name_en;
+      if (o.image_url) item.img = o.image_url;
+    };
+
+    // Items not present in the table (not yet migrated) keep their hardcoded
+    // name/price/photo and stay visible. Items present but inactive are hidden.
+    CATEGORIES.forEach(c => {
+      c.items = c.items.filter(i => !byId[i.id] || byId[i.id].active);
+      c.items.forEach(applyOverrides);
+      if (c.items.length) c.from = Math.min(...c.items.map(i => i.price));
+    });
+    DRINKS.forEach(applyOverrides);
+  }
+
+  /* ============================================================
      INIT
   ============================================================ */
-  renderAll();
+  syncPricesFromSupabase().finally(renderAll);
+  initProfile();
+  initB2ESession();
+
+  /* ============================================================
+     POPUP PROMO
+  ============================================================ */
+  function initPromo() {
+    const today = new Date().toISOString().slice(0, 10);
+    if (localStorage.getItem("bp_promo_seen") === today) return;
+    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+    const endStr = endOfMonth.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-GB", { day: "numeric", month: "long" });
+    $("#promoWelcome").textContent  = t("promo_welcome");
+    $("#promoBadge").textContent    = lang === "fr" ? "Offre de lancement" : "Launch offer";
+    $("#promoDesc").textContent     = t("promo_until") + " " + endStr + " — " + t("promo_offer") + ".";
+    $("#promoCta").textContent      = t("promo_cta");
+    $("#promoSkip").textContent     = t("promo_skip");
+    setTimeout(() => $("#promoPopup").classList.add("open"), 1800);
+  }
+
+  function closePromo() {
+    $("#promoPopup").classList.remove("open");
+    const today = new Date().toISOString().slice(0, 10);
+    localStorage.setItem("bp_promo_seen", today);
+  }
+
+  initPromo();
   </script>
+
+  <div class="profile-modal" id="profileModal">
+    <div class="profile-overlay" onclick="closeProfile()"></div>
+    <div class="profile-panel" id="profilePanel"></div>
+  </div>
+
+  <div class="promo-popup" id="promoPopup">
+    <div class="promo-overlay" onclick="closePromo()"></div>
+    <div class="promo-box">
+      <button class="promo-close" onclick="closePromo()">×</button>
+      <div class="promo-header">
+        <div class="promo-badge" id="promoBadge">Offre de lancement</div>
+        <div class="promo-pct"><span>-</span>50<span>%</span></div>
+        <h3 id="promoWelcome"></h3>
+      </div>
+      <div class="promo-body">
+        <p id="promoDesc"></p>
+        <a href="#menu" class="btn btn-primary btn-block" onclick="closePromo()" id="promoCta"></a>
+        <button class="btn btn-ghost btn-block" onclick="closePromo()" id="promoSkip" style="margin-top:10px;font-size:13px;color:var(--muted)"></button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
