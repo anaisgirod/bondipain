@@ -223,6 +223,7 @@
     .opt-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; }
     .cond-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; cursor: pointer; }
     .cond-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--brand-strong); flex-shrink: 0; }
+    .opt-ic { font-size: 20px; width: 38px; height: 38px; display: inline-grid; place-items: center; background: var(--cream-2); border-radius: 10px; flex-shrink: 0; line-height: 1; }
     .cond-row .label { flex: 1; font-weight: 600; }
     .cond-row .op { font-size: 13px; font-weight: 700; }
     .opt-row .label { font-weight: 600; }
@@ -1167,6 +1168,21 @@
     { id: "jus",  name: { fr: "Jus de fruit", en: "Fruit juice" }, price: 45 }
   ];
 
+  // Petite icône (emoji) pour une boisson / un condiment, selon l'id ou le nom
+  function optEmoji(id, name) {
+    const s = (id + " " + ((name && (name.fr || name.en)) || name || "")).toLowerCase();
+    if (/coca|cola/.test(s)) return "🥤";
+    if (/soda|limonade|sprite|fanta|tonic/.test(s)) return "🧋";
+    if (/eau|water/.test(s)) return "💧";
+    if (/jus|juice|fruit/.test(s)) return "🧃";
+    if (/th[eé]|tea|caf[eé]|coffee/.test(s)) return "☕";
+    if (/ketchup|tomate|tomato/.test(s)) return "🍅";
+    if (/mayo/.test(s)) return "🥚";
+    if (/moutarde|mustard/.test(s)) return "🌭";
+    if (/piment|chili|sauce/.test(s)) return "🌶️";
+    return "🍽️";
+  }
+
   // Formules = 1 plat au choix + 1 boisson au choix, à prix combo (remise ajustable).
   const FORMULAS = [
     {
@@ -1542,6 +1558,7 @@
         ${CONDIMENTS.map(cd => `
           <label class="cond-row">
             <input type="checkbox" ${formula.condiments[cd.id]?"checked":""} onchange="toggleFormulaCondiment('${cd.id}')" />
+            <span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>
             <span class="label">${cd.name[lang]}</span>
             ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
           </label>`).join("")}
@@ -1842,7 +1859,7 @@
     const sel = cfg.selectedItem;
     const drinkRow = (item) => `
       <div class="opt-row">
-        <div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><span class="opt-ic">${optEmoji(item.id, item.name)}</span><div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div></div>
         <div class="stepper">
           <button onclick="stepOpt('drinks','${item.id}',-1)">−</button>
           <span class="q" id="q_drinks_${item.id}">${cfg.drinks[item.id]}</span>
@@ -1887,6 +1904,7 @@
         ${CONDIMENTS.map(cd => `
           <label class="cond-row">
             <input type="checkbox" ${cfg.condiments[cd.id]?"checked":""} onchange="toggleCondiment('${cd.id}')" />
+            <span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>
             <span class="label">${cd.name[lang]}</span>
             ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
           </label>`).join("")}
