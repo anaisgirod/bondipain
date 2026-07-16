@@ -565,7 +565,7 @@
     <a href="entreprises.html" data-i18n="nav_entreprises"></a>
     <a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a>
     <a href="#" id="mobileProfileBtn" onclick="toggleMobileNav(false);openProfile()" style="display:none" data-i18n="prof_title"></a>
-    <a href="compte.html">Mon compte</a>
+    <a href="compte.html" id="mobileAccountLink">Mon compte</a>
   </div>
 
   <span id="top"></span>
@@ -2326,7 +2326,41 @@
     return cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
   }
 
+  // Prénom du client B2C connecté (session Supabase hors employé) — pour personnaliser le lien compte
+  let b2cUser = null;
+  const firstNameOf = (full) => (full || "").trim().split(/\s+/)[0] || "";
+
+  // Un seul point d'accès « compte » : en session employé, le lien du header mène à l'espace employé
+  // (et non au compte B2C compte.html), et le profil local B2C est masqué.
+  // Connecté (employé ou client) → on affiche le prénom au lieu de « Mon profil ».
+  function updateAccountLinks() {
+    const active = b2eSession.active;
+    let name = "";
+    if (active) name = firstNameOf(b2eSession.employee?.full_name);
+    else if (b2cUser?.name) name = firstNameOf(b2cUser.name);
+    else { const p = getProfile(); if (p?.name) name = firstNameOf(p.name); }
+    const defLabel = active ? t("b2e_my_space") : t("hdr_profile");
+    const label = name || defLabel;
+
+    const acc = $("#accountLink");
+    if (acc) {
+      acc.href = active ? "mon-espace-b2e.html" : "compte.html";
+      const lbl = acc.querySelector(".icon-lbl");
+      if (lbl) lbl.textContent = label;
+      acc.title = name ? label : (active ? t("b2e_my_space") : "Mon compte");
+    }
+    const macc = $("#mobileAccountLink");
+    if (macc) { macc.href = active ? "mon-espace-b2e.html" : "compte.html"; macc.textContent = label; }
+    if (active) {
+      [$("#profileBtn"), $("#mobileProfileBtn")].forEach(b => { if (b) b.style.display = "none"; });
+    } else {
+      const has = !!getProfile();
+      [$("#profileBtn"), $("#mobileProfileBtn")].forEach(b => { if (b) b.style.display = has ? "" : "none"; });
+    }
+  }
+
   function renderB2EBanner() {
+    updateAccountLinks();
     const el = $("#b2eBanner");
     if (!el) return;
     if (!b2eSession.active) { el.innerHTML = ""; return; }
@@ -2337,7 +2371,6 @@
         <span>${lang === "fr" ? "Vous commandez avec l'avantage" : "You are ordering with the"} <b>${b2eSession.company?.name || ""}</b></span>
         ${b2eHidePrices() ? `<span class="b2e-free-note">🎁 ${t("b2e_covered_banner")}</span>` : b2eIsFree() ? `<span class="b2e-free-note">🎁 ${t("b2e_free_banner")}</span>` : (cap != null ? `<span>${money(b2eSession.budgetUsed)} ${t("b2e_banner_budget")} ${money(cap)}</span>` : "")}
         ${b2eSession.office ? `<span>${b2eSession.office.name}${b2eSession.office.delivery_slot ? " — " + b2eSession.office.delivery_slot : ""}</span>` : ""}
-        <a href="mon-espace-b2e.html" class="b2e-space">${t("b2e_my_space")}</a>
         <button class="b2e-logout" onclick="b2eLogout()">${t("b2e_logout")}</button>
       </div>
       <div class="b2e-filterbar">
@@ -3160,6 +3193,19 @@
   loadCondiments();
   initProfile();
   initB2ESession();
+  initB2CIdentity();
+
+  // Client B2C connecté (session Supabase, hors employé) → récupère son prénom pour le header
+  async function initB2CIdentity() {
+    if (!_supa) return;
+    if (localStorage.getItem("bp_b2e_active") === "1") return; // employé : géré par initB2ESession
+    const { data: { session } } = await _supa.auth.getSession();
+    if (!session) return;
+    let name = null;
+    const { data } = await _supa.from("customers").select("full_name").eq("id", session.user.id).maybeSingle();
+    name = data?.full_name || null;
+    if (name) { b2cUser = { name }; updateAccountLinks(); }
+  }
 
   /* ============================================================
      POPUP PROMO

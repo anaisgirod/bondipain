@@ -113,6 +113,12 @@
     <div class="hello" id="hello">Bonjour</div>
     <div class="hello-sub" id="helloSub"></div>
 
+    <div class="section">
+      <h3 data-i18n="my_info">Mes informations</h3>
+      <div id="infoRows" style="font-size:14px;"></div>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:10px;" data-i18n="info_hr_note">Ces informations sont gérées par votre service RH.</p>
+    </div>
+
     <div class="stats">
       <div class="stat green">
         <div class="label" data-i18n="budget_left">Budget restant</div>
@@ -186,7 +192,9 @@ const L = {
     covered_month:"pris en charge ce mois", order_word:"Commande", meal_word:"Repas", cancelled:"Commande annulée",
     no_orders:"Aucune commande pour le moment.", delivery:"livraison", your_rating:"Votre note :", add_fav:"★ Ajouter aux favoris",
     no_fav:"Aucun favori. Ajoutez-en depuis vos commandes passées.", fav_word:"Favori", items:"article(s)",
-    reorder:"Recommander", remove:"Retirer", all_months:"Tous les mois", nav_home_btn:"← Accueil" },
+    reorder:"Recommander", remove:"Retirer", all_months:"Tous les mois", nav_home_btn:"← Accueil",
+    my_info:"Mes informations", info_name:"Nom", info_email:"Email", info_company:"Entreprise",
+    info_delivery:"Point de livraison", info_none:"—", info_hr_note:"Ces informations sont gérées par votre service RH." },
   en: { order:"Order", logout:"Log out", budget_left:"Remaining budget", orders_month:"Orders this month",
     meals_ordered:"meals ordered", avg_rating:"Average rating", on_rated:"on your rated meals",
     my_favorites:"My favorites", my_diet:"My dietary profile", diet:"Diet", allergen_alerts:"Allergen alerts",
@@ -195,7 +203,9 @@ const L = {
     covered_month:"covered this month", order_word:"Order", meal_word:"Meal", cancelled:"Order cancelled",
     no_orders:"No orders yet.", delivery:"delivery", your_rating:"Your rating:", add_fav:"★ Add to favorites",
     no_fav:"No favorites yet. Add some from your past orders.", fav_word:"Favorite", items:"item(s)",
-    reorder:"Reorder", remove:"Remove", all_months:"All months", nav_home_btn:"← Home" },
+    reorder:"Reorder", remove:"Remove", all_months:"All months", nav_home_btn:"← Home",
+    my_info:"My information", info_name:"Name", info_email:"Email", info_company:"Company",
+    info_delivery:"Delivery point", info_none:"—", info_hr_note:"This information is managed by your HR team." },
 };
 let lang = localStorage.getItem("bp_lang") || "fr";
 const T = (k) => (L[lang][k] !== undefined ? L[lang][k] : k);
@@ -212,6 +222,23 @@ function setHello() {
   document.getElementById("hello").textContent = T("hello") + " " + (employee.full_name || "").split(" ")[0];
   document.getElementById("helloSub").textContent = T("benefit") + " " + (employee.companies?.name || "")
     + (employee.company_offices ? " · " + employee.company_offices.name + (employee.company_offices.delivery_slot ? " — " + employee.company_offices.delivery_slot : "") : "");
+  renderInfo();
+}
+
+// Carte « Mes informations » — infos gérées par le RH (nom, email, entreprise, point de livraison)
+function renderInfo() {
+  const box = document.getElementById("infoRows");
+  if (!box) return;
+  const o = employee.company_offices;
+  const delivery = o ? [o.name, o.address, o.delivery_slot].filter(Boolean).join(" — ") : T("info_none");
+  const row = (label, val) => `<div style="display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);">
+    <span style="color:var(--muted);">${label}</span>
+    <span style="font-weight:600;text-align:right;">${val || T("info_none")}</span></div>`;
+  box.innerHTML =
+    row(T("info_name"), employee.full_name) +
+    row(T("info_email"), employee.work_email) +
+    row(T("info_company"), employee.companies?.name) +
+    row(T("info_delivery"), delivery);
 }
 
 let employee=null, rules=[], prefs=[], allergens=[];
@@ -223,7 +250,7 @@ async function init(){
   if(!session){ window.location.href="b2e-login.html"; return; }
 
   const { data:emp, error } = await _supa.from("employees")
-    .select("*, companies(name), company_offices(name, delivery_slot)")
+    .select("*, companies(name), company_offices(name, delivery_slot, address)")
     .eq("id", session.user.id).single();
   if(error || !emp || emp.status==="removed"){ window.location.href="b2e-login.html"; return; }
   employee = emp;
