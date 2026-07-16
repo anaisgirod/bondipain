@@ -57,6 +57,10 @@
   .dash-logo { display: flex; align-items: center; gap: 10px; }
   .dash-logo span { font-family: 'Rubik'; font-weight: 800; font-size: 20px; color: var(--brand-deep); }
   .dash-logo .badge { background: var(--brand-soft); color: var(--brand-deep); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .admin-tabs { max-width: 1120px; margin: 18px auto 0; padding: 0 24px; display: flex; gap: 8px; }
+  .admin-tab { padding: 10px 22px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; font-family: 'Rubik'; font-weight: 700; font-size: 14px; color: var(--ink); cursor: pointer; transition: all .15s; }
+  .admin-tab:hover { border-color: var(--brand); color: var(--brand-deep); }
+  .admin-tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
   .dash-body { max-width: 1120px; margin: 0 auto; padding: 32px 24px 60px; display: flex; gap: 30px; align-items: flex-start; }
   .admin-nav { position: sticky; top: 88px; flex: 0 0 210px; display: flex; flex-direction: column; gap: 4px; }
   .admin-nav a { display: block; padding: 10px 14px; border-radius: 10px; font-family: 'Rubik'; font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none; transition: background .15s, color .15s; }
@@ -149,6 +153,11 @@
     </div>
   </header>
 
+  <div class="admin-tabs">
+    <button id="tabbtn-part" class="admin-tab active" onclick="showAdminTab('part')" data-i18n="tab_particulier">Particulier</button>
+    <button id="tabbtn-emp" class="admin-tab" onclick="showAdminTab('emp')" data-i18n="tab_employe">Employé</button>
+  </div>
+
   <div class="dash-body">
     <nav class="admin-nav">
       <a href="#sec-daily" data-i18n="daily_title">🍽️ Menu du jour</a>
@@ -159,6 +168,7 @@
       <a href="#sec-popup" data-i18n="popup_title_h">💬 Pop-up</a>
     </nav>
     <div class="admin-main">
+    <div id="tab-particulier">
     <h2 style="font-size:22px;font-weight:800;margin-bottom:6px" data-i18n="prices_title">Gestion des prix</h2>
     <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="prices_sub">Modifiez un prix ou désactivez un plat en rupture — les changements sont visibles immédiatement sur le site.</p>
     <div class="save-banner" id="saveBanner" data-i18n="saved">✓ Enregistré</div>
@@ -211,6 +221,13 @@
       <button class="btn" onclick="savePopup()" style="margin-top:14px;background:var(--brand);color:#fff;padding:11px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;" data-i18n="content_save">💾 Enregistrer le contenu</button>
       <div id="popMsg" style="font-size:13.5px;margin-top:12px;"></div>
     </div>
+    </div><!-- /tab-particulier -->
+
+    <div id="tab-employe" style="display:none;">
+      <h2 style="font-size:22px;font-weight:800;margin-bottom:6px" data-i18n="b2e_content_title">👔 Espace employé (avantage entreprise)</h2>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="b2e_content_sub">Modifiez les messages d'avantage affichés aux employés connectés, en français et en anglais.</p>
+      <div id="contentEditorB2E"><p class="empty" data-i18n="loading">Chargement…</p></div>
+    </div>
     </div>
   </div>
 </div>
@@ -236,6 +253,8 @@ const L = {
     nl_test:"Envoyer un test", nl_all:"Envoyer à tous",
     content_title:"📝 Contenu du site (page d'accueil)", content_sub:"Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.",
     content_save:"💾 Enregistrer le contenu",
+    tab_particulier:"Particulier", tab_employe:"Employé",
+    b2e_content_title:"👔 Espace employé (avantage entreprise)", b2e_content_sub:"Modifiez les messages d'avantage affichés aux employés connectés, en français et en anglais.",
     popup_title_h:"💬 Pop-up d'accueil", popup_sub:"Message affiché dans une fenêtre à l'arrivée sur le site (une fois par visite).",
     popup_enable:"Activer le pop-up d'accueil", popup_ftitle:"Titre", popup_fbody:"Message",
     veg:"Veg", nonveg:"Non-Veg", available:"Disponible", unavailable:"Indisponible",
@@ -253,6 +272,8 @@ const L = {
     nl_test:"Send a test", nl_all:"Send to all",
     content_title:"📝 Site content (home page)", content_sub:"Edit the home page texts, in French and English. Changes appear on the site instantly.",
     content_save:"💾 Save content",
+    tab_particulier:"Consumer", tab_employe:"Employee",
+    b2e_content_title:"👔 Employee space (company benefit)", b2e_content_sub:"Edit the benefit messages shown to logged-in employees, in French and English.",
     popup_title_h:"💬 Welcome pop-up", popup_sub:"Message shown in a window when visitors arrive on the site (once per visit).",
     popup_enable:"Enable the welcome pop-up", popup_ftitle:"Title", popup_fbody:"Message",
     veg:"Veg", nonveg:"Non-Veg", available:"Available", unavailable:"Unavailable",
@@ -879,6 +900,15 @@ const CONTENT_GROUPS = [
     { key:"footer_tag", label:"Pied de page", labelEn:"Footer", fr:"Le pain garni, livré à Moka.", en:"Stuffed bread, delivered in Moka." },
   ]},
 ];
+// Textes de l'avantage entreprise (onglet Employé) — surchargés côté site via site_content
+const CONTENT_GROUPS_B2E = [
+  { title:"Bannières d'avantage entreprise", titleEn:"Company benefit banners", fields:[
+    { key:"b2e_free_banner", label:"Avantage « 1 repas offert / jour »", labelEn:"Benefit “1 free meal / day”", big:true, fr:"1 repas offert par jour · articles en plus au tarif normal", en:"1 free meal per day · extra items at normal price" },
+    { key:"b2e_covered_banner", label:"Avantage « entièrement pris en charge »", labelEn:"Benefit “fully covered”", big:true, fr:"Vos repas sont entièrement pris en charge par votre entreprise", en:"Your meals are fully covered by your company" },
+    { key:"b2e_banner_budget", label:"Texte budget — entre le montant utilisé et le plafond (ex. « 580 utilisé sur 3000 »)", labelEn:"Budget text — between amount used and cap (e.g. “580 used of 3000”)", fr:"utilisé sur", en:"used of" },
+  ]},
+];
+
 let contentData = {};
 async function loadContent() {
   const { data } = await _supa.from("site_content").select("key, fr, en");
@@ -887,8 +917,13 @@ async function loadContent() {
 }
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function renderContentEditor() {
-  const box = document.getElementById("contentEditor");
-  box.innerHTML = CONTENT_GROUPS.map(g => `
+  renderContentGroups(CONTENT_GROUPS, "contentEditor");
+  renderContentGroups(CONTENT_GROUPS_B2E, "contentEditorB2E");
+}
+function renderContentGroups(groups, containerId) {
+  const box = document.getElementById(containerId);
+  if (!box) return;
+  box.innerHTML = groups.map(g => `
     <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;max-width:820px;">
       <h3 style="font-family:'Rubik';font-weight:800;font-size:16px;margin-bottom:14px;">${lang==="en"&&g.titleEn?g.titleEn:g.title}</h3>
       ${g.fields.map(f => {
@@ -909,13 +944,14 @@ function renderContentEditor() {
         </div>`;
       }).join("")}
     </div>`).join("") +
-    `<button class="btn" onclick="saveContent()" style="background:var(--brand);color:#fff;padding:12px 26px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${T("content_save")}</button>
-     <div id="contentMsg" style="font-size:13.5px;margin-top:12px;"></div>`;
+    `<button class="btn" onclick="saveContent('${containerId}')" style="background:var(--brand);color:#fff;padding:12px 26px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${T("content_save")}</button>
+     <div id="${containerId}Msg" style="font-size:13.5px;margin-top:12px;"></div>`;
 }
-async function saveContent() {
-  const msg = document.getElementById("contentMsg");
+async function saveContent(containerId) {
+  containerId = containerId || "contentEditor";
+  const msg = document.getElementById(containerId + "Msg");
   const map = {};
-  document.querySelectorAll("#contentEditor [data-ck]").forEach(el => {
+  document.querySelectorAll("#" + containerId + " [data-ck]").forEach(el => {
     const k = el.dataset.ck, l = el.dataset.cl;
     (map[k] = map[k] || { key:k })[l] = el.value;
   });
@@ -923,8 +959,18 @@ async function saveContent() {
   msg.style.color = "var(--muted)"; msg.textContent = "Enregistrement…";
   const { error } = await _supa.from("site_content").upsert(payload);
   if (error) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; return; }
-  contentData = Object.fromEntries(payload.map(r => [r.key, r]));
+  payload.forEach(r => { contentData[r.key] = r; });
   msg.style.color = "var(--green, #2E7D52)"; msg.textContent = "Contenu enregistré ✓ — visible sur le site.";
+}
+
+function showAdminTab(which) {
+  const part = which === "part";
+  document.getElementById("tab-particulier").style.display = part ? "" : "none";
+  document.getElementById("tab-employe").style.display = part ? "none" : "";
+  const nav = document.querySelector(".admin-nav");
+  if (nav) nav.style.display = part ? "" : "none";
+  document.getElementById("tabbtn-part").classList.toggle("active", part);
+  document.getElementById("tabbtn-emp").classList.toggle("active", !part);
 }
 
 /* Auto-login (session persistante) */
