@@ -26,6 +26,41 @@ async function sendB2EConfirmation(order, employee, companyName) {
   } catch (e) { console.warn('B2E confirmation email failed:', e.message); }
 }
 
+// Notification à Bondipain (livreur) pour une commande entreprise — best-effort
+async function sendB2EDriverNotification(supabaseAdmin, order, employee, companyName, contact = {}) {
+  const notify = process.env.ORDERS_NOTIFY_EMAIL || 'hello@bondipain.com';
+  let office = null;
+  if (order.office_id) {
+    const { data } = await supabaseAdmin.from('company_offices').select('name, address, delivery_slot').eq('id', order.office_id).maybeSingle();
+    office = data || null;
+  }
+  const deliveryPoint = office ? [office.name, office.address].filter(Boolean).join(' — ') : (contact.note || '');
+  const inner = `
+    <div style="background:#FDF1E5;border-radius:12px;padding:14px 16px;margin-bottom:18px;">
+      <div style="font-size:13px;color:#837A70;">N° de commande</div>
+      <div style="font-family:Georgia,serif;font-weight:bold;font-size:20px;color:#C9711B;">${order.order_ref}</div>
+      <div style="font-size:13px;color:#837A70;margin-top:8px;">Code de retrait : <b>${order.pickup_code || '—'}</b></div>
+    </div>
+    <div style="background:#F7F3EC;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:15px;color:#33302C;line-height:1.7;">
+      <div style="font-weight:bold;margin-bottom:6px;">📍 Livraison entreprise</div>
+      Employé : <b>${contact.name || employee.full_name || employee.work_email || ''}</b><br>
+      ${companyName ? `Entreprise : <b>${companyName}</b><br>` : ''}
+      ${contact.phone ? `Téléphone : <b>${contact.phone}</b><br>` : ''}
+      ${deliveryPoint ? `Point de livraison : <b>${deliveryPoint}</b><br>` : ''}
+      ${office && office.delivery_slot ? `Créneau : ${office.delivery_slot}<br>` : ''}
+      Email : ${employee.work_email || ''}
+    </div>
+    ${itemsTable(order.order_items)}
+    <p style="font-size:14px;color:#837A70;margin-top:14px;line-height:1.6;">Livraison le <b>${order.delivery_date}</b>, entre 11h et 14h.</p>`;
+  try {
+    await sendEmail({
+      to: notify,
+      subject: `🛵 Nouvelle commande entreprise ${order.order_ref}${(contact.name || employee.full_name) ? ' — ' + (contact.name || employee.full_name) : ''}`,
+      html: wrap('Nouvelle commande entreprise', inner),
+    });
+  } catch (e) { console.warn('B2E driver notification failed:', e.message); }
+}
+
 function firstOfMonth(dateStr) {
   const d = new Date(dateStr + 'T00:00:00Z');
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-01`;
@@ -54,7 +89,8 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const { items, deliveryDate, paymentMethod, officeId, orderRef: clientOrderRef } = req.body || {};
+    const { items, deliveryDate, paymentMethod, officeId, orderRef: clientOrderRef, contactPhone, contactName, deliveryNote } = req.body || {};
+    const contact = { phone: contactPhone, name: contactName, note: deliveryNote };
     if (!Array.isArray(items) || items.length === 0 || !deliveryDate) {
       res.status(400).json({ error: 'Commande invalide.' });
       return;
@@ -81,7 +117,7 @@ module.exports = async (req, res) => {
     // Mode d'avantage de l'entreprise
     const { data: company } = await supabaseAdmin
       .from('companies')
-      .select('benefit_mode, show_prices')
+      .select('benefit_mode, show_prices, name')
       .eq('id', employee.company_id)
       .maybeSingle();
     const benefitMode = company?.benefit_mode || 'contribution';
@@ -103,7 +139,8 @@ module.exports = async (req, res) => {
         })
         .select().single();
       if (insertError) throw insertError;
-      await sendB2EConfirmation(order, employee, null);
+      await sendB2EConfirmation(order, employee, company?.name || null);
+      await sendB2EDriverNotification(supabaseAdmin, order, employee, company?.name || null, contact);
       res.status(200).json({ order });
       return;
     }
@@ -142,7 +179,8 @@ module.exports = async (req, res) => {
         .select()
         .single();
       if (insertError) throw insertError;
-      await sendB2EConfirmation(order, employee, null);
+      await sendB2EConfirmation(order, employee, company?.name || null);
+      await sendB2EDriverNotification(supabaseAdmin, order, employee, company?.name || null, contact);
       res.status(200).json({ order });
       return;
     }
@@ -238,7 +276,8 @@ module.exports = async (req, res) => {
       .single();
     if (insertError) throw insertError;
 
-    await sendB2EConfirmation(order, employee, null);
+    await sendB2EConfirmation(order, employee, company?.name || null);
+    await sendB2EDriverNotification(supabaseAdmin, order, employee, company?.name || null, contact);
     res.status(200).json({ order });
   } catch (err) {
     console.error('place-order error', err);

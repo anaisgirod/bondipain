@@ -165,6 +165,7 @@
 
     <h2 style="font-size:22px;font-weight:800;margin:8px 0 6px" id="sec-daily" data-i18n="daily_title">🍽️ Menu du jour</h2>
     <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="daily_sub">Le menu qui change chaque semaine (Lun→Ven, un plat Veg + un Non-Veg par jour). Modifiez le nom, le prix, les ingrédients, les allergènes et la disponibilité.</p>
+    <div id="weekBar" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;"></div>
     <div id="dailyMenu"><p class="empty" data-i18n="loading">Chargement…</p></div>
 
     <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-conds" data-i18n="conds_title">🧂 Condiments</h2>
@@ -283,7 +284,7 @@ const CATALOG = [
     { id: "v11", name: "Vindaye Teocon" }, { id: "v12", name: "Teocon Pané" },
     { id: "v13", name: "Salade Bringelle" }, { id: "v14", name: "Vindaye Bringelle" },
   ]},
-  { label: "🍗 Pain Non-Veg", items: [
+  { label: "🍽️ Pain Non-Veg", items: [
     { id: "nv1", name: "Poulet Tandoorie" }, { id: "nv2", name: "Roti de Poulet" },
     { id: "nv3", name: "Poulet Croustillant" }, { id: "nv4", name: "Saute Poulet" },
     { id: "nv5", name: "Poulet Satay" }, { id: "nv6", name: "Poisson Pané" },
@@ -309,16 +310,80 @@ let products = {};
 
 /* ── MENU DU JOUR ── */
 const MENU_DAYS = [["mon","Lundi"],["tue","Mardi"],["wed","Mercredi"],["thu","Jeudi"],["fri","Vendredi"]];
-const MENU_TYPES = [["veg","🌿 Veg"],["nonveg","🍗 Non-Veg"]];
-let dailyRows = {}; // 'day-type' -> row
+const MENU_TYPES = [["veg","🌿 Veg"],["nonveg","🍽️ Non-Veg"]];
+let dailyRows = {}; // 'day-type' -> row (semaine sélectionnée)
+
+/* ── Gestion PAR SEMAINE (planification des semaines à venir) ── */
+const WEEK_COUNT = 5; // semaine en cours + 4 à venir
+const MU_OFFSET_H = 4; // Maurice = UTC+4
+function mtNow() { const d = new Date(); return new Date(d.getTime() + d.getTimezoneOffset() * 60000 + MU_OFFSET_H * 3600000); }
+function ymd(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+// Lundi (clé AAAA-MM-JJ) de la semaine décalée de `shift` semaines, en heure de Maurice
+function mondayKeyForShift(shift) {
+  const mt = mtNow();
+  const dow = mt.getDay();
+  const mondayOffset = (dow === 0 ? -6 : 1 - dow);
+  return ymd(new Date(mt.getFullYear(), mt.getMonth(), mt.getDate() + mondayOffset + shift * 7));
+}
+const MONTHS_FR = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+function weekLabel(shift) {
+  const [y,m,d] = mondayKeyForShift(shift).split("-").map(Number);
+  const mon = new Date(y, m-1, d), fri = new Date(y, m-1, d+4);
+  const base = `Sem. du ${mon.getDate()} ${MONTHS_FR[mon.getMonth()]} → ${fri.getDate()} ${MONTHS_FR[fri.getMonth()]}`;
+  return shift === 0 ? base + " (en cours)" : base;
+}
+let selectedWeekShift = 0;
+let dailyAll = []; // toutes les lignes chargées, tous week confondus
+
+function renderWeekBar() {
+  const bar = document.getElementById("weekBar");
+  if (!bar) return;
+  bar.innerHTML = `
+    <label style="font-family:'Rubik';font-weight:700;font-size:14px;">Semaine :</label>
+    <select id="weekPick" onchange="onWeekChange(this.value)" style="font-family:'Rubik';font-weight:700;font-size:14px;padding:9px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;">
+      ${Array.from({length:WEEK_COUNT}, (_,i) => `<option value="${i}" ${i===selectedWeekShift?"selected":""}>${weekLabel(i)}</option>`).join("")}
+    </select>
+    ${selectedWeekShift > 0 ? `<button class="btn" onclick="copyPrevWeek()" style="background:#fff;border:1.5px solid var(--line);padding:9px 16px;border-radius:10px;font-family:'Rubik';font-weight:700;font-size:13.5px;cursor:pointer;">⧉ Copier la semaine précédente</button>` : ""}
+    <span id="weekBarMsg" style="font-size:13px;color:var(--muted);"></span>`;
+}
+function onWeekChange(v) { selectedWeekShift = parseInt(v, 10) || 0; refreshDailyForWeek(); }
+function refreshDailyForWeek() {
+  const wk = mondayKeyForShift(selectedWeekShift);
+  dailyRows = {};
+  // La semaine en cours récupère aussi les lignes historiques sans semaine (avant migration).
+  dailyAll
+    .filter(r => (r.week || "") === wk || (selectedWeekShift === 0 && !r.week))
+    .forEach(r => dailyRows[r.day + "-" + r.type] = r);
+  renderWeekBar();
+  renderDaily();
+}
 
 async function loadDaily() {
   const { data, error } = await _supa.from("daily_menu").select("*");
   const box = document.getElementById("dailyMenu");
   if (error) { box.innerHTML = `<p class="empty">Erreur : ${error.message}</p>`; return; }
-  dailyRows = {};
-  (data || []).forEach(r => dailyRows[r.day + "-" + r.type] = r);
-  renderDaily();
+  dailyAll = data || [];
+  refreshDailyForWeek();
+}
+
+// Copier la semaine précédente vers la semaine sélectionnée (ne remplace pas ce qui existe déjà)
+async function copyPrevWeek() {
+  const srcWk = mondayKeyForShift(selectedWeekShift - 1);
+  const dstWk = mondayKeyForShift(selectedWeekShift);
+  const src = dailyAll.filter(r => (r.week || "") === srcWk);
+  const msg = document.getElementById("weekBarMsg");
+  if (!src.length) { if (msg) { msg.style.color = "var(--danger)"; msg.textContent = "Semaine précédente vide."; } return; }
+  const existing = new Set(dailyAll.filter(r => (r.week || "") === dstWk).map(r => r.day + "-" + r.type));
+  const payload = src
+    .filter(r => !existing.has(r.day + "-" + r.type))
+    .map(r => ({ week: dstWk, day: r.day, type: r.type, name_fr: r.name_fr, name_en: r.name_en, price: r.price, ingredients: r.ingredients, allergens: r.allergens, available: r.available, image_url: r.image_url, updated_at: new Date().toISOString() }));
+  if (!payload.length) { if (msg) { msg.style.color = "var(--muted)"; msg.textContent = "Rien à copier (déjà rempli)."; } return; }
+  if (msg) { msg.style.color = "var(--muted)"; msg.textContent = "Copie…"; }
+  const { error } = await _supa.from("daily_menu").upsert(payload, { onConflict: "week,day,type" });
+  if (error) { if (msg) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; } return; }
+  await loadDaily();
+  const msg2 = document.getElementById("weekBarMsg");
+  if (msg2) { msg2.style.color = "var(--green, #2E7D52)"; msg2.textContent = "Semaine copiée ✓"; }
 }
 
 function renderDaily() {
@@ -371,20 +436,29 @@ async function onDailyPhoto(dk, tk, file) {
   loading.className = "ph-loading"; loading.textContent = "…";
   wrap.appendChild(loading);
 
+  const wk = mondayKeyForShift(selectedWeekShift);
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const path = `daily-${dk}-${tk}-${Date.now()}.${ext}`;
+  const path = `daily-${wk}-${dk}-${tk}-${Date.now()}.${ext}`;
   const { error: upErr } = await _supa.storage.from("products").upload(path, file, { upsert: true });
   if (upErr) { alert("Erreur d'upload : " + upErr.message); loading.remove(); return; }
   const { data: pub } = _supa.storage.from("products").getPublicUrl(path);
   const imageUrl = pub.publicUrl;
 
-  // update (pas upsert) pour ne pas écraser les autres champs de la ligne
-  const { error: saveErr } = await _supa.from("daily_menu").update({ image_url: imageUrl, updated_at: new Date().toISOString() }).eq("day", dk).eq("type", tk);
+  // update (pas upsert) pour ne pas écraser les autres champs de la ligne de CETTE semaine
+  const { error: saveErr } = await _supa.from("daily_menu").update({ image_url: imageUrl, updated_at: new Date().toISOString() }).eq("week", wk).eq("day", dk).eq("type", tk);
   loading.remove();
   if (saveErr) { alert("Erreur d'enregistrement : " + saveErr.message); return; }
-  dailyRows[dk + "-" + tk] = { ...(dailyRows[dk + "-" + tk] || { day: dk, type: tk }), image_url: imageUrl };
+  const existing = dailyRows[dk + "-" + tk];
+  if (!existing) { alert("Enregistrez d'abord le nom du plat, puis ajoutez la photo."); return; }
+  dailyRows[dk + "-" + tk] = { ...existing, image_url: imageUrl };
+  syncDailyAll(dailyRows[dk + "-" + tk]);
   wrap.querySelector(".photo-inner").innerHTML = `<img src="${imageUrl}" alt="" />`;
   flashSaved();
+}
+// Garde dailyAll (cache toutes semaines) synchronisé après une écriture
+function syncDailyAll(row) {
+  const i = dailyAll.findIndex(r => (r.week||"") === row.week && r.day === row.day && r.type === row.type);
+  if (i >= 0) dailyAll[i] = { ...dailyAll[i], ...row }; else dailyAll.push(row);
 }
 
 async function saveDaily(dk, tk) {
@@ -392,7 +466,9 @@ async function saveDaily(dk, tk) {
   const val = (f) => row.querySelector(`[data-f="${f}"]`);
   const name_fr = val("name_fr").value.trim();
   if (!name_fr) { alert("Le nom (FR) est obligatoire."); return; }
+  const existing = dailyRows[dk + "-" + tk] || {};
   const payload = {
+    week: mondayKeyForShift(selectedWeekShift),
     day: dk, type: tk,
     name_fr,
     name_en: val("name_en").value.trim(),
@@ -400,14 +476,16 @@ async function saveDaily(dk, tk) {
     allergens: val("allergens").value.trim(),
     price: parseInt(val("price").value, 10) || 0,
     available: val("available").checked,
+    image_url: existing.image_url || null,
     updated_at: new Date().toISOString(),
   };
   const btn = document.getElementById(`dsave-${dk}-${tk}`);
   btn.textContent = "…";
-  const { error } = await _supa.from("daily_menu").upsert(payload, { onConflict: "day,type" });
+  const { error } = await _supa.from("daily_menu").upsert(payload, { onConflict: "week,day,type" });
   btn.textContent = "Enregistrer";
   if (error) { alert("Erreur : " + error.message); return; }
   dailyRows[dk + "-" + tk] = payload;
+  syncDailyAll(payload);
   btn.classList.remove("dirty");
   flashSaved();
 }
@@ -518,7 +596,7 @@ async function initAdmin() {
 const DEFAULT_MENU = {
   categories: [
     { id:"veg",    name_fr:"🌿 Pain Veg",    name_en:"🌿 Veg Bread",    desc_fr:"14 garnitures végétariennes au choix.", desc_en:"14 vegetarian fillings to choose from.", tag_fr:"Végétarien", tag_en:"Vegetarian", img:"./sandwich-vege.jpg", diet:"veg", sort:1 },
-    { id:"nonveg", name_fr:"🍗 Pain Non-Veg", name_en:"🍗 Non-Veg Bread", desc_fr:"Poulet à Rs 170 · Poisson à Rs 185.", desc_en:"Chicken Rs 170 · Fish Rs 185.", tag_fr:"Poulet & Poisson", tag_en:"Chicken & Fish", img:"./sandwich-nonveg.jpg", diet:"nonveg", sort:2 },
+    { id:"nonveg", name_fr:"🍽️ Pain Non-Veg", name_en:"🍽️ Non-Veg Bread", desc_fr:"Poulet à Rs 170 · Poisson à Rs 185.", desc_en:"Chicken Rs 170 · Fish Rs 185.", tag_fr:"Poulet & Poisson", tag_en:"Chicken & Fish", img:"./sandwich-nonveg.jpg", diet:"nonveg", sort:2 },
     { id:"sautes", name_fr:"🍜 Mine Frit & Riz Frit", name_en:"🍜 Fried Noodles & Fried Rice", desc_fr:"Nos plats sautés maison.", desc_en:"Our homemade fried dishes.", tag_fr:"Sauté", tag_en:"Fried", img:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80", diet:"mixed", sort:3 },
   ],
   products: [
@@ -780,6 +858,18 @@ const CONTENT_GROUPS = [
     { key:"about_p1", label:"Paragraphe 1", labelEn:"Paragraph 1", big:true, fr:"Bondipain prépare chaque jour des pains garnis généreux à partir d'ingrédients frais et locaux.", en:"Bondipain prepares generous stuffed breads every day using fresh, local ingredients." },
     { key:"about_p2", label:"Paragraphe 2", labelEn:"Paragraph 2", big:true, fr:"Nous livrons uniquement dans le quartier de Moka, pour un service de proximité et des produits toujours frais.", en:"We deliver only within the Moka area, for a local service and always-fresh products." },
     { key:"about_features", label:"Points forts (un par ligne)", labelEn:"Key points (one per line)", list:true, fr:"Ingrédients frais et locaux\nPréparé le jour de la livraison\nLivraison de proximité à Moka\nPaiement espèces ou Juice by MCB", en:"Fresh, local ingredients\nMade on delivery day\nLocal delivery in Moka\nPay by cash or Juice by MCB" },
+  ]},
+  { title:"Infographie « Commander en 4 étapes »", titleEn:"“Order in 4 steps” infographic", fields:[
+    { key:"steps_eyebrow", label:"Sur-titre", labelEn:"Eyebrow", fr:"Comment ça marche", en:"How it works" },
+    { key:"steps_title", label:"Titre", labelEn:"Title", fr:"Commander en 4 étapes", en:"Order in 4 steps" },
+    { key:"step1_title", label:"Étape 1 — titre", labelEn:"Step 1 — title", fr:"Choisissez une catégorie", en:"Choose a category" },
+    { key:"step1_sub", label:"Étape 1 — sous-titre", labelEn:"Step 1 — subtitle", fr:"Veg, Non-Veg, Briani…", en:"Veg, Non-Veg, Biryani…" },
+    { key:"step2_title", label:"Étape 2 — titre", labelEn:"Step 2 — title", fr:"Sélectionnez votre plat", en:"Select your dish" },
+    { key:"step2_sub", label:"Étape 2 — sous-titre", labelEn:"Step 2 — subtitle", fr:"Parmi nos 20+ recettes", en:"From our 20+ recipes" },
+    { key:"step3_title", label:"Étape 3 — titre", labelEn:"Step 3 — title", fr:"Commandez sous 24h", en:"Order within 24h" },
+    { key:"step3_sub", label:"Étape 3 — sous-titre", labelEn:"Step 3 — subtitle", fr:"Limite commande 16h–17h", en:"Order deadline 4–5pm" },
+    { key:"step4_title", label:"Étape 4 — titre", labelEn:"Step 4 — title", fr:"Livré à Moka", en:"Delivered in Moka" },
+    { key:"step4_sub", label:"Étape 4 — sous-titre", labelEn:"Step 4 — subtitle", fr:"Entre 11h et 14h", en:"Between 11am and 2pm" },
   ]},
   { title:"Bandeaux & Contact", titleEn:"Banners & Contact", fields:[
     { key:"info_strip", label:"Bandeau infos (sous le hero)", labelEn:"Info banner (under hero)", big:true, fr:"Commandez avant 15h la veille · Livraison entre 11h et 14h · Zone de Moka uniquement", en:"Order before 3pm the day before · Delivery between 11am and 2pm · Moka area only" },

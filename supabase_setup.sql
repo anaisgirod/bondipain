@@ -492,9 +492,10 @@ create policy "Employé note ses commandes"
 -- MENU DU JOUR — géré par Bondipain (change chaque semaine)
 -- ============================================================
 
--- 26. TABLE MENU DU JOUR (5 jours × Veg/Non-Veg)
+-- 26. TABLE MENU DU JOUR (5 jours × Veg/Non-Veg, PAR SEMAINE)
 create table if not exists daily_menu (
   id          uuid default gen_random_uuid() primary key,
+  week        text not null default '',  -- lundi de la semaine, 'AAAA-MM-JJ'
   day         text not null,        -- 'mon','tue','wed','thu','fri'
   type        text not null,        -- 'veg' | 'nonveg'
   name_fr     text,
@@ -502,10 +503,27 @@ create table if not exists daily_menu (
   price       numeric default 220,
   ingredients text,
   allergens   text,
+  image_url   text,
   available   boolean default true,
   updated_at  timestamptz default now(),
-  unique(day, type)
+  unique(week, day, type)
 );
+
+-- ── MIGRATION (base déjà créée) : ajoute la semaine + rattache l'existant ──
+-- À exécuter une fois dans Supabase si la table daily_menu existe déjà.
+alter table daily_menu add column if not exists week text;
+alter table daily_menu add column if not exists image_url text;
+update daily_menu
+  set week = to_char(date_trunc('week', (now() at time zone 'Indian/Mauritius')), 'YYYY-MM-DD')
+  where week is null or week = '';
+alter table daily_menu alter column week set not null;
+alter table daily_menu drop constraint if exists daily_menu_day_type_key;
+do $$ begin
+  alter table daily_menu add constraint daily_menu_week_day_type_key unique (week, day, type);
+exception
+  when duplicate_object then null;   -- contrainte déjà présente
+  when duplicate_table  then null;   -- index du même nom déjà présent (42P07)
+end $$;
 
 alter table daily_menu enable row level security;
 
@@ -517,8 +535,11 @@ create policy "Admin gère le menu du jour"
   using (auth.email() = 'hello@bondipain.com')
   with check (auth.email() = 'hello@bondipain.com');
 
--- 27. SEED — le menu de la semaine (prix par défaut Rs 220, à ajuster dans l'admin)
-insert into daily_menu (day, type, name_fr, name_en, price) values
+-- 27. SEED — le menu de la semaine EN COURS (prix par défaut Rs 220, à ajuster dans l'admin)
+insert into daily_menu (week, day, type, name_fr, name_en, price)
+select w.k, v.day, v.type, v.name_fr, v.name_en, v.price
+from (select to_char(date_trunc('week', (now() at time zone 'Indian/Mauritius')), 'YYYY-MM-DD') as k) w,
+(values
   ('mon','veg',    'Macaroni au Fromage',                       'Mac & Cheese',              220),
   ('mon','nonveg', 'Riz et poulet au miel',                     'Honey Chicken Rice',        220),
   ('tue','veg',    'Riz et Salade de Fromage',                  'Rice & Cheese Salad',       220),
@@ -529,7 +550,8 @@ insert into daily_menu (day, type, name_fr, name_en, price) values
   ('thu','nonveg', 'Riz aux crevettes sauce rouge',             'Prawn Rice, Red Sauce',     220),
   ('fri','veg',    'Briani Légumes',                            'Veg Biryani',               190),
   ('fri','nonveg', 'Briani Poulet',                             'Chicken Biryani',           220)
-on conflict (day, type) do nothing;
+) as v(day, type, name_fr, name_en, price)
+on conflict (week, day, type) do nothing;
 
 -- ============================================================
 -- CONDIMENTS — gérés par Bondipain (Ketchup, Mayonnaise… éditables)

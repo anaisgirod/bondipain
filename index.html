@@ -236,9 +236,12 @@
     .item-opt { display: flex; align-items: center; gap: 12px; padding: 11px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; transition: all .15s; }
     .item-opt:hover { border-color: var(--brand); }
     .item-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
-    .item-opt input[type=radio] { width: 18px; height: 18px; accent-color: var(--brand-strong); flex-shrink: 0; }
+    .item-opt input[type=radio], .item-opt input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--brand-strong); flex-shrink: 0; }
     .item-opt .it-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
     .item-opt .it { flex: 1; font-weight: 600; }
+    .item-opt .item-qty { flex-shrink: 0; }
+    .stepper.sm { gap: 8px; }
+    .stepper.sm button { width: 26px; height: 26px; font-size: 16px; }
     .item-opt .it-clickable { cursor: pointer; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
     .item-opt .it-clickable:hover { color: var(--brand-deep); text-decoration-color: var(--brand); }
     .item-opt .ip { font-family: 'Rubik'; font-weight: 800; color: var(--brand-deep); font-size: 14px; }
@@ -827,8 +830,8 @@
       menu_title: "Nos plats",
       menu_sub: "Nos pains garnis, préparés maison. Commandez avant 15h la veille, livraison entre 11h et 14h.",
       choose: "Voir la carte",
-      pm_choose: "Choisissez votre plat",
-      pm_choose_h: "Sélectionnez une option ci-dessous",
+      pm_choose: "Choisissez vos plats",
+      pm_choose_h: "Cochez un ou plusieurs pains, et ajustez la quantité de chacun",
       pm_choose_first: "Choisissez un plat d'abord", choose_day: "Choisissez un jour de livraison",
       steps_eyebrow: "Comment ça marche",
       steps_title: "Commander en 4 étapes",
@@ -866,8 +869,12 @@
       co_day_h: "Choisissez un jour disponible (commande avant 15h la veille).",
       co_info_t: "Vos coordonnées",
       co_name: "Nom complet", co_phone: "Téléphone", co_email: "Email (pour le suivi)",
+      co_company: "Nom de l'entreprise",
       co_addr_t: "Adresse de livraison",
       co_addr: "Rue / résidence / repères (Moka)",
+      co_building: "Nom du bâtiment / immeuble",
+      co_town: "Ville",
+      co_locality: "Localité (optionnel — facilite la livraison)",
       co_moka_confirm: "Je confirme que mon adresse se situe dans le quartier de Moka.",
       co_pay_t: "Mode de paiement",
       co_pay_cash_t: "Espèces à la livraison",
@@ -911,8 +918,8 @@
       prof_clear: "Effacer mes données",
       prof_edit: "Modifier une commande",
       prof_sign: "Me connecter / Créer mon compte",
-      co_b2b_t: "Code entreprise (optionnel)",
-      co_b2b_h: "Bénéficiez d'une subvention repas de votre employeur",
+      co_b2b_t: "Code promo (optionnel)",
+      co_b2b_h: "Entrez votre code entreprise / promo pour bénéficier d'une remise",
       co_b2b_apply: "Appliquer",
       co_b2b_ok: "Code valide · Jusqu'à Rs 150 pris en charge par votre employeur",
       co_b2b_remove: "Retirer",
@@ -961,8 +968,8 @@
       menu_title: "Our dishes",
       menu_sub: "Our homemade stuffed breads. Order before 3pm the day before, delivery between 11am and 2pm.",
       choose: "View menu",
-      pm_choose: "Choose your dish",
-      pm_choose_h: "Select an option below",
+      pm_choose: "Choose your dishes",
+      pm_choose_h: "Tick one or more breads, and set the quantity of each",
       pm_choose_first: "Choose a dish first", choose_day: "Choose a delivery day",
       steps_eyebrow: "How it works",
       steps_title: "Order in 4 steps",
@@ -1000,8 +1007,12 @@
       co_day_h: "Pick an available day (24h lead time respected).",
       co_info_t: "Your details",
       co_name: "Full name", co_phone: "Phone", co_email: "Email (for tracking)",
+      co_company: "Company name",
       co_addr_t: "Delivery address",
       co_addr: "Street / residence / landmarks (Moka)",
+      co_building: "Building name",
+      co_town: "Town",
+      co_locality: "Locality (optional — helps delivery)",
       co_moka_confirm: "I confirm my address is within the Moka area.",
       co_pay_t: "Payment method",
       co_pay_cash_t: "Cash on delivery",
@@ -1045,8 +1056,8 @@
       prof_clear: "Clear my data",
       prof_edit: "Edit order",
       prof_sign: "Sign in / Create account",
-      co_b2b_t: "Company code (optional)",
-      co_b2b_h: "Get a meal subsidy from your employer",
+      co_b2b_t: "Promo code (optional)",
+      co_b2b_h: "Enter your company / promo code to get a discount",
       co_b2b_apply: "Apply",
       co_b2b_ok: "Valid code · Up to Rs 150 covered by your employer",
       co_b2b_remove: "Remove",
@@ -1100,7 +1111,7 @@
     },
     {
       id: "nonveg",
-      name: { fr: "🍗 Pain Non-Veg", en: "🍗 Non-Veg Bread" },
+      name: { fr: "🍽️ Pain Non-Veg", en: "🍽️ Non-Veg Bread" },
       desc: { fr: "Poulet à Rs 170 · Poisson à Rs 185.", en: "Chicken Rs 170 · Fish Rs 185." },
       img: "./sandwich-nonveg.jpg",
       tag: { fr: "Poulet & Poisson", en: "Chicken & Fish" },
@@ -1219,17 +1230,43 @@
     }
   }
 
-  let DAILY_MENU = {}; // { mon:[{type,name_fr,name_en,price,ingredients,allergens,available}], ... }
+  // Menu du jour désormais indexé PAR SEMAINE : { "AAAA-MM-JJ"(lundi): { mon:[rows], ... }, ... }
+  let DAILY_MENU = {};
+  let DAILY_WEEKS = [];   // clés de semaine (lundi) triées croissant
+  let dailyLoaded = false;
   async function loadDailyMenu() {
     if (!_supa) return;
     const { data, error } = await _supa.from("daily_menu").select("*");
     if (error || !data) return;
-    const m = {};
     // veg avant nonveg pour un affichage stable
     data.sort((a, b) => (a.type === "veg" ? -1 : 1) - (b.type === "veg" ? -1 : 1));
-    data.forEach(r => { (m[r.day] = m[r.day] || []).push(r); });
-    DAILY_MENU = m;
+    const byWeek = {};
+    data.forEach(r => {
+      const wk = r.week || "0000-00-00"; // lignes historiques sans semaine → base reportée
+      ((byWeek[wk] = byWeek[wk] || {})[r.day] = byWeek[wk][r.day] || []).push(r);
+    });
+    DAILY_MENU = byWeek;
+    DAILY_WEEKS = Object.keys(byWeek).sort();
+    dailyLoaded = true;
   }
+  function ymd(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+  function weekKeyForShift(shift) { return ymd(weekMenuDate(1, shift)); }            // lundi de la semaine (décalage)
+  function mondayKeyOfDate(dt) { const off = dt.getDay()===0 ? -6 : 1-dt.getDay(); return ymd(new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()+off)); }
+  function shiftForWeekKey(key) {
+    const cur = weekMenuDate(1, 0);
+    const [y,m,d] = key.split("-").map(Number);
+    return Math.round((new Date(y, m-1, d) - new Date(cur.getFullYear(), cur.getMonth(), cur.getDate())) / (7*86400000));
+  }
+  function defaultWeekShift() { return WEEK_OPTIONS.find(w => DAY_DEFS.some(d => isDateOrderable(weekMenuDate(d.wd, w)))) ?? 0; }
+  // Menu d'une semaine (clé lundi) avec REPORT : on prend la dernière semaine renseignée ≤ cible.
+  function menuForWeekKey(key) {
+    if (DAILY_MENU[key]) return DAILY_MENU[key];
+    let best = null;
+    for (const w of DAILY_WEEKS) { if (w <= key) best = w; }
+    if (best) return DAILY_MENU[best];
+    return DAILY_WEEKS.length ? DAILY_MENU[DAILY_WEEKS[0]] : {};
+  }
+  function menuForWeek(shift) { return menuForWeekKey(weekKeyForShift(shift)); }
 
   const STEPS = [
     { fr: ["Choisissez une catégorie", "Veg, Non-Veg, Briani…"], en: ["Choose a category",  "Veg, Non-Veg, Biryani…"] },
@@ -1365,8 +1402,8 @@
     const el = $("#weekGrid");
     if (!el) return;
     // semaine par défaut : la 1re qui a encore un jour commandable
-    if (weekView === null) weekView = WEEK_OPTIONS.find(w => DAY_DEFS.some(d => isDateOrderable(weekMenuDate(d.wd, w)))) ?? 0;
-    if (!Object.keys(DAILY_MENU).length) {
+    if (weekView === null) weekView = defaultWeekShift();
+    if (!dailyLoaded) {
       el.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px;">${lang==="fr"?"Chargement du menu…":"Loading menu…"}</div>`;
       loadDailyMenu().then(() => { renderWeekSelector(); el.innerHTML = weekGridHtml(weekView); });
       return;
@@ -1394,22 +1431,23 @@
     return new Date(mt.getFullYear(), mt.getMonth(), mt.getDate() + mondayOffset + weekShift * 7 + (wd - 1), 11, 0, 0, 0);
   }
   function weekGridHtml(weekShift) {
-    if (weekShift == null) weekShift = DAY_DEFS.some(d => isDateOrderable(weekMenuDate(d.wd, 0))) ? 0 : 1;
+    if (weekShift == null) weekShift = defaultWeekShift();
+    const menu = menuForWeek(weekShift);
     const mt = mtNow();
     const todayStr = mt.toDateString();
     return DAY_DEFS.map(d => {
-      const items = DAILY_MENU[d.key] || [];
+      const items = menu[d.key] || [];
       const theDate = weekMenuDate(d.wd, weekShift);
       const isToday = theDate.toDateString() === todayStr;
       const closed = !isDateOrderable(theDate);
       const dateStr = `${theDate.getDate()} ${t("months")[theDate.getMonth()]}`;
       const dishesHtml = items.length ? items.map((it, idx) => {
         const disabled = closed || it.available === false;
-        const label = (it.type === "veg" ? "🌿 " : "🍗 ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
+        const label = (it.type === "veg" ? "🌿 " : "🍽️ ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
         const priceHtml = b2eIsFree()
           ? `<span class="dd-price" style="color:var(--green-ok)">${lang==="fr"?"Offert":"Free"}</span>`
           : `<span class="dd-price">${money(it.price)}</span>`;
-        return `<button class="day-dish" ${disabled ? "disabled" : `onclick="closeAll();openDailyDish('${d.key}',${idx})"`}>
+        return `<button class="day-dish" ${disabled ? "disabled" : `onclick="closeAll();openDailyDish('${d.key}',${idx},${weekShift})"`}>
           <img class="dd-photo" src="${dailyRowPhoto(it)}" alt="" loading="lazy" />
           <span class="dd-name">${label}</span>${priceHtml}
         </button>`;
@@ -1448,8 +1486,9 @@
     if (item.type === "veg") return DISH_PHOTOS.veg;
     return DISH_PHOTOS.poulet;
   }
-  function openDailyDish(dayKey, idx) {
-    const it = (DAILY_MENU[dayKey] || [])[idx];
+  function openDailyDish(dayKey, idx, weekShift) {
+    if (weekShift == null) weekShift = (weekView != null ? weekView : defaultWeekShift());
+    const it = (menuForWeek(weekShift)[dayKey] || [])[idx];
     if (!it) return;
     const name = { fr: it.name_fr, en: it.name_en || it.name_fr };
     dish = { daily: true, dayKey, item: { id: "daily-" + dayKey + "-" + it.type, name, price: Number(it.price), ingredients: it.ingredients, allergens: it.allergens, type: it.type, image_url: it.image_url }, qty: 1, fromCategory: false };
@@ -1458,7 +1497,7 @@
     openModal("#dishModal");
   }
   async function openWeekMenu() {
-    if (!Object.keys(DAILY_MENU).length) await loadDailyMenu();
+    if (!dailyLoaded) await loadDailyMenu();
     $("#weekModalTitle").textContent = t("week_title");
     $("#weekModalBody").innerHTML = `<p style="color:var(--muted);margin-bottom:16px;">${t("week_sub")}</p><div class="week-grid">${weekGridHtml()}</div>`;
     openModal("#weekModal");
@@ -1733,7 +1772,9 @@
   ============================================================ */
   function openCategory(id) {
     currentCat = CATEGORIES.find(c => c.id === id);
-    cfg = { qty: 1, selectedItem: currentCat.items.length === 1 ? currentCat.items[0].id : null, drinks: {}, condiments: {} };
+    // cfg.items : { [itemId]: quantité } — sélection multiple, une quantité par pain
+    cfg = { items: {}, drinks: {}, condiments: {}, day: null };
+    if (currentCat.items.length === 1) cfg.items[currentCat.items[0].id] = 1;
     DRINKS.forEach(d => cfg.drinks[d.id] = 0);
     CONDIMENTS.forEach(c => cfg.condiments[c.id] = false);
     $("#pmTitle").textContent = currentCat.name[lang];
@@ -1856,7 +1897,6 @@
 
   function renderCategoryBody() {
     const c = currentCat;
-    const sel = cfg.selectedItem;
     const drinkRow = (item) => `
       <div class="opt-row">
         <div style="display:flex;align-items:center;gap:10px;"><span class="opt-ic">${optEmoji(item.id, item.name)}</span><div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div></div>
@@ -1871,21 +1911,23 @@
         <label class="gl">${t("pm_choose")}</label>
         <div class="hint">${t("pm_choose_h")}</div>
         <div class="item-list">
-          ${c.items.map(item => `
-            <label class="item-opt${sel===item.id?" selected":""}" onclick="selectItem('${item.id}')">
-              <input type="radio" name="catitem" value="${item.id}" ${sel===item.id?"checked":""} />
+          ${c.items.map(item => {
+            const on = cfg.items[item.id] != null;
+            return `
+            <label class="item-opt${on?" selected":""}" onclick="toggleItem('${item.id}')">
+              <input type="checkbox" value="${item.id}" ${on?"checked":""} />
               <img class="it-thumb" src="${dishPhoto(item, c)}" alt="" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')" style="cursor:pointer" />
               <span class="it it-clickable" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')">${item.name[lang]}${item.bestseller ? ` <span class="bs-badge">★ ${t("bestseller")}</span>` : ""}</span>
               <span class="ip">${money(item.price)}</span>
-            </label>`).join("")}
-        </div>
-      </div>
-      <div class="opt-group">
-        <label class="gl">${t("pm_qty")}</label>
-        <div class="stepper" style="margin-top:6px;">
-          <button onclick="stepQty(-1)">−</button>
-          <span class="q" id="q_main" style="font-size:18px;">${cfg.qty}</span>
-          <button onclick="stepQty(1)">+</button>
+              <div class="item-qty" id="iq_${item.id}" style="${on?"":"display:none;"}" onclick="event.stopPropagation()">
+                <div class="stepper sm">
+                  <button type="button" onclick="stepItem('${item.id}',-1)">−</button>
+                  <span class="q" id="q_item_${item.id}">${cfg.items[item.id] || 1}</span>
+                  <button type="button" onclick="stepItem('${item.id}',1)">+</button>
+                </div>
+              </div>
+            </label>`;
+          }).join("")}
         </div>
       </div>
       <div class="opt-group">
@@ -1914,53 +1956,83 @@
 
   function toggleCondiment(id) { cfg.condiments[id] = !cfg.condiments[id]; updatePmButton(); }
 
-  function selectItem(id) {
-    cfg.selectedItem = id;
-    document.querySelectorAll(".item-opt").forEach(el => {
-      const v = el.querySelector("input").value;
-      el.classList.toggle("selected", v === id);
-      el.querySelector("input").checked = v === id;
-    });
+  // Coche/décoche un pain ; quantité par défaut 1 à la sélection
+  function toggleItem(id) {
+    const row = document.querySelector(`.item-opt input[value="${id}"]`)?.closest(".item-opt");
+    const qtyBox = document.getElementById(`iq_${id}`);
+    if (cfg.items[id] != null) {
+      delete cfg.items[id];
+      if (row) { row.classList.remove("selected"); row.querySelector("input").checked = false; }
+      if (qtyBox) qtyBox.style.display = "none";
+    } else {
+      cfg.items[id] = 1;
+      if (row) { row.classList.add("selected"); row.querySelector("input").checked = true; }
+      if (qtyBox) { qtyBox.style.display = ""; const q = document.getElementById(`q_item_${id}`); if (q) q.textContent = 1; }
+    }
     updatePmButton();
   }
-
-  function stepQty(d) { cfg.qty = Math.max(1, cfg.qty + d); $("#q_main").textContent = cfg.qty; updatePmButton(); }
+  // Quantité d'un pain donné (min 1 ; passer sous 1 le retire)
+  function stepItem(id, d) {
+    const next = (cfg.items[id] || 1) + d;
+    if (next < 1) { toggleItem(id); return; }
+    cfg.items[id] = Math.min(9, next);
+    const q = document.getElementById(`q_item_${id}`); if (q) q.textContent = cfg.items[id];
+    updatePmButton();
+  }
   function stepOpt(kind, id, d) {
     cfg[kind][id] = Math.max(0, Math.min(9, cfg[kind][id] + d));
     $(`#q_${kind}_${id}`).textContent = cfg[kind][id];
     updatePmButton();
   }
 
-  function configLineTotal() {
-    if (!cfg.selectedItem) return 0;
-    const item = currentCat.items.find(i => i.id === cfg.selectedItem);
+  // Extras (boissons + condiments) ajoutés une seule fois à la commande
+  function extrasTotal() {
     let extras = 0;
     DRINKS.forEach(d => extras += cfg.drinks[d.id] * d.price);
     CONDIMENTS.forEach(c => { if (cfg.condiments[c.id]) extras += c.price; });
-    return (item.price + extras) * cfg.qty;
+    return extras;
+  }
+  function configLineTotal() {
+    let total = extrasTotal();
+    for (const id in cfg.items) {
+      const item = currentCat.items.find(i => i.id === id);
+      if (item) total += item.price * cfg.items[id];
+    }
+    return total;
   }
 
   function updatePmButton() {
     const btn = $("#pmAdd");
     const day = readDaySelect("catDay");
-    btn.disabled = !cfg.selectedItem || !day;
-    btn.textContent = !cfg.selectedItem
+    const hasItems = Object.keys(cfg.items).length > 0;
+    btn.disabled = !hasItems || !day;
+    btn.textContent = !hasItems
       ? t("pm_choose_first")
       : (!day ? t("choose_day") : (b2eHidePrices() ? t("pm_add") : `${t("pm_add")} · ${money(configLineTotal())}`));
   }
 
   function addConfiguredToCart() {
-    if (!cfg.selectedItem) return;
+    const ids = Object.keys(cfg.items);
+    if (!ids.length) return;
     const day = readDaySelect("catDay");
     if (!day) { alert(lang === "fr" ? "Choisissez d'abord un jour de livraison." : "Please choose a delivery day first."); return; }
-    const item = currentCat.items.find(i => i.id === cfg.selectedItem);
+    // Boissons/condiments : rattachés à la 1re ligne (une seule fois pour la commande)
     const drinks = DRINKS.filter(d => cfg.drinks[d.id] > 0).map(d => ({ id: d.id, name: d.name, qty: cfg.drinks[d.id], price: d.price }));
     const condiments = CONDIMENTS.filter(c => cfg.condiments[c.id]).map(c => ({ id: c.id, name: c.name, price: c.price }));
-    cart.push({
-      uid: Date.now() + "_" + Math.floor(Math.random()*9999),
-      pid: cfg.selectedItem, name: item.name, img: item.img || currentCat.img,
-      base: item.price, qty: cfg.qty, sides: [], drinks, condiments, day,
-      lineTotal: configLineTotal()
+    const stamp = Date.now();
+    ids.forEach((id, idx) => {
+      const item = currentCat.items.find(i => i.id === id);
+      if (!item) return;
+      const qty = cfg.items[id];
+      const lineDrinks = idx === 0 ? drinks : [];
+      const lineConds  = idx === 0 ? condiments : [];
+      const extras = idx === 0 ? extrasTotal() : 0;
+      cart.push({
+        uid: stamp + "_" + idx + "_" + Math.floor(Math.random()*9999),
+        pid: id, name: item.name, img: item.img || currentCat.img,
+        base: item.price, qty, sides: [], drinks: lineDrinks, condiments: lineConds, day,
+        lineTotal: item.price * qty + extras
+      });
     });
     saveCart();
     closeAll();
@@ -2120,8 +2192,9 @@
     if (pid.startsWith("formula-")) { openFormula(pid.replace("formula-", "")); return; }
     if (pid.startsWith("daily-")) {
       const [, day, type] = pid.split("-");
-      const idx = (DAILY_MENU[day] || []).findIndex(x => x.type === type);
-      if (idx >= 0) openDailyDish(day, idx); else openWeekMenu();
+      const shift = line.day ? shiftForWeekKey(mondayKeyOfDate(new Date(line.day))) : defaultWeekShift();
+      const idx = (menuForWeek(shift)[day] || []).findIndex(x => x.type === type);
+      if (idx >= 0) openDailyDish(day, idx, shift); else openWeekMenu();
       return;
     }
     const cat = CATEGORIES.find(c => c.items.some(i => i.id === pid));
@@ -2352,25 +2425,27 @@
 
       <div class="opt-group">
         <label class="gl">${t("co_info_t")}</label>
-        <div class="field" id="f_name"><label>${t("co_name")}</label><input id="i_name" type="text" /><div class="err">${t("err_required")}</div></div>
         <div class="two-col">
-          <div class="field" id="f_phone"><label>${t("co_phone")}</label><input id="i_phone" type="tel" /><div class="err">${t("err_required")}</div></div>
+          <div class="field" id="f_name"><label>${t("co_name")}</label><input id="i_name" type="text" autocomplete="name" /><div class="err">${t("err_required")}</div></div>
+          <div class="field" id="f_company"><label>${t("co_company")}</label><input id="i_company" type="text" autocomplete="organization" /><div class="err">${t("err_required")}</div></div>
+        </div>
+        <div class="two-col">
+          <div class="field" id="f_phone"><label>${t("co_phone")}</label><input id="i_phone" type="tel" autocomplete="tel" /><div class="err">${t("err_required")}</div></div>
           <div style="background:var(--cream-2);border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--line)">
             <div style="font-family:'Rubik';font-weight:700;font-size:15px;margin-bottom:4px;color:var(--brand-deep)">${lang==="fr"?"📧 Créez votre compte":"📧 Create your account"}</div>
             <div style="font-size:13px;color:var(--muted);margin-bottom:10px">${lang==="fr"?"Votre email est requis pour le suivi de commande et les prochaines commandes.":"Your email is required for order tracking and future orders."}</div>
-            <div class="field" id="f_email" style="margin:0"><label>${t("co_email")}</label><input id="i_email" type="email" placeholder="${lang==="fr"?"votre@email.com":"your@email.com"}" /><div class="err">${t("err_email")}</div></div>
+            <div class="field" id="f_email" style="margin:0"><label>${t("co_email")}</label><input id="i_email" type="email" autocomplete="email" placeholder="${lang==="fr"?"votre@email.com":"your@email.com"}" /><div class="err">${t("err_email")}</div></div>
           </div>
         </div>
       </div>
 
       <div class="opt-group">
         <label class="gl">${t("co_addr_t")}</label>
-        <div class="field" id="f_addr"><label>${t("co_addr")}</label><textarea id="i_addr" rows="2"></textarea><div class="err">${t("err_required")}</div></div>
-        <label class="pay-opt" id="mokaWrap" style="margin-top:4px;">
-          <input type="checkbox" id="i_moka" />
-          <div><div class="pt" style="font-size:14px;">${t("co_moka_confirm")}</div></div>
-        </label>
-        <div class="field" id="f_moka"><div class="err">${t("err_moka")}</div></div>
+        <div class="field" id="f_building"><label>${t("co_building")}</label><input id="i_building" type="text" /><div class="err">${t("err_required")}</div></div>
+        <div class="two-col">
+          <div class="field" id="f_town"><label>${t("co_town")}</label><input id="i_town" type="text" value="Ebène" readonly style="background:var(--cream-2);cursor:not-allowed;" /></div>
+          <div class="field" id="f_locality"><label>${t("co_locality")}</label><input id="i_locality" type="text" /></div>
+        </div>
       </div>
 
       ${b2eSession.active ? `
@@ -2483,22 +2558,26 @@
         </div>
         `}
       </div>`;
-    // Pré-remplissage depuis le profil sauvegardé
+    // Pré-remplissage depuis le profil sauvegardé (le client ne saisit qu'une seule fois)
     const _p = getProfile();
+    const set = (id, v) => { const el = $(id); if (el && !el.value && v) el.value = v; };
     if (_p) {
-      if ($("#i_name") && !$("#i_name").value) $("#i_name").value = _p.name || "";
-      if ($("#i_email") && !$("#i_email").value) $("#i_email").value = _p.email || "";
-      if ($("#i_phone") && !$("#i_phone").value) $("#i_phone").value = _p.phone || "";
-      if ($("#i_addr") && !$("#i_addr").value) $("#i_addr").value = _p.addr || "";
+      set("#i_name", _p.name); set("#i_company", _p.company);
+      set("#i_email", _p.email); set("#i_phone", _p.phone);
+      set("#i_building", _p.building); set("#i_locality", _p.locality);
+      // rétro-compat : ancien profil avec une adresse libre unique
+      if ($("#i_building") && !$("#i_building").value && _p.addr) $("#i_building").value = _p.addr;
     }
     // Employé connecté : nom / email / téléphone / bureau pré-remplis automatiquement depuis son profil entreprise
     if (b2eSession.active && b2eSession.employee) {
       const emp = b2eSession.employee;
       if ($("#i_name") && emp.full_name) $("#i_name").value = emp.full_name;
+      if ($("#i_company") && !$("#i_company").value && b2eSession.company?.name) $("#i_company").value = b2eSession.company.name;
       if ($("#i_email") && emp.work_email) $("#i_email").value = emp.work_email;
       if ($("#i_phone") && !$("#i_phone").value && emp.phone) $("#i_phone").value = emp.phone;
-      if ($("#i_addr") && !$("#i_addr").value && b2eSession.office) {
-        $("#i_addr").value = [b2eSession.office.name, b2eSession.office.address].filter(Boolean).join(" — ");
+      if (b2eSession.office) {
+        if ($("#i_building") && !$("#i_building").value && b2eSession.office.name) $("#i_building").value = b2eSession.office.name;
+        if ($("#i_locality") && !$("#i_locality").value && b2eSession.office.address) $("#i_locality").value = b2eSession.office.address;
       }
     }
     $("#placeOrderBtn").textContent = noPayment ? t("co_place_free") : `${t("co_place")} · ${money(empAmt)}`;
@@ -2527,16 +2606,20 @@
     let ok = true;
     const setErr = (sel, bad) => { $(sel).classList.toggle("invalid", bad); if (bad) ok = false; };
     const name = $("#i_name").value.trim();
+    const company = $("#i_company").value.trim();
     const phone = $("#i_phone").value.trim();
     const email = $("#i_email").value.trim();
-    const addr = $("#i_addr").value.trim();
-    const moka = $("#i_moka").checked;
+    const building = $("#i_building").value.trim();
+    const town = ($("#i_town")?.value || "Ebène").trim();
+    const locality = $("#i_locality").value.trim();
+    // Adresse composée pour la commande, l'email et le livreur
+    const addr = [building, locality, town].filter(Boolean).join(", ");
 
     setErr("#f_name", !name);
+    setErr("#f_company", !company);
     setErr("#f_phone", !phone);
     setErr("#f_email", !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
-    setErr("#f_addr", !addr);
-    setErr("#f_moka", !moka);
+    setErr("#f_building", !building);
 
     if (!ok) { $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" }); return; }
 
@@ -2550,7 +2633,7 @@
       return;
     }
 
-    if (b2eSession.active) { await placeB2EOrder(name, phone, addr, moka); return; }
+    if (b2eSession.active) { await placeB2EOrder({ name, company, phone, email, building, town, locality, addr }); return; }
 
     // Parcours particulier multi-jours : la commande est répartie par jour de livraison
     const groups = cartByDay(); // [{ts, label, lines}]
@@ -2573,7 +2656,7 @@
     if (!savedB2b) payTotal = fullAmt;
 
     // Historique local (une entrée, items portent chacun leur .day)
-    const order = { num: orderNum, name, phone, email, addr, days: groups.map(g => ({ day: g.ts, label: g.label })), pay: checkout.pay, items: [...cart], total: payTotal, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subTotal } : null, createdAt: Date.now() };
+    const order = { num: orderNum, name, company, phone, email, addr, building, town, locality, days: groups.map(g => ({ day: g.ts, label: g.label })), pay: checkout.pay, items: [...cart], total: payTotal, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subTotal } : null, createdAt: Date.now() };
     const history = JSON.parse(localStorage.getItem("bp_orders") || "[]");
     history.push(order);
     localStorage.setItem("bp_orders", JSON.stringify(history));
@@ -2600,13 +2683,13 @@
       });
     }
 
-    // Sauvegarde du profil pour les prochaines visites
-    saveProfile(name, phone, email, addr, savedB2b?.code || null);
+    // Sauvegarde du profil pour les prochaines visites (saisie une seule fois)
+    saveProfile({ name, company, phone, email, addr, building, town, locality, b2bCode: savedB2b?.code || null });
 
     // Email de confirmation (best-effort)
     fetch("/api/order-email", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to: email, orderRef: orderNum, items: order.items, total: payTotal, deliveryDate: daysLabel, payLabel, name, lang }),
+      body: JSON.stringify({ to: email, orderRef: orderNum, items: order.items, total: payTotal, deliveryDate: daysLabel, payLabel, name, company, phone, addr, lang }),
     }).catch(() => {});
 
     cart = []; saveCart();
@@ -2617,7 +2700,8 @@
     openModal("#confirmModal");
   }
 
-  async function placeB2EOrder(name, phone, addr, moka) {
+  async function placeB2EOrder(info) {
+    const { name, company, phone, email: infoEmail, addr, building, town, locality } = info;
     const btn = $("#placeOrderBtn");
     btn.disabled = true;
     btn.textContent = lang === "fr" ? "Envoi de la commande…" : "Placing order…";
@@ -2640,6 +2724,7 @@
             paymentMethod: checkout.pay,
             officeId: b2eSession.office?.id || null,
             orderRef: (checkout.orderNum ? checkout.orderNum + "-" + deliveryDate.slice(5).replace("-", "") : null),
+            contactName: name, contactPhone: phone, deliveryNote: addr,
           }),
         });
         const payload = await res.json();
@@ -2656,7 +2741,7 @@
         return;
       }
 
-      saveProfile(name, phone, session.user.email, addr, null);
+      saveProfile({ name, company, phone, email: session.user.email, addr, building, town, locality, b2bCode: null });
       b2eSession.budgetUsed += totalContribution;
       cart = []; saveCart();
 
@@ -2763,8 +2848,21 @@
   ============================================================ */
   const PROFILE_KEY = "bp_profile";
 
-  function saveProfile(name, phone, email, addr, b2bCode) {
-    const data = { name, phone, email, addr, b2bCode: b2bCode || null, savedAt: new Date().toISOString() };
+  function saveProfile(info) {
+    const prev = getProfile() || {};
+    // Conserve les valeurs déjà connues si un champ n'est pas fourni cette fois-ci
+    const data = {
+      name: info.name ?? prev.name ?? "",
+      company: info.company ?? prev.company ?? "",
+      phone: info.phone ?? prev.phone ?? "",
+      email: info.email ?? prev.email ?? "",
+      addr: info.addr ?? prev.addr ?? "",
+      building: info.building ?? prev.building ?? "",
+      town: info.town ?? prev.town ?? "Ebène",
+      locality: info.locality ?? prev.locality ?? "",
+      b2bCode: info.b2bCode || prev.b2bCode || null,
+      savedAt: new Date().toISOString(),
+    };
     localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
     const btns = [$("#profileBtn"), $("#mobileProfileBtn")];
     btns.forEach(b => { if (b) b.style.display = ""; });
@@ -2867,10 +2965,11 @@
 
       <div class="profile-section">
         <h4>${t("prof_info")}</h4>
-        <div class="profile-row"><span class="label">${lang==="fr"?"Nom":"Name"}</span><span class="value">${p.name}</span></div>
-        <div class="profile-row"><span class="label">Email</span><span class="value">${p.email}</span></div>
-        <div class="profile-row"><span class="label">${lang==="fr"?"Téléphone":"Phone"}</span><span class="value">${p.phone}</span></div>
-        <div class="profile-row"><span class="label">${lang==="fr"?"Adresse":"Address"}</span><span class="value">${p.addr}</span></div>
+        <div class="profile-row"><span class="label">${lang==="fr"?"Nom":"Name"}</span><span class="value">${p.name||"—"}</span></div>
+        ${p.company?`<div class="profile-row"><span class="label">${lang==="fr"?"Entreprise":"Company"}</span><span class="value">${p.company}</span></div>`:""}
+        <div class="profile-row"><span class="label">Email</span><span class="value">${p.email||"—"}</span></div>
+        <div class="profile-row"><span class="label">${lang==="fr"?"Téléphone":"Phone"}</span><span class="value">${p.phone||"—"}</span></div>
+        <div class="profile-row"><span class="label">${lang==="fr"?"Adresse":"Address"}</span><span class="value">${p.addr || [p.building,p.locality,p.town].filter(Boolean).join(", ") || "—"}</span></div>
       </div>
 
       ${b2bHtml}
@@ -2963,12 +3062,22 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
     if (error || !data) return;
     for (const row of data) {
+      // Infographie « 4 étapes » : clés stepN_title / stepN_sub → surcharge du tableau STEPS
+      const stepM = row.key.match(/^step([1-4])_(title|sub)$/);
+      if (stepM) {
+        const i = parseInt(stepM[1], 10) - 1, slot = stepM[2] === "title" ? 0 : 1;
+        if (STEPS[i]) {
+          if (row.fr) STEPS[i].fr[slot] = row.fr;
+          if (row.en) STEPS[i].en[slot] = row.en;
+        }
+        continue;
+      }
       if (row.key === "about_features") {
         if (row.fr) ABOUT_FEATURES.fr = row.fr.split("\n").map(s => s.trim()).filter(Boolean);
         if (row.en) ABOUT_FEATURES.en = row.en.split("\n").map(s => s.trim()).filter(Boolean);

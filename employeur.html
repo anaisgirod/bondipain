@@ -81,6 +81,9 @@
     .badge-status.invited { background: var(--brand-soft); color: var(--brand-deep); }
     .row-remove { font-size: 12.5px; font-weight: 700; color: var(--danger); padding: 4px 10px; border-radius: 8px; }
     .row-remove:hover { background: #FBE9E7; }
+    .row-edit { font-size: 12.5px; font-weight: 700; color: var(--brand); padding: 4px 10px; border-radius: 8px; }
+    .row-edit:hover { background: var(--cream-2, #F7F1E8); }
+    .row-item.editing { outline: 2px solid var(--brand); }
     .checkbox-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
     .checkbox-row label { display: flex; align-items: center; gap: 6px; font-size: 13.5px; }
     .empty { text-align: center; color: var(--muted); padding: 18px 0; font-size: 13.5px; }
@@ -164,7 +167,8 @@
           <div class="field"><label data-i18n="delivery_slot">Créneau de livraison</label><input id="of_slot" placeholder="11h30 - 13h30" /></div>
         </div>
         <div class="field"><label data-i18n="address">Adresse</label><input id="of_addr" data-ph="address_ph" placeholder="Adresse complète" /></div>
-        <button class="btn btn-primary" onclick="addOffice()" data-i18n="add_office">+ Ajouter le bureau</button>
+        <button class="btn btn-primary" id="officeSaveBtn" onclick="addOffice()" data-i18n="add_office">+ Ajouter le bureau</button>
+        <button class="btn btn-ghost" id="officeCancelBtn" onclick="cancelOfficeEdit()" data-i18n="cancel_edit" style="display:none;margin-left:8px;">Annuler</button>
         <div class="msg" id="officeMsg"></div>
       </div>
     </div>
@@ -340,6 +344,8 @@ const L = {
     rep_rating:"Note moyenne", rep_adoption:"Taux d'adoption", other_office:"Autre / non défini", orders_count:"commande(s)",
     no_orders_month:"Aucune commande ce mois-ci.", bill_saved:"Mode de facturation enregistré.", err_prefix:"Erreur : ",
     office_added:"Bureau ajouté.", office_name_required:"Le nom du bureau est requis.", no_offices:"Aucun bureau pour le moment.",
+    office_edit:"Modifier", office_del:"Supprimer", office_updated:"Bureau modifié.", office_removed:"Bureau supprimé.",
+    office_del_confirm:"Supprimer le bureau « {n} » ? Les commandes passées sont conservées.", save_office:"Enregistrer les modifications", cancel_edit:"Annuler",
     st_invited:"invité", st_active:"actif", st_removed:"retiré", remove:"Retirer",
     remove_confirm:"Retirer {n} de l'avantage repas ? Il ne pourra plus commander.", removed_ok:"{n} a été retiré.",
     email_required:"L'email est requis.", sending:"Envoi…", invite_sent:"Invitation envoyée à {e}.", no_employees:"Aucun employé actif pour le moment.",
@@ -383,6 +389,8 @@ const L = {
     rep_rating:"Average rating", rep_adoption:"Adoption rate", other_office:"Other / undefined", orders_count:"order(s)",
     no_orders_month:"No orders this month.", bill_saved:"Billing mode saved.", err_prefix:"Error: ",
     office_added:"Office added.", office_name_required:"Office name is required.", no_offices:"No offices yet.",
+    office_edit:"Edit", office_del:"Delete", office_updated:"Office updated.", office_removed:"Office deleted.",
+    office_del_confirm:"Delete office \"{n}\"? Past orders are kept.", save_office:"Save changes", cancel_edit:"Cancel",
     st_invited:"invited", st_active:"active", st_removed:"removed", remove:"Remove",
     remove_confirm:"Remove {n} from the meal benefit? They will no longer be able to order.", removed_ok:"{n} has been removed.",
     email_required:"Email is required.", sending:"Sending…", invite_sent:"Invitation sent to {e}.", no_employees:"No active employees yet.",
@@ -612,16 +620,25 @@ async function saveBilling() {
 }
 
 /* ── BUREAUX ── */
+let editingOfficeId = null;
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
 async function loadOffices() {
   const { data } = await _supa.from("company_offices").select("*").eq("company_id", company.id).order("created_at");
-  offices = data || [];
+  // On masque les bureaux supprimés (active = false), tout en gardant l'historique des commandes
+  offices = (data || []).filter(o => o.active !== false);
   const list = document.getElementById("officesList");
   list.innerHTML = offices.length ? offices.map(o => `
-    <div class="row-item"><span class="main">${o.name}</span><span class="sub">${o.delivery_slot || ""} ${o.address ? "· " + o.address : ""}</span></div>
+    <div class="row-item${editingOfficeId===o.id?" editing":""}">
+      <span class="main">${esc(o.name)}</span>
+      <span class="sub">${esc(o.delivery_slot || "")} ${o.address ? "· " + esc(o.address) : ""}</span>
+      <button class="row-edit" onclick="editOffice('${o.id}')">${T("office_edit")}</button>
+      <button class="row-remove" onclick="deleteOffice('${o.id}', '${esc(o.name).replace(/'/g,"&#39;")}')">${T("office_del")}</button>
+    </div>
   `).join("") : `<p class="empty">${T("no_offices")}</p>`;
 
   const select = document.getElementById("emp_office");
-  select.innerHTML = `<option value="">—</option>` + offices.map(o => `<option value="${o.id}">${o.name}</option>`).join("");
+  select.innerHTML = `<option value="">—</option>` + offices.map(o => `<option value="${o.id}">${esc(o.name)}</option>`).join("");
 }
 
 async function addOffice() {
@@ -630,6 +647,18 @@ async function addOffice() {
   const addr = document.getElementById("of_addr").value.trim();
   if (!name) { showMsg("officeMsg", T("office_name_required"), false); return; }
 
+  if (editingOfficeId) {
+    // Modification d'un bureau existant
+    const { error } = await _supa.from("company_offices")
+      .update({ name, delivery_slot: slot, address: addr })
+      .eq("id", editingOfficeId).eq("company_id", company.id);
+    if (error) { showMsg("officeMsg", T("err_prefix") + error.message, false); return; }
+    cancelOfficeEdit();
+    showMsg("officeMsg", T("office_updated"), true);
+    await loadOffices();
+    return;
+  }
+
   const { error } = await _supa.from("company_offices").insert({ company_id: company.id, name, delivery_slot: slot, address: addr });
   if (error) { showMsg("officeMsg", T("err_prefix") + error.message, false); return; }
 
@@ -637,6 +666,41 @@ async function addOffice() {
   document.getElementById("of_slot").value = "";
   document.getElementById("of_addr").value = "";
   showMsg("officeMsg", T("office_added"), true);
+  await loadOffices();
+}
+
+// Charge un bureau dans le formulaire pour le modifier
+function editOffice(id) {
+  const o = offices.find(x => x.id === id);
+  if (!o) return;
+  editingOfficeId = id;
+  document.getElementById("of_name").value = o.name || "";
+  document.getElementById("of_slot").value = o.delivery_slot || "";
+  document.getElementById("of_addr").value = o.address || "";
+  document.getElementById("officeSaveBtn").textContent = T("save_office");
+  document.getElementById("officeCancelBtn").style.display = "";
+  loadOffices();
+  document.getElementById("of_name").scrollIntoView({ behavior: "smooth", block: "center" });
+  document.getElementById("of_name").focus();
+}
+
+function cancelOfficeEdit() {
+  editingOfficeId = null;
+  document.getElementById("of_name").value = "";
+  document.getElementById("of_slot").value = "";
+  document.getElementById("of_addr").value = "";
+  document.getElementById("officeSaveBtn").textContent = T("add_office");
+  document.getElementById("officeCancelBtn").style.display = "none";
+  loadOffices();
+}
+
+// Suppression = désactivation (active = false) pour préserver les commandes passées
+async function deleteOffice(id, name) {
+  if (!confirm(T("office_del_confirm").replace("{n}", name))) return;
+  const { error } = await _supa.from("company_offices").update({ active: false }).eq("id", id).eq("company_id", company.id);
+  if (error) { showMsg("officeMsg", T("err_prefix") + error.message, false); return; }
+  if (editingOfficeId === id) cancelOfficeEdit();
+  showMsg("officeMsg", T("office_removed"), true);
   await loadOffices();
 }
 
