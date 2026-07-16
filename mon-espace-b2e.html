@@ -193,7 +193,7 @@ const L = {
     no_orders:"Aucune commande pour le moment.", delivery:"livraison", your_rating:"Votre note :", add_fav:"★ Ajouter aux favoris",
     no_fav:"Aucun favori. Ajoutez-en depuis vos commandes passées.", fav_word:"Favori", items:"article(s)",
     reorder:"Recommander", remove:"Retirer", all_months:"Tous les mois", nav_home_btn:"← Accueil",
-    my_info:"Mes informations", info_name:"Nom", info_email:"Email", info_company:"Entreprise",
+    my_info:"Mes informations", info_name:"Nom", info_email:"Email", info_phone:"Téléphone", info_company:"Entreprise",
     info_delivery:"Point de livraison", info_none:"—", info_hr_note:"Ces informations sont gérées par votre service RH." },
   en: { order:"Order", logout:"Log out", budget_left:"Remaining budget", orders_month:"Orders this month",
     meals_ordered:"meals ordered", avg_rating:"Average rating", on_rated:"on your rated meals",
@@ -204,7 +204,7 @@ const L = {
     no_orders:"No orders yet.", delivery:"delivery", your_rating:"Your rating:", add_fav:"★ Add to favorites",
     no_fav:"No favorites yet. Add some from your past orders.", fav_word:"Favorite", items:"item(s)",
     reorder:"Reorder", remove:"Remove", all_months:"All months", nav_home_btn:"← Home",
-    my_info:"My information", info_name:"Name", info_email:"Email", info_company:"Company",
+    my_info:"My information", info_name:"Name", info_email:"Email", info_phone:"Phone", info_company:"Company",
     info_delivery:"Delivery point", info_none:"—", info_hr_note:"This information is managed by your HR team." },
 };
 let lang = localStorage.getItem("bp_lang") || "fr";
@@ -237,6 +237,7 @@ function renderInfo() {
   box.innerHTML =
     row(T("info_name"), employee.full_name) +
     row(T("info_email"), employee.work_email) +
+    row(T("info_phone"), employee.phone) +
     row(T("info_company"), employee.companies?.name) +
     row(T("info_delivery"), delivery);
 }

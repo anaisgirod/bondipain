@@ -316,6 +316,7 @@ create table if not exists employees (
   office_id       uuid references company_offices(id),
   full_name       text,
   work_email      text unique,
+  phone           text,
   invite_code     text unique,
   department      text,
   status          text default 'invited',

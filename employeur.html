@@ -183,8 +183,12 @@
           <div class="field"><label data-i18n="full_name">Nom complet</label><input id="emp_name" placeholder="Jason N." /></div>
         </div>
         <div class="two-col">
+          <div class="field"><label data-i18n="emp_phone">Téléphone (optionnel)</label><input id="emp_phone" type="tel" placeholder="+230 5xxx xxxx" /></div>
           <div class="field"><label data-i18n="office">Bureau</label><select id="emp_office"></select></div>
+        </div>
+        <div class="two-col">
           <div class="field"><label data-i18n="department">Département (optionnel)</label><input id="emp_dept" placeholder="Marketing" /></div>
+          <div></div>
         </div>
         <button class="btn btn-primary" id="inviteBtn" onclick="inviteEmployee()" data-i18n="invite_emp">+ Inviter l'employé</button>
         <div class="msg" id="employeeMsg"></div>
@@ -320,8 +324,8 @@ const L = {
     offices_title:"Bureaux / points de livraison", office_name:"Nom du bureau", delivery_slot:"Créneau de livraison",
     address:"Adresse", address_ph:"Adresse complète", add_office:"+ Ajouter le bureau",
     nav_home_btn:"← Accueil",
-    full_name:"Nom complet", office:"Bureau", department:"Département (optionnel)", invite_emp:"+ Inviter l'employé",
-    bulk_title:"Import en masse (Excel / CSV)", bulk_hint:"Importez plusieurs employés d'un coup. Colonnes attendues : email, nom, prénom (ou nom complet), département (optionnel), bureau (optionnel).",
+    full_name:"Nom complet", emp_phone:"Téléphone (optionnel)", office:"Bureau", department:"Département (optionnel)", invite_emp:"+ Inviter l'employé",
+    bulk_title:"Import en masse (Excel / CSV)", bulk_hint:"Importez plusieurs employés d'un coup. Colonnes attendues : email, nom, prénom (ou nom complet), téléphone (optionnel), département (optionnel), bureau (optionnel).",
     bulk_template:"⬇ Télécharger le modèle CSV", bulk_file:"Fichier (.xlsx ou .csv)", bulk_btn:"Importer les employés",
     bulk_nofile:"Choisissez d'abord un fichier.", bulk_liberr:"Module d'import non chargé, rechargez la page.", bulk_reading:"Lecture du fichier…",
     bulk_parseerr:"Impossible de lire ce fichier. Vérifiez le format (.xlsx ou .csv).", bulk_empty:"Aucun email valide trouvé dans le fichier.",
@@ -365,8 +369,8 @@ const L = {
     offices_title:"Offices / delivery points", office_name:"Office name", delivery_slot:"Delivery slot",
     address:"Address", address_ph:"Full address", add_office:"+ Add office",
     nav_home_btn:"← Home",
-    full_name:"Full name", office:"Office", department:"Department (optional)", invite_emp:"+ Invite employee",
-    bulk_title:"Bulk import (Excel / CSV)", bulk_hint:"Import several employees at once. Expected columns: email, last name, first name (or full name), department (optional), office (optional).",
+    full_name:"Full name", emp_phone:"Phone (optional)", office:"Office", department:"Department (optional)", invite_emp:"+ Invite employee",
+    bulk_title:"Bulk import (Excel / CSV)", bulk_hint:"Import several employees at once. Expected columns: email, last name, first name (or full name), phone (optional), department (optional), office (optional).",
     bulk_template:"⬇ Download CSV template", bulk_file:"File (.xlsx or .csv)", bulk_btn:"Import employees",
     bulk_nofile:"Please choose a file first.", bulk_liberr:"Import module not loaded, please reload the page.", bulk_reading:"Reading file…",
     bulk_parseerr:"Could not read this file. Check the format (.xlsx or .csv).", bulk_empty:"No valid email found in the file.",
@@ -712,7 +716,7 @@ async function loadEmployees() {
   list.innerHTML = active.length ? active.map(e => `
     <div class="row-item">
       <span class="main">${e.full_name || e.work_email}</span>
-      <span class="sub">${e.work_email}${e.company_offices ? " · " + e.company_offices.name : ""}</span>
+      <span class="sub">${e.work_email}${e.phone ? " · " + e.phone : ""}${e.company_offices ? " · " + e.company_offices.name : ""}</span>
       <span class="badge-status ${e.status === "invited" ? "invited" : ""}">${T("st_"+e.status) || e.status}</span>
       <button class="row-remove" onclick="removeEmployee('${e.id}', '${(e.full_name || e.work_email).replace(/'/g, "")}')">${T("remove")}</button>
     </div>
@@ -730,6 +734,7 @@ async function removeEmployee(id, label) {
 async function inviteEmployee() {
   const email = document.getElementById("emp_email").value.trim();
   const fullName = document.getElementById("emp_name").value.trim();
+  const phone = document.getElementById("emp_phone").value.trim();
   const officeId = document.getElementById("emp_office").value || null;
   const department = document.getElementById("emp_dept").value.trim();
   if (!email) { showMsg("employeeMsg", T("email_required"), false); return; }
@@ -741,13 +746,14 @@ async function inviteEmployee() {
     const res = await fetch("/api/invite-employee", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...(await authHeader()) },
-      body: JSON.stringify({ email, fullName, officeId, department }),
+      body: JSON.stringify({ email, fullName, phone, officeId, department }),
     });
     const payload = await res.json();
     if (!res.ok) throw new Error(payload.error || T("err_generic"));
 
     document.getElementById("emp_email").value = "";
     document.getElementById("emp_name").value = "";
+    document.getElementById("emp_phone").value = "";
     document.getElementById("emp_dept").value = "";
     showMsg("employeeMsg", T("invite_sent").replace("{e}", email), true);
     await loadEmployees();
@@ -760,7 +766,7 @@ async function inviteEmployee() {
 
 /* ── IMPORT EN MASSE (Excel / CSV) ── */
 function downloadTemplate() {
-  const csv = "email,prenom,nom,departement,bureau\njason@acme.com,Jason,Nirmal,Marketing,\nsarah@acme.com,Sarah,Payen,Finance,\n";
+  const csv = "email,prenom,nom,telephone,departement,bureau\njason@acme.com,Jason,Nirmal,+230 5123 4567,Marketing,\nsarah@acme.com,Sarah,Payen,+230 5987 6543,Finance,\n";
   const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = "modele-employes-bondipain.csv";
@@ -804,10 +810,11 @@ async function bulkImport() {
       const last = pick(row, ["nom", "lastname", "last", "surname"]);
       fullName = [first, last].filter(Boolean).join(" ").trim();
     }
+    const phone = pick(row, ["telephone", "phone", "tel", "mobile", "gsm", "numero"]);
     const department = pick(row, ["departement", "department", "service", "dept"]);
     const officeName = pick(row, ["bureau", "office", "site"]);
     const officeId = officeName ? (officeByName[normKey(officeName)] || null) : (document.getElementById("emp_office").value || null);
-    list.push({ email: email.toLowerCase(), fullName, department, officeId });
+    list.push({ email: email.toLowerCase(), fullName, phone, department, officeId });
   }
 
   if (!list.length) { showMsg("bulkMsg", T("bulk_empty"), false); btn.disabled = false; return; }

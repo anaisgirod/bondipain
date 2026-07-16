@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const { email, fullName, officeId, department } = req.body || {};
+    const { email, fullName, phone, officeId, department } = req.body || {};
     if (!email) {
       res.status(400).json({ error: 'Email requis.' });
       return;
@@ -64,6 +64,7 @@ module.exports = async (req, res) => {
         office_id: officeId || company.default_office_id || null,
         full_name: fullName || null,
         work_email: email,
+        phone: phone || null,
         invite_code: inviteCode,
         department: department || null,
         status: 'invited',

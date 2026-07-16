@@ -35,6 +35,7 @@ async function sendB2EDriverNotification(supabaseAdmin, order, employee, company
     office = data || null;
   }
   const deliveryPoint = office ? [office.name, office.address].filter(Boolean).join(' — ') : (contact.note || '');
+  const phone = contact.phone || employee.phone || '';
   const inner = `
     <div style="background:#FDF1E5;border-radius:12px;padding:14px 16px;margin-bottom:18px;">
       <div style="font-size:13px;color:#837A70;">N° de commande</div>
@@ -45,7 +46,7 @@ async function sendB2EDriverNotification(supabaseAdmin, order, employee, company
       <div style="font-weight:bold;margin-bottom:6px;">📍 Livraison entreprise</div>
       Employé : <b>${contact.name || employee.full_name || employee.work_email || ''}</b><br>
       ${companyName ? `Entreprise : <b>${companyName}</b><br>` : ''}
-      ${contact.phone ? `Téléphone : <b>${contact.phone}</b><br>` : ''}
+      ${phone ? `Téléphone : <b>${phone}</b><br>` : ''}
       ${deliveryPoint ? `Point de livraison : <b>${deliveryPoint}</b><br>` : ''}
       ${office && office.delivery_slot ? `Créneau : ${office.delivery_slot}<br>` : ''}
       Email : ${employee.work_email || ''}
