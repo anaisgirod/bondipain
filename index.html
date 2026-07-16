@@ -347,7 +347,9 @@
     .fslot-change { font-family: 'Rubik'; font-weight: 700; font-size: 12.5px; color: var(--brand-deep); background: var(--brand-soft); border-radius: 999px; padding: 4px 12px; }
     .fslot-change:hover { background: var(--brand); color: #fff; }
     .fslot-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
-    .fslot-opt { display: flex; justify-content: space-between; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 14px; }
+    .fslot-opt { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 14px; }
+    .fslot-opt .fslot-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .fslot-opt .fslot-name { flex: 1; }
     .fslot-opt:hover { border-color: var(--brand); }
     .fslot-opt.sel { border-color: var(--brand); background: var(--brand-soft); }
 
@@ -1483,7 +1485,8 @@
     const def = FORMULAS.find(f => f.id === id);
     if (!def) return;
     const sel = {}; def.slots.forEach(s => sel[s.key] = s.default);
-    formula = { def, sel, openSlot: null };
+    const condiments = {}; CONDIMENTS.forEach(c => condiments[c.id] = false);
+    formula = { def, sel, openSlot: null, condiments };
     $("#formulaTitle").textContent = def.name[lang];
     renderFormulaBody();
     openModal("#formulaModal");
@@ -1501,10 +1504,14 @@
       const pool = formulaPool(slot.pool);
       const listHtml = openSlot === slot.key ? `
         <div class="fslot-list">
-          ${pool.map(it => `
-            <div class="fslot-opt ${sel[slot.key]===it.id?'sel':''}" onclick="setFormulaSlot('${slot.key}','${it.id}')">
-              <span>${it.name[lang]}</span><b>${money(it.price)}</b>
-            </div>`).join("")}
+          ${pool.map(it => {
+            const c = CATEGORIES.find(cc => cc.items.some(i => i.id === it.id));
+            const photo = it.img || (c ? dishPhoto(it, c) : "");
+            return `<div class="fslot-opt ${sel[slot.key]===it.id?'sel':''}" onclick="setFormulaSlot('${slot.key}','${it.id}')">
+              ${slot.pool === "dishes" ? `<img class="fslot-thumb" src="${photo}" alt="" loading="lazy" />` : ""}
+              <span class="fslot-name">${it.name[lang]}</span><b>${money(it.price)}</b>
+            </div>`;
+          }).join("")}
         </div>` : "";
       return `
         <div class="fslot">
@@ -1527,6 +1534,17 @@
           <span>${b2ePerItemContrib()?t("b2e_banner_you_pay"):(lang==="fr"?"Total formule":"Combo total")}</span><b style="font-size:17px;">${money(youPay)}</b>
         </div>
       </div>
+      ${CONDIMENTS.length ? `
+      <div class="opt-group">
+        <label class="gl">${t("pm_condiments_t")}</label>
+        <div class="hint">${t("pm_condiments_h")}</div>
+        ${CONDIMENTS.map(cd => `
+          <label class="cond-row">
+            <input type="checkbox" ${formula.condiments[cd.id]?"checked":""} onchange="toggleFormulaCondiment('${cd.id}')" />
+            <span class="label">${cd.name[lang]}</span>
+            ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
+          </label>`).join("")}
+      </div>` : ""}
       <div class="opt-group">
         <label class="gl">${t("co_day_t")}</label>
         <div style="margin-top:6px;">${daySelectHtml("formula-" + def.id, "formulaDay", formula.day)}</div>
@@ -1536,6 +1554,7 @@
 
   function toggleFormulaSlot(key) { formula.openSlot = formula.openSlot === key ? null : key; renderFormulaBody(); }
   function setFormulaSlot(key, id) { formula.sel[key] = id; formula.openSlot = null; renderFormulaBody(); }
+  function toggleFormulaCondiment(id) { formula.condiments[id] = !formula.condiments[id]; renderFormulaBody(); }
 
   function addFormulaToCart() {
     const { def, sel } = formula;
@@ -1543,10 +1562,11 @@
     if (!day) { alert(lang === "fr" ? "Aucun jour de livraison disponible." : "No delivery day available."); return; }
     const total = formulaTotal(def, sel);
     const plat = findMenuItem(sel.plat), boisson = findMenuItem(sel.boisson);
+    const condiments = CONDIMENTS.filter(c => formula.condiments[c.id]).map(c => ({ id: c.id, name: c.name, price: c.price }));
     cart.push({
       uid: Date.now() + "_" + Math.floor(Math.random()*9999),
       pid: "formula-" + def.id, name: def.name, img: def.img,
-      base: total, qty: 1, day,
+      base: total, qty: 1, day, condiments,
       sides: plat ? [{ id: plat.id, name: plat.name, qty: 1, price: plat.price }] : [],
       drinks: boisson ? [{ id: boisson.id, name: boisson.name, qty: 1, price: boisson.price }] : [],
       lineTotal: total
@@ -2247,8 +2267,10 @@
     const Y = mt.getFullYear(), M = mt.getMonth(), D = mt.getDate();
     const nowMs = Date.now(); // vrai instant UTC
     const days = [];
-    for (let i = 1; i < 16 && days.length < 7; i++) {
+    for (let i = 1; i < 21 && days.length < 5; i++) {
       const deliv = new Date(Y, M, D + i, 11, 0, 0, 0); // date de livraison (calendrier Maurice)
+      const wd = deliv.getDay();
+      if (wd === 0 || wd === 6) continue; // pas de livraison le samedi/dimanche
       const veille = new Date(Y, M, D + i - 1);
       // 15h Maurice la veille = (15 - 4)h UTC ce jour-là
       const deadlineMs = Date.UTC(veille.getFullYear(), veille.getMonth(), veille.getDate(), CUTOFF_HOUR - MU_OFFSET_H, 0, 0);
