@@ -124,7 +124,7 @@
 <div class="login-wrap" id="loginScreen">
   <div class="login-card">
     <div class="login-logo">
-      <span>Bondipain</span>
+      <img src="./logo-full.png" alt="Bondipain" style="height:30px;width:auto;" />
       <span class="badge">Entreprise</span>
     </div>
     <h2>Espace employeur</h2>
@@ -139,6 +139,7 @@
       <input id="i_login_pwd" type="password" autocomplete="current-password" />
     </div>
     <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">Se connecter</button>
+    <div style="text-align:center;margin-top:16px;"><a href="index.html" style="color:var(--brand-deep);font-weight:700;font-size:13.5px;">← Accueil</a></div>
   </div>
 </div>
 
@@ -147,10 +148,11 @@
 
   <header class="dash-header no-print">
     <div class="dash-logo">
-      <span>Bondipain</span>
+      <img src="./logo-full.png" alt="Bondipain" style="height:30px;width:auto;" />
       <span class="badge">Entreprise</span>
     </div>
     <div class="dash-right">
+      <a class="btn btn-ghost" href="index.html" style="padding:8px 18px;font-size:14px;">← Accueil</a>
       <span class="company-chip">🏢 <b id="companyNameBadge"></b></span>
       <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()">Déconnexion</button>
     </div>
@@ -385,5 +387,6 @@ _supa.auth.getSession().then(({ data: { session } }) => {
   if (session) initDashboard();
 });
 </script>
+<script src="./pwd-eye.js"></script>
 </body>
 </html>

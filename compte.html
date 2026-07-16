@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bondipain — Mon compte</title>
-<link rel="icon" type="image/png" href="./logo.png" />
+<link rel="icon" type="image/png" href="./logo-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -98,29 +98,32 @@
 </head>
 <body>
 
-<div class="topbar">
+<div class="topbar" style="justify-content:space-between;max-width:960px;margin:0 auto;width:100%;">
   <a class="brand" href="index.html">
-    <img src="./logo.png" alt="Bondipain" />
-    <span>Bondipain</span>
+    <img src="./logo-full.png" alt="Bondipain" style="height:38px;width:auto;border-radius:0;" />
   </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="lang-toggle" id="langToggle"></span>
+    <a href="index.html" style="color:var(--brand-deep);font-family:'Rubik';font-weight:700;font-size:14px;" data-i18n="home">← Accueil</a>
+  </div>
 </div>
 
 <!-- ===== LOGIN / SIGNUP PORTAL ===== -->
 <div class="wrap" id="portalScreen">
   <div class="card">
     <div class="segment">
-      <button class="active" id="segB2C" onclick="setSegment('b2c')">Particulier</button>
-      <button id="segB2B" onclick="setSegment('b2b')">Entreprise</button>
+      <button class="active" id="segB2C" onclick="setSegment('b2c')" data-i18n="seg_b2c">Particulier</button>
+      <button id="segB2B" onclick="location.href='b2e-login.html'" data-i18n="seg_emp">Espace employé</button>
     </div>
 
     <!-- B2C -->
     <div id="panelB2C">
-      <h2 class="title">Espace client</h2>
-      <p class="sub">Connectez-vous pour retrouver votre historique de commandes.</p>
+      <h2 class="title" data-i18n="client_title">Espace client</h2>
+      <p class="sub" data-i18n="client_sub">Connectez-vous pour retrouver votre historique de commandes.</p>
 
       <div class="mode-tabs">
-        <button class="active" id="tabLogin" onclick="setMode('login')">Se connecter</button>
-        <button id="tabSignup" onclick="setMode('signup')">Créer un compte</button>
+        <button class="active" id="tabLogin" onclick="setMode('login')" data-i18n="tab_login">Se connecter</button>
+        <button id="tabSignup" onclick="setMode('signup')" data-i18n="tab_signup">Créer un compte</button>
       </div>
 
       <div class="msg err" id="b2cErr"></div>
@@ -128,39 +131,26 @@
 
       <form id="formLogin" onsubmit="return doB2CLogin(event)">
         <div class="field"><label>Email</label><input id="loginEmail" type="email" required autocomplete="email" /></div>
-        <div class="field"><label>Mot de passe</label><input id="loginPwd" type="password" required autocomplete="current-password" /></div>
-        <button class="btn btn-primary btn-block" id="loginBtn" type="submit">Se connecter</button>
+        <div class="field"><label data-i18n="pwd">Mot de passe</label><input id="loginPwd" type="password" required autocomplete="current-password" /></div>
+        <button class="btn btn-primary btn-block" id="loginBtn" type="submit" data-i18n="signin">Se connecter</button>
+        <div style="text-align:center;margin-top:12px;"><a href="#" onclick="return forgotPwd(event)" style="color:var(--brand-deep);font-weight:600;font-size:13.5px;" data-i18n="forgot">Mot de passe oublié ?</a></div>
       </form>
 
       <form id="formSignup" class="hidden" onsubmit="return doB2CSignup(event)">
-        <div class="field"><label>Nom complet</label><input id="suName" type="text" required autocomplete="name" /></div>
+        <div class="field"><label data-i18n="full_name">Nom complet</label><input id="suName" type="text" required autocomplete="name" /></div>
         <div class="field"><label>Email</label><input id="suEmail" type="email" required autocomplete="email" /></div>
-        <div class="field"><label>Téléphone</label><input id="suPhone" type="tel" required autocomplete="tel" /></div>
-        <div class="field"><label>Mot de passe</label><input id="suPwd" type="password" required minlength="6" autocomplete="new-password" /></div>
-        <button class="btn btn-primary btn-block" id="signupBtn" type="submit">Créer mon compte</button>
+        <div class="field"><label data-i18n="phone">Téléphone</label><input id="suPhone" type="tel" required autocomplete="tel" /></div>
+        <div class="field"><label data-i18n="pwd">Mot de passe</label><input id="suPwd" type="password" required minlength="6" autocomplete="new-password" /></div>
+        <button class="btn btn-primary btn-block" id="signupBtn" type="submit" data-i18n="create_account">Créer mon compte</button>
       </form>
     </div>
 
-    <!-- B2B -->
-    <div id="panelB2B" class="hidden">
-      <h2 class="title">Espace entreprise</h2>
-      <p class="sub">Réservé aux entreprises partenaires Bondipain.</p>
-
-      <div class="msg err" id="b2bErr">Email ou mot de passe incorrect.</div>
-
-      <form onsubmit="return doB2BLogin(event)">
-        <div class="field"><label>Email professionnel</label><input id="b2bEmail" type="email" required autocomplete="email" /></div>
-        <div class="field"><label>Mot de passe</label><input id="b2bPwd" type="password" required autocomplete="current-password" /></div>
-        <button class="btn btn-primary btn-block" id="b2bBtn" type="submit">Se connecter</button>
-      </form>
-      <p class="foot-link">Pas encore partenaire ? <a href="index.html#contact">Contactez-nous</a></p>
-    </div>
   </div>
 </div>
 
 <!-- ===== ACCOUNT (logged-in B2C) ===== -->
 <div class="acct-wrap hidden" id="acctScreen">
-  <a class="back-link" href="index.html">← Retour au site</a>
+  <a class="back-link" href="index.html" data-i18n="back_site">← Retour au site</a>
   <div class="acct-header">
     <div class="acct-name-row">
       <div class="acct-avatar" id="acctInitials">?</div>
@@ -169,17 +159,17 @@
         <div style="font-size:13px;color:var(--muted)" id="acctEmail">—</div>
       </div>
     </div>
-    <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doB2CLogout()">Déconnexion</button>
+    <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doB2CLogout()" data-i18n="logout">Déconnexion</button>
   </div>
 
   <div class="section">
-    <h4>Mes informations</h4>
-    <div class="row"><span class="label">Téléphone</span><span class="val" id="acctPhone">—</span></div>
+    <h4 data-i18n="my_info">Mes informations</h4>
+    <div class="row"><span class="label" data-i18n="phone">Téléphone</span><span class="val" id="acctPhone">—</span></div>
   </div>
 
   <div class="section">
-    <h4>Historique de commandes</h4>
-    <div id="acctOrders"><p class="empty">Chargement…</p></div>
+    <h4 data-i18n="order_history">Historique de commandes</h4>
+    <div id="acctOrders"><p class="empty" data-i18n="loading">Chargement…</p></div>
   </div>
 </div>
 
@@ -190,12 +180,50 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 const money = (n) => `Rs ${n ?? 0}`;
 
+/* ── i18n FR/EN (langue partagée via localStorage bp_lang) ── */
+const L = {
+  fr: {
+    home:"← Accueil", seg_b2c:"Particulier", seg_emp:"Espace employé",
+    client_title:"Espace client", client_sub:"Connectez-vous pour retrouver votre historique de commandes.",
+    tab_login:"Se connecter", tab_signup:"Créer un compte", pwd:"Mot de passe", signin:"Se connecter",
+    forgot:"Mot de passe oublié ?", full_name:"Nom complet", phone:"Téléphone", create_account:"Créer mon compte",
+    back_site:"← Retour au site", logout:"Déconnexion", my_info:"Mes informations", order_history:"Historique de commandes", loading:"Chargement…",
+    creating:"Création…", connecting:"Connexion…", err_exists:"Un compte existe déjà avec cet email.",
+    account_created:"Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.",
+    err_bad:"Email ou mot de passe incorrect.", no_orders:"Aucune commande pour le moment.",
+    reset_prompt:"Entrez votre email pour réinitialiser votre mot de passe :",
+    reset_sent:"Si un compte existe pour {e}, un email de réinitialisation vient d'être envoyé.",
+  },
+  en: {
+    home:"← Home", seg_b2c:"Individual", seg_emp:"Employee area",
+    client_title:"Customer area", client_sub:"Sign in to find your order history.",
+    tab_login:"Sign in", tab_signup:"Create account", pwd:"Password", signin:"Sign in",
+    forgot:"Forgot password?", full_name:"Full name", phone:"Phone", create_account:"Create my account",
+    back_site:"← Back to site", logout:"Log out", my_info:"My information", order_history:"Order history", loading:"Loading…",
+    creating:"Creating…", connecting:"Signing in…", err_exists:"An account already exists with this email.",
+    account_created:"Account created! Check your email to confirm your registration, then sign in.",
+    err_bad:"Incorrect email or password.", no_orders:"No orders yet.",
+    reset_prompt:"Enter your email to reset your password:",
+    reset_sent:"If an account exists for {e}, a reset email has just been sent.",
+  },
+};
+let lang = localStorage.getItem("bp_lang") || "fr";
+const T = (k) => (L[lang][k] !== undefined ? L[lang][k] : k);
+function applyLang() {
+  localStorage.setItem("bp_lang", lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.getAttribute("data-i18n")); });
+  const tg = document.getElementById("langToggle");
+  if (tg) tg.innerHTML = ["fr","en"].map(l => `<button onclick="setLang('${l}')" style="background:${l===lang?'var(--brand)':'#fff'};color:${l===lang?'#fff':'var(--muted)'};border:1.5px solid var(--line);font-family:'Rubik';font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;">${l.toUpperCase()}</button>`).join(" ");
+}
+function setLang(l) { lang = l; applyLang(); }
+document.addEventListener("DOMContentLoaded", applyLang);
+
 /* ── Segment / mode toggling ── */
 function setSegment(seg) {
-  document.getElementById("segB2C").classList.toggle("active", seg === "b2c");
-  document.getElementById("segB2B").classList.toggle("active", seg === "b2b");
-  document.getElementById("panelB2C").classList.toggle("hidden", seg !== "b2c");
-  document.getElementById("panelB2B").classList.toggle("hidden", seg !== "b2b");
+  // "b2b" est désormais un lien direct vers le portail employeur (employeur.html)
+  document.getElementById("segB2C").classList.add("active");
+  document.getElementById("panelB2C").classList.remove("hidden");
 }
 
 function setMode(mode) {
@@ -221,13 +249,13 @@ async function doB2CSignup(evt) {
   const pwd   = document.getElementById("suPwd").value;
   const btn   = document.getElementById("signupBtn");
   const err   = document.getElementById("b2cErr");
-  btn.disabled = true; btn.textContent = "Création…";
+  btn.disabled = true; btn.textContent = T("creating");
 
   const { data, error } = await _supa.auth.signUp({ email, password: pwd });
   if (error) {
-    err.textContent = error.message.includes("already") ? "Un compte existe déjà avec cet email." : error.message;
+    err.textContent = error.message.includes("already") ? T("err_exists") : error.message;
     err.classList.add("show");
-    btn.disabled = false; btn.textContent = "Créer mon compte";
+    btn.disabled = false; btn.textContent = T("create_account");
     return false;
   }
 
@@ -237,9 +265,9 @@ async function doB2CSignup(evt) {
   }
 
   if (!data.session) {
-    document.getElementById("b2cOk").textContent = "Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.";
+    document.getElementById("b2cOk").textContent = T("account_created");
     document.getElementById("b2cOk").classList.add("show");
-    btn.disabled = false; btn.textContent = "Créer mon compte";
+    btn.disabled = false; btn.textContent = T("create_account");
     setMode("login");
     return false;
   }
@@ -256,15 +284,15 @@ async function doB2CLogin(evt) {
   const pwd   = document.getElementById("loginPwd").value;
   const btn   = document.getElementById("loginBtn");
   const err   = document.getElementById("b2cErr");
-  btn.disabled = true; btn.textContent = "Connexion…";
+  btn.disabled = true; btn.textContent = T("connecting");
 
   const { data, error } = await _supa.auth.signInWithPassword({ email, password: pwd });
   if (error || !data.session) {
     err.textContent = error?.message === "Email not confirmed"
-      ? "Confirmez d'abord votre email : vérifiez votre boîte de réception (et vos spams)."
-      : "Email ou mot de passe incorrect.";
+      ? (lang === "fr" ? "Confirmez d'abord votre email : vérifiez votre boîte de réception (et vos spams)." : "Please confirm your email first: check your inbox (and spam).")
+      : T("err_bad");
     err.classList.add("show");
-    btn.disabled = false; btn.textContent = "Se connecter";
+    btn.disabled = false; btn.textContent = T("signin");
     return false;
   }
   await enterAccount();
@@ -307,7 +335,7 @@ async function loadOrders(userId) {
     .limit(20);
 
   if (error || !data?.length) {
-    box.innerHTML = `<p class="empty">Aucune commande pour le moment.</p>`;
+    box.innerHTML = `<p class="empty">${T("no_orders")}</p>`;
     return;
   }
 
@@ -319,6 +347,17 @@ async function loadOrders(userId) {
       <div class="ototal">${money(o.order_total)}</div>
     </div>`;
   }).join("");
+}
+
+/* ── Mot de passe oublié ── */
+async function forgotPwd(evt) {
+  evt.preventDefault();
+  const email = (document.getElementById("loginEmail").value || "").trim()
+    || prompt(T("reset_prompt"));
+  if (!email) return false;
+  const { error } = await _supa.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + "/reset-password.html" });
+  alert(error ? ("Erreur : " + error.message) : T("reset_sent").replace("{e}", email));
+  return false;
 }
 
 /* ── B2B: login (reuses dashboard.html session) ── */
@@ -355,5 +394,6 @@ async function doB2BLogin(evt) {
   await enterAccount();
 })();
 </script>
+<script src="./pwd-eye.js"></script>
 </body>
 </html>

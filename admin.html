@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bondipain — Admin</title>
-<link rel="icon" type="image/png" href="./logo.png" />
+<link rel="icon" type="image/png" href="./logo-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -57,7 +57,19 @@
   .dash-logo { display: flex; align-items: center; gap: 10px; }
   .dash-logo span { font-family: 'Rubik'; font-weight: 800; font-size: 20px; color: var(--brand-deep); }
   .dash-logo .badge { background: var(--brand-soft); color: var(--brand-deep); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
-  .dash-body { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+  .dash-body { max-width: 1120px; margin: 0 auto; padding: 32px 24px 60px; display: flex; gap: 30px; align-items: flex-start; }
+  .admin-nav { position: sticky; top: 88px; flex: 0 0 210px; display: flex; flex-direction: column; gap: 4px; }
+  .admin-nav a { display: block; padding: 10px 14px; border-radius: 10px; font-family: 'Rubik'; font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none; transition: background .15s, color .15s; }
+  .admin-nav a:hover { background: var(--cream); }
+  .admin-nav a.active { background: var(--brand); color: #fff; }
+  .admin-main { flex: 1; min-width: 0; }
+  html { scroll-behavior: smooth; }
+  [id^="sec-"] { scroll-margin-top: 84px; }
+  @media (max-width: 820px) {
+    .dash-body { flex-direction: column; gap: 14px; }
+    .admin-nav { position: static; flex-direction: row; flex-wrap: wrap; flex-basis: auto; width: 100%; }
+    .admin-nav a { padding: 7px 12px; font-size: 13px; background: var(--cream); }
+  }
 
   .save-banner { position: sticky; top: 66px; z-index: 5; background: var(--green-soft); color: var(--green); font-weight: 600; font-size: 14px; padding: 10px 16px; border-radius: 10px; margin-bottom: 18px; display: none; align-items: center; gap: 8px; }
   .save-banner.show { display: flex; }
@@ -93,6 +105,8 @@
   .toggle input:checked + .track + .thumb { transform: translateX(18px); }
   .save-row-btn { font-family: 'Rubik'; font-weight: 700; font-size: 12.5px; color: var(--brand-deep); padding: 6px 12px; border-radius: 999px; background: var(--brand-soft); opacity: 0; transition: opacity .15s; margin-left: auto; }
   .save-row-btn.dirty { opacity: 1; }
+  .bs-btn { font-family: 'Rubik'; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; color: var(--muted); cursor: pointer; white-space: nowrap; transition: all .15s; }
+  .bs-btn.on { background: #FDE7C7; border-color: var(--brand); color: var(--brand-deep); }
   .empty { text-align: center; color: var(--muted); padding: 40px; }
 </style>
 </head>
@@ -101,22 +115,23 @@
 <!-- ===== LOGIN ===== -->
 <div class="login-wrap" id="loginScreen">
   <div class="login-card">
-    <div class="login-logo">
-      <span>Bondipain</span>
-      <span class="badge">Admin</span>
+    <div class="login-logo" style="justify-content:space-between;">
+      <span style="display:flex;align-items:center;gap:8px;"><span>Bondipain</span><span class="badge">Admin</span></span>
+      <span class="lang-toggle" id="langToggle"></span>
     </div>
-    <h2>Panneau admin</h2>
-    <p>Connectez-vous pour modifier les prix du menu.</p>
-    <div class="login-err" id="loginErr">Email ou mot de passe incorrect.</div>
+    <h2 data-i18n="login_title">Panneau admin</h2>
+    <p data-i18n="login_sub">Connectez-vous pour modifier les prix du menu.</p>
+    <div class="login-err" id="loginErr" data-i18n="login_err">Email ou mot de passe incorrect.</div>
     <div class="field">
-      <label>Email</label>
+      <label data-i18n="email">Email</label>
       <input id="i_login_email" type="email" autocomplete="email" />
     </div>
     <div class="field">
-      <label>Mot de passe</label>
+      <label data-i18n="password">Mot de passe</label>
       <input id="i_login_pwd" type="password" autocomplete="current-password" />
     </div>
-    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">Se connecter</button>
+    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()" data-i18n="signin">Se connecter</button>
+    <div style="text-align:center;margin-top:16px;"><a href="index.html" style="color:var(--brand-deep);font-weight:700;font-size:13.5px;" data-i18n="home">← Accueil</a></div>
   </div>
 </div>
 
@@ -127,14 +142,75 @@
       <span>Bondipain</span>
       <span class="badge">Admin</span>
     </div>
-    <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()">Déconnexion</button>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="lang-toggle" id="langToggleDash"></span>
+      <a class="btn btn-ghost" href="index.html" style="padding:8px 18px;font-size:14px;" data-i18n="home">← Accueil</a>
+      <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()" data-i18n="logout">Déconnexion</button>
+    </div>
   </header>
 
   <div class="dash-body">
-    <h2 style="font-size:22px;font-weight:800;margin-bottom:6px">Gestion des prix</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Modifiez un prix ou désactivez un plat en rupture — les changements sont visibles immédiatement sur le site.</p>
-    <div class="save-banner" id="saveBanner">✓ Enregistré</div>
-    <div id="catalog"><p class="empty">Chargement…</p></div>
+    <nav class="admin-nav">
+      <a href="#sec-daily" data-i18n="daily_title">🍽️ Menu du jour</a>
+      <a href="#sec-conds" data-i18n="conds_title">🧂 Condiments</a>
+      <a href="#sec-catalog" data-i18n="catalog_title">Catalogue</a>
+      <a href="#sec-nl" data-i18n="nl_title">📣 Newsletter</a>
+      <a href="#sec-content" data-i18n="content_title">📝 Contenu</a>
+      <a href="#sec-popup" data-i18n="popup_title_h">💬 Pop-up</a>
+    </nav>
+    <div class="admin-main">
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:6px" data-i18n="prices_title">Gestion des prix</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="prices_sub">Modifiez un prix ou désactivez un plat en rupture — les changements sont visibles immédiatement sur le site.</p>
+    <div class="save-banner" id="saveBanner" data-i18n="saved">✓ Enregistré</div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:8px 0 6px" id="sec-daily" data-i18n="daily_title">🍽️ Menu du jour</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="daily_sub">Le menu qui change chaque semaine (Lun→Ven, un plat Veg + un Non-Veg par jour). Modifiez le nom, le prix, les ingrédients, les allergènes et la disponibilité.</p>
+    <div id="dailyMenu"><p class="empty" data-i18n="loading">Chargement…</p></div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-conds" data-i18n="conds_title">🧂 Condiments</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="conds_sub">Les condiments proposés au client (Ketchup, Mayonnaise…). Ajoutez, modifiez le nom/prix, activez/désactivez ou supprimez.</p>
+    <div id="condiments"><p class="empty" data-i18n="loading">Chargement…</p></div>
+    <button class="btn btn-ghost" style="margin-bottom:8px" onclick="addCondiment()" data-i18n="add_cond">+ Ajouter un condiment</button>
+    <div class="save-banner" id="condSaveBanner" style="position:static;margin-top:8px" data-i18n="saved">✓ Enregistré</div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-catalog" data-i18n="catalog_title">🍞 Nos plats (catalogue)</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="catalog_sub">Gérez vos catégories et vos plats : prix, nom et description (FR/EN), photo, disponibilité. Ajoutez ou retirez des plats et créez de nouvelles catégories (ex. Burgers).</p>
+    <div id="menuManager"><p class="empty" data-i18n="loading">Chargement…</p></div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-nl" data-i18n="nl_title">📣 Newsletter</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:14px" data-i18n="nl_sub">Rédigez et envoyez une newsletter à tous les abonnés. Testez d'abord (envoi à vous-même) avant l'envoi réel.</p>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;max-width:640px;">
+      <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:6px" data-i18n="nl_subject">Sujet</label>
+      <input id="nlSubject" type="text" data-ph="nl_subject_ph" placeholder="Ex : Nouveau menu de la semaine !" style="width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;margin-bottom:12px;font-family:inherit;font-size:15px;" />
+      <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:6px" data-i18n="nl_message">Message</label>
+      <textarea id="nlBody" rows="6" data-ph="nl_message_ph" placeholder="Votre message… (les retours à la ligne sont conservés)" style="width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;resize:vertical;"></textarea>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="sendNewsletter(true)" style="border:1.5px solid var(--line);background:#fff;padding:10px 18px;border-radius:999px;font-family:'Rubik';font-weight:700;cursor:pointer;" data-i18n="nl_test">Envoyer un test</button>
+        <button class="btn" onclick="sendNewsletter(false)" style="background:var(--brand);color:#fff;padding:10px 18px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;" data-i18n="nl_all">Envoyer à tous</button>
+      </div>
+      <div id="nlMsg" style="font-size:13.5px;margin-top:12px;"></div>
+    </div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-content" data-i18n="content_title">📝 Contenu du site (page d'accueil)</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="content_sub">Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.</p>
+    <div id="contentEditor"><p class="empty">Chargement…</p></div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-popup" data-i18n="popup_title_h">💬 Pop-up d'accueil</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:14px" data-i18n="popup_sub">Message affiché dans une fenêtre à l'arrivée sur le site (une fois par visite).</p>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;max-width:640px;">
+      <label style="display:flex;align-items:center;gap:10px;font-family:'Rubik';font-weight:700;font-size:14px;margin-bottom:14px;cursor:pointer;">
+        <input type="checkbox" id="popEnabled" style="width:18px;height:18px;" /> <span data-i18n="popup_enable">Activer le pop-up d'accueil</span>
+      </label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🇫🇷 FR — <span data-i18n="popup_ftitle">Titre</span></div><input id="popTitleFr" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;" /></div>
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🇬🇧 EN — Title</div><input id="popTitleEn" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;" /></div>
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🇫🇷 FR — <span data-i18n="popup_fbody">Message</span></div><textarea id="popBodyFr" rows="3" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;resize:vertical;"></textarea></div>
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🇬🇧 EN — Message</div><textarea id="popBodyEn" rows="3" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;resize:vertical;"></textarea></div>
+      </div>
+      <button class="btn" onclick="savePopup()" style="margin-top:14px;background:var(--brand);color:#fff;padding:11px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;" data-i18n="content_save">💾 Enregistrer le contenu</button>
+      <div id="popMsg" style="font-size:13.5px;margin-top:12px;"></div>
+    </div>
+    </div>
   </div>
 </div>
 
@@ -143,6 +219,58 @@ const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
 const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
 const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 const ADMIN_EMAIL = "hello@bondipain.com";
+
+/* ── i18n FR/EN ── */
+const L = {
+  fr: {
+    login_title:"Panneau admin", login_sub:"Connectez-vous pour modifier les prix du menu.",
+    login_err:"Email ou mot de passe incorrect.", email:"Email", password:"Mot de passe", signin:"Se connecter",
+    home:"← Accueil", logout:"Déconnexion", loading:"Chargement…", saved:"✓ Enregistré", save:"Enregistrer",
+    prices_title:"Gestion des prix", prices_sub:"Modifiez un prix ou désactivez un plat en rupture — les changements sont visibles immédiatement sur le site.",
+    daily_title:"🍽️ Menu du jour", daily_sub:"Le menu qui change chaque semaine (Lun→Ven, un plat Veg + un Non-Veg par jour). Modifiez le nom, le prix, les ingrédients, les allergènes et la disponibilité.",
+    conds_title:"🧂 Condiments", conds_sub:"Les condiments proposés au client (Ketchup, Mayonnaise…). Ajoutez, modifiez le nom/prix, activez/désactivez ou supprimez.", add_cond:"+ Ajouter un condiment",
+    catalog_title:"Gestion des pains (catalogue)", catalog_sub:"Prix, noms, photos et disponibilité des pains garnis — visibles immédiatement sur le site.",
+    nl_title:"📣 Newsletter", nl_sub:"Rédigez et envoyez une newsletter à tous les abonnés. Testez d'abord (envoi à vous-même) avant l'envoi réel.",
+    nl_subject:"Sujet", nl_subject_ph:"Ex : Nouveau menu de la semaine !", nl_message:"Message", nl_message_ph:"Votre message… (les retours à la ligne sont conservés)",
+    nl_test:"Envoyer un test", nl_all:"Envoyer à tous",
+    content_title:"📝 Contenu du site (page d'accueil)", content_sub:"Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.",
+    content_save:"💾 Enregistrer le contenu",
+    popup_title_h:"💬 Pop-up d'accueil", popup_sub:"Message affiché dans une fenêtre à l'arrivée sur le site (une fois par visite).",
+    popup_enable:"Activer le pop-up d'accueil", popup_ftitle:"Titre", popup_fbody:"Message",
+    veg:"Veg", nonveg:"Non-Veg", available:"Disponible", unavailable:"Indisponible",
+  },
+  en: {
+    login_title:"Admin panel", login_sub:"Sign in to edit the menu prices.",
+    login_err:"Incorrect email or password.", email:"Email", password:"Password", signin:"Sign in",
+    home:"← Home", logout:"Log out", loading:"Loading…", saved:"✓ Saved", save:"Save",
+    prices_title:"Price management", prices_sub:"Edit a price or disable an out-of-stock dish — changes appear on the site instantly.",
+    daily_title:"🍽️ Daily menu", daily_sub:"The menu that changes every week (Mon→Fri, one Veg + one Non-Veg dish per day). Edit the name, price, ingredients, allergens and availability.",
+    conds_title:"🧂 Condiments", conds_sub:"The condiments offered to customers (Ketchup, Mayonnaise…). Add, edit the name/price, enable/disable or delete.", add_cond:"+ Add a condiment",
+    catalog_title:"Bread management (catalogue)", catalog_sub:"Price, names, photos and availability of the stuffed breads — visible instantly on the site.",
+    nl_title:"📣 Newsletter", nl_sub:"Write and send a newsletter to all subscribers. Test first (send to yourself) before the real send.",
+    nl_subject:"Subject", nl_subject_ph:"e.g. New menu this week!", nl_message:"Message", nl_message_ph:"Your message… (line breaks are kept)",
+    nl_test:"Send a test", nl_all:"Send to all",
+    content_title:"📝 Site content (home page)", content_sub:"Edit the home page texts, in French and English. Changes appear on the site instantly.",
+    content_save:"💾 Save content",
+    popup_title_h:"💬 Welcome pop-up", popup_sub:"Message shown in a window when visitors arrive on the site (once per visit).",
+    popup_enable:"Enable the welcome pop-up", popup_ftitle:"Title", popup_fbody:"Message",
+    veg:"Veg", nonveg:"Non-Veg", available:"Available", unavailable:"Unavailable",
+  },
+};
+let lang = localStorage.getItem("bp_lang") || "fr";
+const T = (k) => (L[lang][k] !== undefined ? L[lang][k] : k);
+function applyLang() {
+  localStorage.setItem("bp_lang", lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.getAttribute("data-i18n")); });
+  document.querySelectorAll("[data-ph]").forEach(el => { el.setAttribute("placeholder", T(el.getAttribute("data-ph"))); });
+  ["langToggle","langToggleDash"].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML =
+    ["fr","en"].map(l => `<button onclick="setLang('${l}')" style="background:${l===lang?'var(--brand)':'#fff'};color:${l===lang?'#fff':'var(--muted)'};border:1.5px solid var(--line);font-family:'Rubik';font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;">${l.toUpperCase()}</button>`).join(" "); });
+  // Re-render les sections dynamiques dont les libellés statiques dépendent de la langue
+  if (typeof renderContentEditor === "function" && document.querySelector("#contentEditor [data-ck]")) renderContentEditor();
+}
+function setLang(l) { lang = l; applyLang(); }
+document.addEventListener("DOMContentLoaded", applyLang);
 
 /* Noms/catégories affichés dans le panneau (les prix, eux, viennent de Supabase) */
 const CATALOG = [
@@ -178,6 +306,168 @@ const CATALOG = [
 ];
 
 let products = {};
+
+/* ── MENU DU JOUR ── */
+const MENU_DAYS = [["mon","Lundi"],["tue","Mardi"],["wed","Mercredi"],["thu","Jeudi"],["fri","Vendredi"]];
+const MENU_TYPES = [["veg","🌿 Veg"],["nonveg","🍗 Non-Veg"]];
+let dailyRows = {}; // 'day-type' -> row
+
+async function loadDaily() {
+  const { data, error } = await _supa.from("daily_menu").select("*");
+  const box = document.getElementById("dailyMenu");
+  if (error) { box.innerHTML = `<p class="empty">Erreur : ${error.message}</p>`; return; }
+  dailyRows = {};
+  (data || []).forEach(r => dailyRows[r.day + "-" + r.type] = r);
+  renderDaily();
+}
+
+function renderDaily() {
+  document.getElementById("dailyMenu").innerHTML = MENU_DAYS.map(([dk, dl]) => `
+    <div class="cat-section">
+      <div class="cat-head">${dl}</div>
+      ${MENU_TYPES.map(([tk, tl]) => {
+        const r = dailyRows[dk + "-" + tk] || { name_fr:"", name_en:"", price:220, ingredients:"", allergens:"", available:true };
+        const photoInner = r.image_url
+          ? `<img src="${r.image_url}" alt="" />`
+          : `<span class="ph-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m4 17 5-5 4 4 3-3 4 4"/></svg></span>`;
+        return `<div class="prod-row" data-day="${dk}" data-type="${tk}">
+          <label class="photo-wrap" title="Changer la photo">
+            <span class="photo-inner">${photoInner}</span>
+            <input type="file" accept="image/*" onchange="onDailyPhoto('${dk}','${tk}', this.files[0])" />
+          </label>
+          <div class="prod-fields">
+            <div style="font-family:'Rubik';font-weight:700;font-size:13px;color:var(--muted);">${tl}</div>
+            <div class="name-inputs">
+              <input class="name-input" data-f="name_fr" placeholder="Nom du plat (FR)" value="${(r.name_fr||"").replace(/"/g,'&quot;')}" oninput="dailyDirty('${dk}','${tk}')" />
+              <input class="name-input" data-f="name_en" placeholder="Name (EN)" value="${(r.name_en||"").replace(/"/g,'&quot;')}" oninput="dailyDirty('${dk}','${tk}')" />
+            </div>
+            <div class="name-inputs">
+              <input class="name-input" data-f="ingredients" placeholder="Ingrédients" value="${(r.ingredients||"").replace(/"/g,'&quot;')}" oninput="dailyDirty('${dk}','${tk}')" />
+              <input class="name-input" data-f="allergens" placeholder="Allergènes (ex : gluten, noix)" value="${(r.allergens||"").replace(/"/g,'&quot;')}" oninput="dailyDirty('${dk}','${tk}')" />
+            </div>
+            <div class="row-controls">
+              <label class="toggle" title="Disponible">
+                <input type="checkbox" data-f="available" ${r.available!==false?"checked":""} onchange="dailyDirty('${dk}','${tk}')" />
+                <span class="track"></span><span class="thumb"></span>
+              </label>
+              <div class="price-input-wrap">
+                <input class="price-input" data-f="price" type="number" min="0" step="5" value="${r.price!=null?r.price:220}" oninput="dailyDirty('${dk}','${tk}')" />
+                <span>Rs</span>
+              </div>
+              <button class="save-row-btn" id="dsave-${dk}-${tk}" onclick="saveDaily('${dk}','${tk}')">Enregistrer</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`).join("");
+}
+
+function dailyDirty(dk, tk) { document.getElementById(`dsave-${dk}-${tk}`)?.classList.add("dirty"); }
+
+async function onDailyPhoto(dk, tk, file) {
+  if (!file) return;
+  const wrap = document.querySelector(`.prod-row[data-day="${dk}"][data-type="${tk}"] .photo-wrap`);
+  const loading = document.createElement("div");
+  loading.className = "ph-loading"; loading.textContent = "…";
+  wrap.appendChild(loading);
+
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `daily-${dk}-${tk}-${Date.now()}.${ext}`;
+  const { error: upErr } = await _supa.storage.from("products").upload(path, file, { upsert: true });
+  if (upErr) { alert("Erreur d'upload : " + upErr.message); loading.remove(); return; }
+  const { data: pub } = _supa.storage.from("products").getPublicUrl(path);
+  const imageUrl = pub.publicUrl;
+
+  // update (pas upsert) pour ne pas écraser les autres champs de la ligne
+  const { error: saveErr } = await _supa.from("daily_menu").update({ image_url: imageUrl, updated_at: new Date().toISOString() }).eq("day", dk).eq("type", tk);
+  loading.remove();
+  if (saveErr) { alert("Erreur d'enregistrement : " + saveErr.message); return; }
+  dailyRows[dk + "-" + tk] = { ...(dailyRows[dk + "-" + tk] || { day: dk, type: tk }), image_url: imageUrl };
+  wrap.querySelector(".photo-inner").innerHTML = `<img src="${imageUrl}" alt="" />`;
+  flashSaved();
+}
+
+async function saveDaily(dk, tk) {
+  const row = document.querySelector(`.prod-row[data-day="${dk}"][data-type="${tk}"]`);
+  const val = (f) => row.querySelector(`[data-f="${f}"]`);
+  const name_fr = val("name_fr").value.trim();
+  if (!name_fr) { alert("Le nom (FR) est obligatoire."); return; }
+  const payload = {
+    day: dk, type: tk,
+    name_fr,
+    name_en: val("name_en").value.trim(),
+    ingredients: val("ingredients").value.trim(),
+    allergens: val("allergens").value.trim(),
+    price: parseInt(val("price").value, 10) || 0,
+    available: val("available").checked,
+    updated_at: new Date().toISOString(),
+  };
+  const btn = document.getElementById(`dsave-${dk}-${tk}`);
+  btn.textContent = "…";
+  const { error } = await _supa.from("daily_menu").upsert(payload, { onConflict: "day,type" });
+  btn.textContent = "Enregistrer";
+  if (error) { alert("Erreur : " + error.message); return; }
+  dailyRows[dk + "-" + tk] = payload;
+  btn.classList.remove("dirty");
+  flashSaved();
+}
+
+/* ── CONDIMENTS ── */
+let condsData = [];
+async function loadConds() {
+  const { data, error } = await _supa.from("condiments").select("*").order("sort");
+  const box = document.getElementById("condiments");
+  if (error) { box.innerHTML = `<p class="empty">Erreur : ${error.message}</p>`; return; }
+  condsData = data || [];
+  renderConds();
+}
+function renderConds() {
+  const box = document.getElementById("condiments");
+  if (!condsData.length) { box.innerHTML = `<p class="empty">Aucun condiment. Ajoutez-en un ci-dessous.</p>`; return; }
+  box.innerHTML = `<div class="cat-section">` + condsData.map(c => `
+    <div class="prod-row" data-cid="${c.id}">
+      <div class="prod-fields">
+        <div class="name-inputs">
+          <input class="name-input" data-f="name_fr" placeholder="Nom (FR)" value="${(c.name_fr||"").replace(/"/g,'&quot;')}" oninput="condDirty('${c.id}')" />
+          <input class="name-input" data-f="name_en" placeholder="Name (EN)" value="${(c.name_en||"").replace(/"/g,'&quot;')}" oninput="condDirty('${c.id}')" />
+        </div>
+        <div class="row-controls">
+          <label class="toggle" title="Disponible"><input type="checkbox" data-f="available" ${c.available!==false?"checked":""} onchange="condDirty('${c.id}')" /><span class="track"></span><span class="thumb"></span></label>
+          <div class="price-input-wrap"><input class="price-input" data-f="price" type="number" min="0" step="5" value="${c.price!=null?c.price:0}" oninput="condDirty('${c.id}')" /><span>Rs</span></div>
+          <button class="save-row-btn" id="csave-${c.id}" onclick="saveCond('${c.id}')">Enregistrer</button>
+          <button onclick="removeCond('${c.id}')" style="color:var(--danger);font-weight:700;font-size:12.5px;padding:6px 10px;">Supprimer</button>
+        </div>
+      </div>
+    </div>`).join("") + `</div>`;
+}
+function condDirty(id) { document.getElementById(`csave-${id}`)?.classList.add("dirty"); }
+async function saveCond(id) {
+  const row = document.querySelector(`.prod-row[data-cid="${id}"]`);
+  const v = (f) => row.querySelector(`[data-f="${f}"]`);
+  const name_fr = v("name_fr").value.trim();
+  if (!name_fr) { alert("Le nom (FR) est obligatoire."); return; }
+  const payload = { id, name_fr, name_en: v("name_en").value.trim(), price: parseInt(v("price").value, 10) || 0, available: v("available").checked, updated_at: new Date().toISOString() };
+  const btn = document.getElementById(`csave-${id}`); btn.textContent = "…";
+  const { error } = await _supa.from("condiments").upsert(payload); btn.textContent = "Enregistrer";
+  if (error) { alert("Erreur : " + error.message); return; }
+  const i = condsData.findIndex(c => c.id === id); if (i >= 0) condsData[i] = { ...condsData[i], ...payload };
+  btn.classList.remove("dirty"); flashCondSaved();
+}
+async function removeCond(id) {
+  if (!confirm("Supprimer ce condiment ?")) return;
+  const { error } = await _supa.from("condiments").delete().eq("id", id);
+  if (error) { alert("Erreur : " + error.message); return; }
+  condsData = condsData.filter(c => c.id !== id); renderConds(); flashCondSaved();
+}
+async function addCondiment() {
+  const name = prompt("Nom du condiment (FR) :"); if (!name) return;
+  const id = name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || ("cond-" + Date.now());
+  const sort = condsData.reduce((m, c) => Math.max(m, c.sort || 0), 0) + 1;
+  const { error } = await _supa.from("condiments").upsert({ id, name_fr: name, name_en: name, price: 0, available: true, sort });
+  if (error) { alert("Erreur : " + error.message); return; }
+  await loadConds();
+}
+function flashCondSaved() { const b = document.getElementById("condSaveBanner"); b.classList.add("show"); clearTimeout(flashCondSaved._t); flashCondSaved._t = setTimeout(() => b.classList.remove("show"), 1800); }
 
 async function doLogin() {
   const email = document.getElementById("i_login_email").value.trim();
@@ -217,112 +507,208 @@ async function doLogout() {
 async function initAdmin() {
   document.getElementById("loginScreen").classList.add("hidden");
   document.getElementById("adminScreen").classList.remove("hidden");
-  await loadProducts();
+  await loadDaily();
+  await loadConds();
+  await loadMenu();
+  await loadContent();
+  await loadPopup();
 }
 
-async function loadProducts() {
-  const { data, error } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url");
-  if (error) {
-    document.getElementById("catalog").innerHTML = `<p class="empty">Erreur de chargement : ${error.message}</p>`;
+/* ── GESTIONNAIRE DE MENU « Nos plats » (catégories + produits, piloté par la base) ── */
+const DEFAULT_MENU = {
+  categories: [
+    { id:"veg",    name_fr:"🌿 Pain Veg",    name_en:"🌿 Veg Bread",    desc_fr:"14 garnitures végétariennes au choix.", desc_en:"14 vegetarian fillings to choose from.", tag_fr:"Végétarien", tag_en:"Vegetarian", img:"./sandwich-vege.jpg", diet:"veg", sort:1 },
+    { id:"nonveg", name_fr:"🍗 Pain Non-Veg", name_en:"🍗 Non-Veg Bread", desc_fr:"Poulet à Rs 170 · Poisson à Rs 185.", desc_en:"Chicken Rs 170 · Fish Rs 185.", tag_fr:"Poulet & Poisson", tag_en:"Chicken & Fish", img:"./sandwich-nonveg.jpg", diet:"nonveg", sort:2 },
+    { id:"sautes", name_fr:"🍜 Mine Frit & Riz Frit", name_en:"🍜 Fried Noodles & Fried Rice", desc_fr:"Nos plats sautés maison.", desc_en:"Our homemade fried dishes.", tag_fr:"Sauté", tag_en:"Fried", img:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80", diet:"mixed", sort:3 },
+  ],
+  products: [
+    ["v1","veg","Chopsuey Teocon","Chopsuey Teocon",130],["v2","veg","Saute Légumes","Sautéed Vegetables",130],["v3","veg","Salade Gateau Piment","Chilli Cake Salad",130],["v4","veg","Chatini Pomme de Terre","Potato Chatini",130],["v5","veg","Saute Bringelle Poivron","Aubergine & Pepper",130],["v6","veg","Achard Légumes","Vegetable Achard",130],["v7","veg","Catless Veg","Veg Cutlet",130],["v8","veg","Tandoorie Teocon","Tandoori Teocon",130],["v9","veg","Vindaye Gateau Piment","Chilli Cake Vindaye",130],["v10","veg","Vindaye Pomme de Terre","Potato Vindaye",130],["v11","veg","Vindaye Teocon","Teocon Vindaye",130],["v12","veg","Teocon Pané","Breaded Teocon",130],["v13","veg","Salade Bringelle","Aubergine Salad",130],["v14","veg","Vindaye Bringelle","Aubergine Vindaye",130],
+    ["nv1","nonveg","Poulet Tandoorie","Tandoori Chicken",170],["nv2","nonveg","Roti de Poulet","Chicken Roti",170],["nv3","nonveg","Poulet Croustillant","Crispy Chicken",170],["nv4","nonveg","Saute Poulet","Chicken Sauté",170],["nv5","nonveg","Poulet Satay","Chicken Satay",170],["nv6","nonveg","Poisson Pané","Breaded Fish",185],["nv7","nonveg","Tikka Poisson","Fish Tikka",185],["nv8","nonveg","Saute Poisson","Fish Sauté",185],["nv9","nonveg","Pain Saucisse Poulet","Chicken Sausage Bread",145],
+    ["mf1","sautes","Mine Frit","Fried Noodles",190],["rf1","sautes","Riz Frit","Fried Rice",190],
+  ].map((r, i) => ({ id:r[0], category_id:r[1], name_fr:r[2], name_en:r[3], price:r[4], sort:i, active:true, bestseller:false })),
+};
+
+let mCats = [], mProds = [], menuNeedsMigration = false;
+async function loadMenu() {
+  menuNeedsMigration = false;
+  const { data: cats, error: catErr } = await _supa.from("menu_categories").select("*").order("sort");
+  const { data: prods, error: prodErr } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url, bestseller, category_id, desc_fr, desc_en, sort");
+  // Colonnes/tables manquantes → migration SQL non exécutée
+  if ((catErr && /does not exist|relation/i.test(catErr.message)) || (prodErr && /does not exist|column/i.test(prodErr.message))) {
+    menuNeedsMigration = true;
+  }
+  mCats = cats || [];
+  mProds = prods || [];
+  renderMenuManager();
+}
+
+const MENU_MIGRATION_SQL = `create table if not exists menu_categories (
+  id text primary key, name_fr text, name_en text, desc_fr text, desc_en text,
+  tag_fr text, tag_en text, img text, diet text default 'mixed',
+  sort integer default 0, active boolean default true);
+alter table menu_categories enable row level security;
+create policy "Lecture publique des catégories" on menu_categories for select using (true);
+create policy "Admin gère les catégories" on menu_categories for all
+  using (auth.email() = 'hello@bondipain.com') with check (auth.email() = 'hello@bondipain.com');
+alter table products add column if not exists name_fr text;
+alter table products add column if not exists name_en text;
+alter table products add column if not exists image_url text;
+alter table products add column if not exists bestseller boolean default false;
+alter table products add column if not exists category_id text;
+alter table products add column if not exists desc_fr text;
+alter table products add column if not exists desc_en text;
+alter table products add column if not exists sort integer default 0;`;
+function renderMenuManager() {
+  const box = document.getElementById("menuManager");
+  if (menuNeedsMigration) {
+    box.innerHTML = `<div style="background:#FBE9E7;border:1px solid #E8B4AA;border-radius:14px;padding:18px;">
+      <p style="font-weight:700;color:var(--danger);margin-bottom:8px;">${lang==="en"?"Database update required":"Mise à jour de la base requise"}</p>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">${lang==="en"?"Run this SQL once in Supabase → SQL Editor, then reload this page.":"Exécutez ce SQL une fois dans Supabase → SQL Editor, puis rechargez cette page."}</p>
+      <textarea readonly onclick="this.select()" style="width:100%;height:190px;font-family:monospace;font-size:12px;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;">${MENU_MIGRATION_SQL}</textarea>
+    </div>`;
     return;
   }
-  products = Object.fromEntries((data || []).map(p => [p.id, p]));
-  renderCatalog();
+  if (!mCats.length) {
+    box.innerHTML = `<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center;">
+      <p style="color:var(--muted);margin-bottom:14px;">${lang==="en"?"The catalogue isn't in the database yet. Import the current menu to start editing it.":"Le catalogue n'est pas encore en base. Importez le menu actuel pour commencer à l'éditer."}</p>
+      <button class="btn" onclick="seedMenu(this)" style="background:var(--brand);color:#fff;padding:12px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${lang==="en"?"Import current menu":"Importer le menu actuel"}</button>
+    </div>`;
+    return;
+  }
+  const dietOpts = (sel) => ["veg","nonveg","mixed"].map(d => `<option value="${d}" ${sel===d?"selected":""}>${d}</option>`).join("");
+  box.innerHTML = mCats.slice().sort((a,b)=>(a.sort||0)-(b.sort||0)).map(c => {
+    const prods = mProds.filter(p => p.category_id === c.id).sort((a,b)=>(a.sort||0)-(b.sort||0));
+    return `<div class="menu-cat" data-cid="${c.id}" style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <input data-cf="name_fr" value="${esc(c.name_fr)}" placeholder="Nom catégorie (FR)" style="padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:'Rubik';font-weight:700;" />
+        <input data-cf="name_en" value="${esc(c.name_en)}" placeholder="Category name (EN)" style="padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:'Rubik';font-weight:700;" />
+        <input data-cf="desc_fr" value="${esc(c.desc_fr)}" placeholder="Description (FR)" style="padding:8px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:13px;" />
+        <input data-cf="desc_en" value="${esc(c.desc_en)}" placeholder="Description (EN)" style="padding:8px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:13px;" />
+        <input data-cf="tag_fr" value="${esc(c.tag_fr)}" placeholder="Étiquette (FR)" style="padding:8px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:13px;" />
+        <input data-cf="tag_en" value="${esc(c.tag_en)}" placeholder="Tag (EN)" style="padding:8px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:13px;" />
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+        <label style="font-size:13px;">Type <select data-cf="diet" style="padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;">${dietOpts(c.diet)}</select></label>
+        <label style="font-size:13px;">Tri <input data-cf="sort" type="number" value="${c.sort||0}" style="width:60px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;" /></label>
+        <label style="font-size:13px;display:flex;align-items:center;gap:6px;"><input type="checkbox" data-cf="active" ${c.active!==false?"checked":""} /> ${lang==="en"?"Visible":"Visible"}</label>
+        <button class="btn" onclick="saveCategory('${c.id}')" style="background:var(--brand);color:#fff;padding:8px 16px;border-radius:999px;font-weight:700;border:none;cursor:pointer;font-size:13px;">${T("save")}</button>
+        <button onclick="deleteCategory('${c.id}')" style="color:var(--danger);background:none;border:none;cursor:pointer;font-weight:700;font-size:13px;">${lang==="en"?"Delete category":"Supprimer la catégorie"}</button>
+      </div>
+      <div class="menu-prods">
+        ${prods.map(p => menuProductRow(p)).join("")}
+      </div>
+      <button class="btn btn-ghost" onclick="addProduct('${c.id}')" style="margin-top:10px;border:1.5px dashed var(--line);background:#fff;padding:8px 16px;border-radius:999px;font-weight:700;cursor:pointer;font-size:13px;">${lang==="en"?"+ Add a dish":"+ Ajouter un plat"}</button>
+    </div>`;
+  }).join("") +
+  `<button class="btn" onclick="addCategory()" style="background:var(--ink);color:#fff;padding:12px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${lang==="en"?"+ Add a category":"+ Ajouter une catégorie"}</button>`;
 }
 
-function renderCatalog() {
-  document.getElementById("catalog").innerHTML = CATALOG.map(cat => `
-    <div class="cat-section">
-      <div class="cat-head">${cat.label}</div>
-      ${cat.items.map(item => {
-        const p = products[item.id] || { price: "", active: true, name_fr: item.name, name_en: "", image_url: "" };
-        const photoInner = p.image_url
-          ? `<img src="${p.image_url}" alt="" />`
-          : `<span class="ph-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m4 17 5-5 4 4 3-3 4 4"/></svg></span>`;
-        return `<div class="prod-row" data-id="${item.id}">
-          <label class="photo-wrap" title="Changer la photo">
-            <span class="photo-inner">${photoInner}</span>
-            <input type="file" accept="image/*" onchange="onPhotoSelected('${item.id}', this.files[0])" />
-          </label>
-          <div class="prod-fields">
-            <div class="name-inputs">
-              <input class="name-input ${p.active ? "" : "inactive"}" data-field="name_fr" placeholder="Nom (FR)" value="${p.name_fr || ""}" oninput="onFieldChange('${item.id}')" />
-              <input class="name-input ${p.active ? "" : "inactive"}" data-field="name_en" placeholder="Nom (EN)" value="${p.name_en || ""}" oninput="onFieldChange('${item.id}')" />
-            </div>
-            <div class="row-controls">
-              <label class="toggle" title="${p.active ? "Disponible" : "Indisponible"}">
-                <input type="checkbox" ${p.active ? "checked" : ""} onchange="onFieldChange('${item.id}')" />
-                <span class="track"></span><span class="thumb"></span>
-              </label>
-              <div class="price-input-wrap">
-                <input class="price-input" data-field="price" type="number" min="0" step="5" value="${p.price}" oninput="onFieldChange('${item.id}')" />
-                <span>Rs</span>
-              </div>
-              <button class="save-row-btn" id="save-${item.id}" onclick="saveProduct('${item.id}')">Enregistrer</button>
-            </div>
-          </div>
-        </div>`;
-      }).join("")}
-    </div>`).join("");
+function menuProductRow(p) {
+  const img = p.image_url ? `<img src="${p.image_url}" alt="" style="width:100%;height:100%;object-fit:cover;" />` : `<span style="font-size:11px;color:var(--muted);">Photo</span>`;
+  return `<div class="menu-prod" data-pid="${p.id}" style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);">
+    <label style="width:56px;height:56px;flex-shrink:0;border-radius:10px;overflow:hidden;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;background:var(--cream);">
+      ${img}<input type="file" accept="image/*" style="display:none" onchange="onMenuPhoto('${p.id}', this.files[0])" />
+    </label>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <input data-pf="name_fr" value="${esc(p.name_fr)}" placeholder="Nom (FR)" style="padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font-weight:600;" />
+      <input data-pf="name_en" value="${esc(p.name_en)}" placeholder="Name (EN)" style="padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font-weight:600;" />
+      <input data-pf="desc_fr" value="${esc(p.desc_fr)}" placeholder="Description (FR)" style="padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;" />
+      <input data-pf="desc_en" value="${esc(p.desc_en)}" placeholder="Description (EN)" style="padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;" />
+      <div style="display:flex;gap:8px;align-items:center;grid-column:1/-1;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:4px;"><input data-pf="price" type="number" min="0" step="5" value="${p.price||0}" style="width:80px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;" /> Rs</span>
+        <label style="font-size:13px;display:flex;align-items:center;gap:5px;"><input type="checkbox" data-pf="active" ${p.active!==false?"checked":""} /> ${lang==="en"?"Available":"Dispo"}</label>
+        <button type="button" class="bs-btn ${p.bestseller?"on":""}" data-pf="bestseller" data-on="${p.bestseller?"1":"0"}" onclick="toggleBS('${p.id}')">★ Best Seller</button>
+        <button class="btn" onclick="saveMenuProduct('${p.id}')" style="background:var(--brand-soft);color:var(--brand-deep);padding:6px 14px;border-radius:999px;font-weight:700;border:none;cursor:pointer;font-size:12.5px;">${T("save")}</button>
+        <button onclick="deleteProduct('${p.id}')" style="color:var(--danger);background:none;border:none;cursor:pointer;font-weight:700;font-size:12.5px;">${lang==="en"?"Remove":"Retirer"}</button>
+      </div>
+    </div>
+  </div>`;
 }
 
-function onFieldChange(id) {
-  document.getElementById(`save-${id}`)?.classList.add("dirty");
+function toggleBS(id) {
+  const b = document.querySelector(`.menu-prod[data-pid="${id}"] .bs-btn`);
+  const on = b.dataset.on === "1"; b.dataset.on = on?"0":"1"; b.classList.toggle("on", !on);
 }
 
-async function onPhotoSelected(id, file) {
+async function seedMenu(btn) {
+  btn.disabled = true; btn.textContent = "…";
+  const { error: e1 } = await _supa.from("menu_categories").upsert(DEFAULT_MENU.categories);
+  const { error: e2 } = await _supa.from("products").upsert(DEFAULT_MENU.products);
+  if (e1 || e2) { alert("Erreur : " + ((e1||e2).message)); btn.disabled = false; return; }
+  await loadMenu(); flashSaved();
+}
+
+async function saveCategory(id) {
+  const el = document.querySelector(`.menu-cat[data-cid="${id}"]`);
+  const g = (f) => el.querySelector(`[data-cf="${f}"]`);
+  const payload = { id, name_fr:g("name_fr").value.trim(), name_en:g("name_en").value.trim(), desc_fr:g("desc_fr").value.trim(), desc_en:g("desc_en").value.trim(), tag_fr:g("tag_fr").value.trim(), tag_en:g("tag_en").value.trim(), diet:g("diet").value, sort:parseInt(g("sort").value,10)||0, active:g("active").checked };
+  if (!payload.name_fr) { alert("Le nom (FR) de la catégorie est obligatoire."); return; }
+  const { error } = await _supa.from("menu_categories").upsert(payload);
+  if (error) { alert("Erreur : " + error.message); return; }
+  const i = mCats.findIndex(c=>c.id===id); if (i>=0) mCats[i] = { ...mCats[i], ...payload };
+  flashSaved();
+}
+
+async function addCategory() {
+  const name = prompt(lang==="en"?"New category name (e.g. Burgers):":"Nom de la nouvelle catégorie (ex : Burgers) :");
+  if (!name) return;
+  const id = "cat_" + Date.now();
+  const payload = { id, name_fr:name, name_en:name, desc_fr:"", desc_en:"", tag_fr:"", tag_en:"", img:"", diet:"mixed", sort:(mCats.length+1), active:true };
+  const { error } = await _supa.from("menu_categories").upsert(payload);
+  if (error) { alert("Erreur : " + error.message); return; }
+  mCats.push(payload); renderMenuManager();
+}
+
+async function deleteCategory(id) {
+  const prods = mProds.filter(p=>p.category_id===id);
+  if (!confirm((lang==="en"?"Delete this category and its ":"Supprimer cette catégorie et ses ") + prods.length + (lang==="en"?" dishes?":" plats ?"))) return;
+  if (prods.length) await _supa.from("products").delete().in("id", prods.map(p=>p.id));
+  const { error } = await _supa.from("menu_categories").delete().eq("id", id);
+  if (error) { alert("Erreur : " + error.message); return; }
+  mCats = mCats.filter(c=>c.id!==id); mProds = mProds.filter(p=>p.category_id!==id);
+  renderMenuManager(); flashSaved();
+}
+
+async function addProduct(catId) {
+  const id = "p_" + Date.now();
+  const maxSort = Math.max(0, ...mProds.filter(p=>p.category_id===catId).map(p=>p.sort||0));
+  const payload = { id, category_id:catId, name_fr:"Nouveau plat", name_en:"New dish", price:130, active:true, bestseller:false, sort:maxSort+1 };
+  const { error } = await _supa.from("products").upsert(payload);
+  if (error) { alert("Erreur : " + error.message); return; }
+  mProds.push(payload); renderMenuManager();
+}
+
+async function saveMenuProduct(id) {
+  const el = document.querySelector(`.menu-prod[data-pid="${id}"]`);
+  const g = (f) => el.querySelector(`[data-pf="${f}"]`);
+  const price = parseInt(g("price").value,10);
+  if (!Number.isFinite(price) || price < 0) { alert("Prix invalide."); return; }
+  const payload = { id, name_fr:g("name_fr").value.trim(), name_en:g("name_en").value.trim(), desc_fr:g("desc_fr").value.trim(), desc_en:g("desc_en").value.trim(), price, active:g("active").checked, bestseller:el.querySelector(".bs-btn").dataset.on==="1", updated_at:new Date().toISOString() };
+  if (!payload.name_fr) { alert("Le nom (FR) est obligatoire."); return; }
+  const { error } = await _supa.from("products").upsert(payload);
+  if (error) { alert("Erreur : " + error.message); return; }
+  const i = mProds.findIndex(p=>p.id===id); if (i>=0) mProds[i] = { ...mProds[i], ...payload };
+  flashSaved();
+}
+
+async function deleteProduct(id) {
+  if (!confirm(lang==="en"?"Remove this dish?":"Retirer ce plat ?")) return;
+  const { error } = await _supa.from("products").delete().eq("id", id);
+  if (error) { alert("Erreur : " + error.message); return; }
+  mProds = mProds.filter(p=>p.id!==id); renderMenuManager(); flashSaved();
+}
+
+async function onMenuPhoto(id, file) {
   if (!file) return;
-  const row = document.querySelector(`.prod-row[data-id="${id}"]`);
-  const wrap = row.querySelector(".photo-wrap");
-  const loading = document.createElement("div");
-  loading.className = "ph-loading";
-  loading.textContent = "…";
-  wrap.appendChild(loading);
-
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `${id}-${Date.now()}.${ext}`;
   const { error: upErr } = await _supa.storage.from("products").upload(path, file, { upsert: true });
-  if (upErr) {
-    alert("Erreur d'upload : " + upErr.message);
-    loading.remove();
-    return;
-  }
+  if (upErr) { alert("Erreur d'upload : " + upErr.message); return; }
   const { data: pub } = _supa.storage.from("products").getPublicUrl(path);
-  const imageUrl = pub.publicUrl;
-
-  const { error: saveErr } = await _supa.from("products").upsert({ id, image_url: imageUrl, updated_at: new Date().toISOString() });
-  loading.remove();
-  if (saveErr) {
-    alert("Erreur d'enregistrement : " + saveErr.message);
-    return;
-  }
-  products[id] = { ...(products[id] || { id, price: 0, active: true }), image_url: imageUrl };
-  wrap.querySelector(".photo-inner").innerHTML = `<img src="${imageUrl}" alt="" />`;
-  flashSaved();
-}
-
-async function saveProduct(id) {
-  const row = document.querySelector(`.prod-row[data-id="${id}"]`);
-  const price = parseInt(row.querySelector('[data-field="price"]').value, 10);
-  const active = row.querySelector(".toggle input").checked;
-  const name_fr = row.querySelector('[data-field="name_fr"]').value.trim();
-  const name_en = row.querySelector('[data-field="name_en"]').value.trim();
-  if (!Number.isFinite(price) || price < 0) { alert("Prix invalide."); return; }
-  if (!name_fr) { alert("Le nom (FR) est obligatoire."); return; }
-
-  const btn = document.getElementById(`save-${id}`);
-  btn.textContent = "…";
-  const { error } = await _supa.from("products").upsert({ id, price, active, name_fr, name_en, updated_at: new Date().toISOString() });
-  if (error) {
-    alert("Erreur : " + error.message);
-    btn.textContent = "Enregistrer";
-    return;
-  }
-  products[id] = { ...(products[id] || { id }), price, active, name_fr, name_en };
-  btn.classList.remove("dirty");
-  btn.textContent = "Enregistrer";
-  row.querySelectorAll(".name-input").forEach(el => el.classList.toggle("inactive", !active));
-  flashSaved();
+  const { error } = await _supa.from("products").upsert({ id, image_url: pub.publicUrl, updated_at: new Date().toISOString() });
+  if (error) { alert("Erreur : " + error.message); return; }
+  const i = mProds.findIndex(p=>p.id===id); if (i>=0) mProds[i].image_url = pub.publicUrl; else mProds.push({ id, image_url: pub.publicUrl });
+  renderMenuManager(); flashSaved();
 }
 
 function flashSaved() {
@@ -332,10 +718,130 @@ function flashSaved() {
   flashSaved._t = setTimeout(() => banner.classList.remove("show"), 1800);
 }
 
+async function sendNewsletter(test) {
+  const subject = document.getElementById("nlSubject").value.trim();
+  const body = document.getElementById("nlBody").value.trim();
+  const msg = document.getElementById("nlMsg");
+  if (!subject || !body) { msg.style.color = "var(--danger)"; msg.textContent = "Sujet et message requis."; return; }
+  if (!test && !confirm("Envoyer cette newsletter à TOUS les abonnés ?")) return;
+  msg.style.color = "var(--muted)"; msg.textContent = "Envoi en cours…";
+  const { data: { session } } = await _supa.auth.getSession();
+  try {
+    const res = await fetch("/api/send-newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
+      body: JSON.stringify({ subject, body, test }),
+    });
+    const p = await res.json();
+    if (!res.ok) throw new Error(p.error || "Erreur");
+    msg.style.color = "var(--green, #2E7D52)";
+    msg.textContent = test ? "Test envoyé à votre adresse ✓" : `Newsletter envoyée à ${p.sent} abonné(s) ✓`;
+  } catch (e) {
+    msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + e.message;
+  }
+}
+
+/* ── POP-UP D'ACCUEIL ── */
+async function loadPopup() {
+  const { data } = await _supa.from("site_content").select("key, fr, en").in("key", ["popup_enabled","popup_title","popup_body"]);
+  const m = Object.fromEntries((data || []).map(r => [r.key, r]));
+  document.getElementById("popEnabled").checked = (m.popup_enabled?.fr === "1");
+  document.getElementById("popTitleFr").value = m.popup_title?.fr || "Bienvenue chez Bondipain 🥖";
+  document.getElementById("popTitleEn").value = m.popup_title?.en || "Welcome to Bondipain 🥖";
+  document.getElementById("popBodyFr").value = m.popup_body?.fr || "";
+  document.getElementById("popBodyEn").value = m.popup_body?.en || "";
+}
+async function savePopup() {
+  const msg = document.getElementById("popMsg");
+  const payload = [
+    { key: "popup_enabled", fr: document.getElementById("popEnabled").checked ? "1" : "0", en: "", updated_at: new Date().toISOString() },
+    { key: "popup_title", fr: document.getElementById("popTitleFr").value, en: document.getElementById("popTitleEn").value, updated_at: new Date().toISOString() },
+    { key: "popup_body", fr: document.getElementById("popBodyFr").value, en: document.getElementById("popBodyEn").value, updated_at: new Date().toISOString() },
+  ];
+  msg.style.color = "var(--muted)"; msg.textContent = "Enregistrement…";
+  const { error } = await _supa.from("site_content").upsert(payload);
+  if (error) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; return; }
+  msg.style.color = "var(--green, #2E7D52)"; msg.textContent = "Pop-up enregistré ✓";
+}
+
+/* ── CONTENU DU SITE (mini-CMS) ── */
+const CONTENT_GROUPS = [
+  { title:"Hero (haut de page)", titleEn:"Hero (top of page)", fields:[
+    { key:"topbar", label:"Bandeau tout en haut", labelEn:"Top banner", big:true, fr:"Commandes livrées en 24h · Livraison entre 11h et 14h · Livraison gratuite", en:"Orders delivered within 24h · Delivery between 11am and 2pm · Free delivery" },
+    { key:"hero_eyebrow", label:"Petit mot (Bienvenue)", labelEn:"Small word (Welcome)", fr:"Bienvenue", en:"Welcome" },
+    { key:"hero_title", label:"Titre principal", labelEn:"Main title", fr:"Chez Bondipain", en:"To Bondipain" },
+    { key:"hero_sub", label:"Sous-titre", labelEn:"Subtitle", big:true, fr:"Le pain garni, fait maison et livré chez vous à Moka.", en:"Homemade stuffed bread, delivered to your door in Moka." },
+    { key:"hero_cta", label:"Bouton « Commander »", labelEn:"“Order” button", fr:"Commander", en:"Order now" },
+    { key:"hero_cta_b2e", label:"Bouton avantage entreprise", labelEn:"Company benefit button", fr:"Commander avec mon avantage entreprise", en:"Order with my company benefit" },
+  ]},
+  { title:"À propos", titleEn:"About", fields:[
+    { key:"about_eyebrow", label:"Sur-titre", labelEn:"Eyebrow", fr:"Notre histoire", en:"Our story" },
+    { key:"about_title", label:"Titre", labelEn:"Title", big:true, fr:"Du pain artisanal, livré dans le quartier de Moka", en:"Artisan bread, delivered across Moka" },
+    { key:"about_p1", label:"Paragraphe 1", labelEn:"Paragraph 1", big:true, fr:"Bondipain prépare chaque jour des pains garnis généreux à partir d'ingrédients frais et locaux.", en:"Bondipain prepares generous stuffed breads every day using fresh, local ingredients." },
+    { key:"about_p2", label:"Paragraphe 2", labelEn:"Paragraph 2", big:true, fr:"Nous livrons uniquement dans le quartier de Moka, pour un service de proximité et des produits toujours frais.", en:"We deliver only within the Moka area, for a local service and always-fresh products." },
+    { key:"about_features", label:"Points forts (un par ligne)", labelEn:"Key points (one per line)", list:true, fr:"Ingrédients frais et locaux\nPréparé le jour de la livraison\nLivraison de proximité à Moka\nPaiement espèces ou Juice by MCB", en:"Fresh, local ingredients\nMade on delivery day\nLocal delivery in Moka\nPay by cash or Juice by MCB" },
+  ]},
+  { title:"Bandeaux & Contact", titleEn:"Banners & Contact", fields:[
+    { key:"info_strip", label:"Bandeau infos (sous le hero)", labelEn:"Info banner (under hero)", big:true, fr:"Commandez avant 15h la veille · Livraison entre 11h et 14h · Zone de Moka uniquement", en:"Order before 3pm the day before · Delivery between 11am and 2pm · Moka area only" },
+    { key:"contact_eyebrow", label:"Contact — sur-titre", labelEn:"Contact — eyebrow", fr:"Une question ?", en:"A question?" },
+    { key:"contact_title", label:"Contact — titre", labelEn:"Contact — title", fr:"Contactez-nous", en:"Get in touch" },
+    { key:"contact_p", label:"Contact — texte", labelEn:"Contact — text", big:true, fr:"Notre équipe est disponible pour toute question sur votre commande ou nos produits.", en:"Our team is available for any question about your order or our products." },
+    { key:"footer_tag", label:"Pied de page", labelEn:"Footer", fr:"Le pain garni, livré à Moka.", en:"Stuffed bread, delivered in Moka." },
+  ]},
+];
+let contentData = {};
+async function loadContent() {
+  const { data } = await _supa.from("site_content").select("key, fr, en");
+  contentData = Object.fromEntries((data || []).map(r => [r.key, r]));
+  renderContentEditor();
+}
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function renderContentEditor() {
+  const box = document.getElementById("contentEditor");
+  box.innerHTML = CONTENT_GROUPS.map(g => `
+    <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;max-width:820px;">
+      <h3 style="font-family:'Rubik';font-weight:800;font-size:16px;margin-bottom:14px;">${lang==="en"&&g.titleEn?g.titleEn:g.title}</h3>
+      ${g.fields.map(f => {
+        const cur = contentData[f.key] || {};
+        const frVal = cur.fr != null ? cur.fr : f.fr;
+        const enVal = cur.en != null ? cur.en : f.en;
+        const rows = f.list ? 4 : (f.big ? 2 : 1);
+        const tag = (rows>1) ? "textarea" : "input";
+        const field = (val, l) => tag==="textarea"
+          ? `<textarea data-ck="${f.key}" data-cl="${l}" rows="${rows}" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;resize:vertical;">${esc(val)}</textarea>`
+          : `<input data-ck="${f.key}" data-cl="${l}" value="${esc(val)}" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;" />`;
+        return `<div style="margin-bottom:14px;">
+          <div style="font-family:'Rubik';font-weight:600;font-size:13px;margin-bottom:6px;">${lang==="en"&&f.labelEn?f.labelEn:f.label}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🇫🇷 FR</div>${field(frVal,"fr")}</div>
+            <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🇬🇧 EN</div>${field(enVal,"en")}</div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`).join("") +
+    `<button class="btn" onclick="saveContent()" style="background:var(--brand);color:#fff;padding:12px 26px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${T("content_save")}</button>
+     <div id="contentMsg" style="font-size:13.5px;margin-top:12px;"></div>`;
+}
+async function saveContent() {
+  const msg = document.getElementById("contentMsg");
+  const map = {};
+  document.querySelectorAll("#contentEditor [data-ck]").forEach(el => {
+    const k = el.dataset.ck, l = el.dataset.cl;
+    (map[k] = map[k] || { key:k })[l] = el.value;
+  });
+  const payload = Object.values(map).map(r => ({ key:r.key, fr:r.fr ?? "", en:r.en ?? "", updated_at:new Date().toISOString() }));
+  msg.style.color = "var(--muted)"; msg.textContent = "Enregistrement…";
+  const { error } = await _supa.from("site_content").upsert(payload);
+  if (error) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; return; }
+  contentData = Object.fromEntries(payload.map(r => [r.key, r]));
+  msg.style.color = "var(--green, #2E7D52)"; msg.textContent = "Contenu enregistré ✓ — visible sur le site.";
+}
+
 /* Auto-login (session persistante) */
 _supa.auth.getSession().then(({ data: { session } }) => {
   if (session && session.user.email === ADMIN_EMAIL) initAdmin();
 });
 </script>
+<script src="./pwd-eye.js"></script>
 </body>
 </html>

@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bondipain — Portail employeur</title>
-  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="icon" type="image/png" href="./logo-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -83,6 +84,18 @@
     .checkbox-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
     .checkbox-row label { display: flex; align-items: center; gap: 6px; font-size: 13.5px; }
     .empty { text-align: center; color: var(--muted); padding: 18px 0; font-size: 13.5px; }
+    .month-nav { display: flex; align-items: center; gap: 8px; background: var(--cream); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; }
+    .month-nav button { width: 26px; height: 26px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-deep); font-weight: 800; font-size: 15px; display: grid; place-items: center; }
+    .month-nav button:hover { background: var(--brand); color: #fff; }
+    .month-nav .mlabel { font-family: 'Rubik'; font-weight: 700; font-size: 13.5px; min-width: 120px; text-align: center; }
+    .rep-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .rep-stat { background: var(--cream); border-radius: 12px; padding: 16px 18px; }
+    .rep-stat .l { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+    .rep-stat .v { font-family: 'Rubik'; font-weight: 800; font-size: 26px; margin-top: 5px; }
+    .rep-stat.green .v { color: var(--green); }
+    .office-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .office-row:last-child { border-bottom: none; }
+    @media (max-width: 640px){ .rep-stats { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -90,45 +103,68 @@
 <!-- ===== LOGIN ===== -->
 <div class="login-wrap" id="loginScreen">
   <div class="login-card">
-    <div class="login-logo"><span>Bondipain</span><span class="badge">Portail RH</span></div>
-    <h2>Espace employeur</h2>
-    <p>Gérez vos bureaux, vos employés et vos règles de contribution.</p>
-    <div class="login-err" id="loginErr">Email ou mot de passe incorrect.</div>
-    <div class="field"><label>Email professionnel</label><input id="i_login_email" type="email" placeholder="contact@entreprise.com" autocomplete="email" /></div>
-    <div class="field"><label>Mot de passe</label><input id="i_login_pwd" type="password" autocomplete="current-password" /></div>
-    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()">Se connecter</button>
+    <div class="login-logo" style="justify-content:space-between;"><span style="display:flex;align-items:center;gap:10px;"><img src="./logo-full.png" alt="Bondipain" style="height:30px;width:auto;" /><span class="badge" data-i18n="badge_hr">Portail RH</span></span><span class="lang-toggle" id="langToggle"></span></div>
+    <h2 data-i18n="login_title">Espace employeur</h2>
+    <p data-i18n="login_sub">Gérez vos bureaux, vos employés et vos règles de contribution.</p>
+    <div class="login-err" id="loginErr" data-i18n="err_login">Email ou mot de passe incorrect.</div>
+    <div class="field"><label data-i18n="email">Email professionnel</label><input id="i_login_email" type="email" placeholder="contact@entreprise.com" autocomplete="email" /></div>
+    <div class="field"><label data-i18n="password">Mot de passe</label><input id="i_login_pwd" type="password" autocomplete="current-password" /></div>
+    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()" data-i18n="signin">Se connecter</button>
+    <div style="text-align:center;margin-top:16px;"><a href="index.html" style="color:var(--brand-deep);font-weight:700;font-size:13.5px;" data-i18n="nav_home_btn">← Accueil</a></div>
   </div>
 </div>
 
 <!-- ===== PORTAL ===== -->
 <div id="dashScreen" class="hidden">
   <header class="dash-header">
-    <div class="dash-logo"><span>Bondipain</span><span class="badge">Portail RH</span></div>
+    <div class="dash-logo"><a href="index.html" title="Accueil"><img src="./logo-full.png" alt="Bondipain" style="height:30px;width:auto;" /></a><span class="badge">Portail RH</span></div>
     <div style="display:flex;align-items:center;gap:14px;">
+      <span class="lang-toggle" id="langToggle"></span>
+      <a class="btn btn-ghost" href="index.html" style="padding:8px 18px;font-size:14px;" data-i18n="nav_home_btn">← Accueil</a>
       <span class="company-chip">🏢 <b id="companyNameBadge"></b></span>
-      <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()">Déconnexion</button>
+      <button class="btn btn-ghost" style="padding:8px 18px;font-size:14px;" onclick="doLogout()" data-i18n="logout">Déconnexion</button>
     </div>
   </header>
 
   <div class="dash-body">
     <div class="tabs">
-      <button class="active" data-tab="offices" onclick="switchTab('offices')">Bureaux</button>
-      <button data-tab="employees" onclick="switchTab('employees')">Employés</button>
-      <button data-tab="rules" onclick="switchTab('rules')">Règles</button>
-      <button data-tab="export" onclick="switchTab('export')">Export</button>
+      <button class="active" data-tab="reporting" onclick="switchTab('reporting')" data-i18n="tab_report">Rapport</button>
+      <button data-tab="offices" onclick="switchTab('offices')" data-i18n="tab_offices">Bureaux</button>
+      <button data-tab="employees" onclick="switchTab('employees')" data-i18n="tab_employees">Employés</button>
+      <button data-tab="rules" onclick="switchTab('rules')" data-i18n="tab_rules">Règles</button>
+      <button data-tab="export" onclick="switchTab('export')" data-i18n="tab_billing">Facturation</button>
+    </div>
+
+    <!-- REPORTING -->
+    <div class="panel active" id="panel-reporting">
+      <div class="section">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+          <h4 style="margin:0;" data-i18n="monthly_report">Rapport mensuel</h4>
+          <div class="month-nav">
+            <button onclick="changeMonth(-1)">‹</button>
+            <span class="mlabel" id="repMonthLabel"></span>
+            <button onclick="changeMonth(1)">›</button>
+          </div>
+        </div>
+        <div class="rep-stats" id="repStats"><p class="empty" data-i18n="loading">Chargement…</p></div>
+      </div>
+      <div class="section">
+        <h4 data-i18n="by_office">Répartition par bureau</h4>
+        <div id="repByOffice"><p class="empty">—</p></div>
+      </div>
     </div>
 
     <!-- BUREAUX -->
-    <div class="panel active" id="panel-offices">
+    <div class="panel" id="panel-offices">
       <div class="section">
-        <h4>Bureaux / points de livraison</h4>
-        <div class="row-list" id="officesList"><p class="empty">Chargement…</p></div>
+        <h4 data-i18n="offices_title">Bureaux / points de livraison</h4>
+        <div class="row-list" id="officesList"><p class="empty" data-i18n="loading">Chargement…</p></div>
         <div class="two-col">
-          <div class="field"><label>Nom du bureau</label><input id="of_name" placeholder="Ebène HQ" /></div>
-          <div class="field"><label>Créneau de livraison</label><input id="of_slot" placeholder="11h30 - 13h30" /></div>
+          <div class="field"><label data-i18n="office_name">Nom du bureau</label><input id="of_name" placeholder="Ebène HQ" /></div>
+          <div class="field"><label data-i18n="delivery_slot">Créneau de livraison</label><input id="of_slot" placeholder="11h30 - 13h30" /></div>
         </div>
-        <div class="field"><label>Adresse</label><input id="of_addr" placeholder="Adresse complète" /></div>
-        <button class="btn btn-primary" onclick="addOffice()">+ Ajouter le bureau</button>
+        <div class="field"><label data-i18n="address">Adresse</label><input id="of_addr" data-ph="address_ph" placeholder="Adresse complète" /></div>
+        <button class="btn btn-primary" onclick="addOffice()" data-i18n="add_office">+ Ajouter le bureau</button>
         <div class="msg" id="officeMsg"></div>
       </div>
     </div>
@@ -136,58 +172,70 @@
     <!-- EMPLOYÉS -->
     <div class="panel" id="panel-employees">
       <div class="section">
-        <h4>Employés</h4>
-        <div class="row-list" id="employeesList"><p class="empty">Chargement…</p></div>
+        <h4 data-i18n="tab_employees">Employés</h4>
+        <div class="row-list" id="employeesList"><p class="empty" data-i18n="loading">Chargement…</p></div>
         <div class="two-col">
-          <div class="field"><label>Email professionnel</label><input id="emp_email" type="email" placeholder="jason@acmecorp.com" /></div>
-          <div class="field"><label>Nom complet</label><input id="emp_name" placeholder="Jason N." /></div>
+          <div class="field"><label data-i18n="email">Email professionnel</label><input id="emp_email" type="email" placeholder="jason@acmecorp.com" /></div>
+          <div class="field"><label data-i18n="full_name">Nom complet</label><input id="emp_name" placeholder="Jason N." /></div>
         </div>
         <div class="two-col">
-          <div class="field"><label>Bureau</label><select id="emp_office"></select></div>
-          <div class="field"><label>Département (optionnel)</label><input id="emp_dept" placeholder="Marketing" /></div>
+          <div class="field"><label data-i18n="office">Bureau</label><select id="emp_office"></select></div>
+          <div class="field"><label data-i18n="department">Département (optionnel)</label><input id="emp_dept" placeholder="Marketing" /></div>
         </div>
-        <button class="btn btn-primary" id="inviteBtn" onclick="inviteEmployee()">+ Inviter l'employé</button>
+        <button class="btn btn-primary" id="inviteBtn" onclick="inviteEmployee()" data-i18n="invite_emp">+ Inviter l'employé</button>
         <div class="msg" id="employeeMsg"></div>
+
+        <div style="margin-top:26px;border-top:1px solid var(--line);padding-top:20px;">
+          <h4 data-i18n="bulk_title">Import en masse (Excel / CSV)</h4>
+          <p style="color:var(--muted);font-size:13px;margin:6px 0 12px;" data-i18n="bulk_hint">Importez plusieurs employés d'un coup. Colonnes attendues : email, nom, prénom (ou nom complet), département (optionnel), bureau (optionnel).</p>
+          <a href="#" onclick="downloadTemplate();return false;" style="font-size:13px;color:var(--brand-deep);font-weight:700;" data-i18n="bulk_template">⬇ Télécharger le modèle CSV</a>
+          <div class="two-col" style="margin-top:12px;align-items:end;">
+            <div class="field"><label data-i18n="bulk_file">Fichier (.xlsx ou .csv)</label><input id="bulkFile" type="file" accept=".csv,.xlsx,.xls" /></div>
+            <div class="field"><button class="btn btn-primary" id="bulkBtn" onclick="bulkImport()" data-i18n="bulk_btn">Importer les employés</button></div>
+          </div>
+          <div class="msg" id="bulkMsg"></div>
+          <div id="bulkProgress" style="font-size:13px;color:var(--muted);margin-top:8px;"></div>
+        </div>
       </div>
     </div>
 
     <!-- RÈGLES -->
     <div class="panel" id="panel-rules">
       <div class="section">
-        <h4>Règles de contribution</h4>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">En cas de règles multiples éligibles pour une commande, celle avec la priorité la plus haute s'applique.</p>
-        <div class="row-list" id="rulesList"><p class="empty">Chargement…</p></div>
+        <h4 data-i18n="rules_title">Règles de contribution</h4>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" data-i18n="rules_hint">En cas de règles multiples éligibles pour une commande, celle avec la priorité la plus haute s'applique.</p>
+        <div class="row-list" id="rulesList"><p class="empty" data-i18n="loading">Chargement…</p></div>
 
         <div class="two-col">
-          <div class="field"><label>Nom de la règle</label><input id="ru_name" placeholder="Déjeuner standard" /></div>
-          <div class="field"><label>Priorité</label><input id="ru_priority" type="number" value="0" /></div>
+          <div class="field"><label data-i18n="rule_name">Nom de la règle</label><input id="ru_name" data-ph="rule_name_ph" placeholder="Déjeuner standard" /></div>
+          <div class="field"><label data-i18n="priority">Priorité</label><input id="ru_priority" type="number" value="0" /></div>
         </div>
         <div class="two-col">
           <div class="field">
-            <label>Mode</label>
+            <label data-i18n="mode">Mode</label>
             <select id="ru_mode" onchange="toggleRuleMode()">
-              <option value="fixed">Montant fixe (Rs)</option>
-              <option value="percent">Pourcentage (%)</option>
+              <option value="fixed" data-i18n="mode_fixed">Montant fixe (Rs)</option>
+              <option value="percent" data-i18n="mode_percent">Pourcentage (%)</option>
             </select>
           </div>
-          <div class="field" id="ru_amount_wrap"><label>Montant (Rs / repas)</label><input id="ru_amount" type="number" placeholder="150" /></div>
-          <div class="field hidden" id="ru_percent_wrap"><label>Pourcentage</label><input id="ru_percent" type="number" placeholder="50" /></div>
+          <div class="field" id="ru_amount_wrap"><label data-i18n="amount">Montant (Rs / repas)</label><input id="ru_amount" type="number" placeholder="150" /></div>
+          <div class="field hidden" id="ru_percent_wrap"><label data-i18n="percent">Pourcentage</label><input id="ru_percent" type="number" placeholder="50" /></div>
         </div>
         <div class="two-col">
-          <div class="field"><label>Plafond journalier (Rs, optionnel)</label><input id="ru_daily_cap" type="number" placeholder="150" /></div>
-          <div class="field"><label>Plafond mensuel (Rs, optionnel)</label><input id="ru_monthly_cap" type="number" placeholder="3000" /></div>
+          <div class="field"><label data-i18n="daily_cap">Plafond journalier (Rs, optionnel)</label><input id="ru_daily_cap" type="number" placeholder="150" /></div>
+          <div class="field"><label data-i18n="monthly_cap">Plafond mensuel (Rs, optionnel)</label><input id="ru_monthly_cap" type="number" placeholder="3000" /></div>
         </div>
-        <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:8px;">Jours éligibles</label>
+        <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:8px;" data-i18n="eligible_days">Jours éligibles</label>
         <div class="checkbox-row" id="ru_days">
-          <label><input type="checkbox" value="mon" checked /> Lun</label>
-          <label><input type="checkbox" value="tue" checked /> Mar</label>
-          <label><input type="checkbox" value="wed" checked /> Mer</label>
-          <label><input type="checkbox" value="thu" checked /> Jeu</label>
-          <label><input type="checkbox" value="fri" checked /> Ven</label>
-          <label><input type="checkbox" value="sat" /> Sam</label>
-          <label><input type="checkbox" value="sun" /> Dim</label>
+          <label><input type="checkbox" value="mon" checked /> <span data-i18n="d_mon">Lun</span></label>
+          <label><input type="checkbox" value="tue" checked /> <span data-i18n="d_tue">Mar</span></label>
+          <label><input type="checkbox" value="wed" checked /> <span data-i18n="d_wed">Mer</span></label>
+          <label><input type="checkbox" value="thu" checked /> <span data-i18n="d_thu">Jeu</span></label>
+          <label><input type="checkbox" value="fri" checked /> <span data-i18n="d_fri">Ven</span></label>
+          <label><input type="checkbox" value="sat" /> <span data-i18n="d_sat">Sam</span></label>
+          <label><input type="checkbox" value="sun" /> <span data-i18n="d_sun">Dim</span></label>
         </div>
-        <button class="btn btn-primary" onclick="addRule()">+ Créer la règle</button>
+        <button class="btn btn-primary" onclick="addRule()" data-i18n="create_rule">+ Créer la règle</button>
         <div class="msg" id="ruleMsg"></div>
       </div>
     </div>
@@ -195,30 +243,55 @@
     <!-- EXPORT -->
     <div class="panel" id="panel-export">
       <div class="section">
-        <h4>Mode de facturation</h4>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">Comment votre entreprise règle la part employeur.</p>
+        <h4 data-i18n="benefit_mode_t">Mode d'avantage employé</h4>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" data-i18n="benefit_hint">Choisissez comment vos employés bénéficient de l'avantage repas.</p>
         <div class="two-col">
           <div class="field">
-            <label>Facturation</label>
-            <select id="billing_mode">
-              <option value="invoice">Facture mensuelle</option>
-              <option value="balance">L'entreprise paie le solde</option>
-              <option value="full">L'entreprise paie la totalité</option>
+            <label data-i18n="benefit_label">Type d'avantage</label>
+            <select id="benefit_mode">
+              <option value="contribution" data-i18n="benefit_contribution">Contribution (l'employé voit les prix et paie sa part)</option>
+              <option value="free_daily" data-i18n="benefit_free">Repas offert (1 repas/jour offert, sans prix ; extras au tarif normal)</option>
             </select>
           </div>
           <div class="field" style="display:flex;align-items:flex-end;">
-            <button class="btn btn-primary" onclick="saveBilling()">Enregistrer</button>
+            <button class="btn btn-primary" onclick="saveBilling()" data-i18n="save">Enregistrer</button>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;margin-top:6px;cursor:pointer;">
+          <input type="checkbox" id="show_prices" style="width:18px;height:18px;" /> <span data-i18n="show_prices_lbl">Afficher les prix aux employés</span>
+        </label>
+        <div class="msg" id="benefitMsg"></div>
+      </div>
+      <div class="section">
+        <h4 data-i18n="billing_mode_t">Mode de facturation</h4>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" data-i18n="billing_hint">Comment votre entreprise règle la part employeur.</p>
+        <div class="two-col">
+          <div class="field">
+            <label data-i18n="billing">Facturation</label>
+            <select id="billing_mode">
+              <option value="invoice" data-i18n="bill_invoice">Facture mensuelle</option>
+              <option value="balance" data-i18n="bill_balance">L'entreprise paie le solde</option>
+              <option value="full" data-i18n="bill_full">L'entreprise paie la totalité</option>
+            </select>
+          </div>
+          <div class="field" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="saveBilling()" data-i18n="save">Enregistrer</button>
           </div>
         </div>
         <div class="msg" id="billingMsg"></div>
       </div>
       <div class="section">
-        <h4>Export des commandes</h4>
+        <h4 data-i18n="export_orders">Export des commandes</h4>
         <div class="two-col">
-          <div class="field"><label>Du</label><input id="ex_from" type="date" /></div>
-          <div class="field"><label>Au</label><input id="ex_to" type="date" /></div>
+          <div class="field"><label data-i18n="from">Du</label><input id="ex_from" type="date" /></div>
+          <div class="field"><label data-i18n="to">Au</label><input id="ex_to" type="date" /></div>
         </div>
-        <button class="btn btn-primary" onclick="exportCsv()">Télécharger le CSV</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="exportCsv()" data-i18n="download_csv">Télécharger le CSV</button>
+          <button class="btn btn-ghost" onclick="printInvoice()" data-i18n="invoice_pdf">Facture (PDF)</button>
+          <button class="btn btn-ghost" onclick="emailInvoice()" data-i18n="invoice_email">Envoyer par email</button>
+        </div>
+        <p style="color:var(--muted);font-size:12.5px;margin-top:8px;" data-i18n="invoice_note">La facture reprend le mois affiché dans l'onglet « Rapport ». Utilisez « Enregistrer au format PDF » dans la fenêtre d'impression.</p>
         <div class="msg" id="exportMsg"></div>
       </div>
     </div>
@@ -233,6 +306,108 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let company = null;
 let offices = [];
 
+/* ── i18n FR/EN ── */
+const L = {
+  fr: {
+    badge_hr:"Portail RH", login_title:"Espace employeur", login_sub:"Gérez vos bureaux, vos employés et vos règles de contribution.",
+    err_login:"Email ou mot de passe incorrect.", email:"Email professionnel", password:"Mot de passe", signin:"Se connecter",
+    logout:"Déconnexion", tab_report:"Rapport", tab_offices:"Bureaux", tab_employees:"Employés", tab_rules:"Règles", tab_billing:"Facturation",
+    monthly_report:"Rapport mensuel", loading:"Chargement…", by_office:"Répartition par bureau",
+    offices_title:"Bureaux / points de livraison", office_name:"Nom du bureau", delivery_slot:"Créneau de livraison",
+    address:"Adresse", address_ph:"Adresse complète", add_office:"+ Ajouter le bureau",
+    nav_home_btn:"← Accueil",
+    full_name:"Nom complet", office:"Bureau", department:"Département (optionnel)", invite_emp:"+ Inviter l'employé",
+    bulk_title:"Import en masse (Excel / CSV)", bulk_hint:"Importez plusieurs employés d'un coup. Colonnes attendues : email, nom, prénom (ou nom complet), département (optionnel), bureau (optionnel).",
+    bulk_template:"⬇ Télécharger le modèle CSV", bulk_file:"Fichier (.xlsx ou .csv)", bulk_btn:"Importer les employés",
+    bulk_nofile:"Choisissez d'abord un fichier.", bulk_liberr:"Module d'import non chargé, rechargez la page.", bulk_reading:"Lecture du fichier…",
+    bulk_parseerr:"Impossible de lire ce fichier. Vérifiez le format (.xlsx ou .csv).", bulk_empty:"Aucun email valide trouvé dans le fichier.",
+    bulk_sending:"Envoi de {n} invitation(s)…", bulk_progress:"Envoi {i} / {n}…", bulk_done:"{ok} / {n} employé(s) invité(s).", bulk_errors:"{e} en erreur",
+    rules_title:"Règles de contribution", rules_hint:"En cas de règles multiples éligibles pour une commande, celle avec la priorité la plus haute s'applique.",
+    rule_name:"Nom de la règle", rule_name_ph:"Déjeuner standard", priority:"Priorité", mode:"Mode",
+    mode_fixed:"Montant fixe (Rs)", mode_percent:"Pourcentage (%)", amount:"Montant (Rs / repas)", percent:"Pourcentage",
+    daily_cap:"Plafond journalier (Rs, optionnel)", monthly_cap:"Plafond mensuel (Rs, optionnel)", eligible_days:"Jours éligibles",
+    d_mon:"Lun", d_tue:"Mar", d_wed:"Mer", d_thu:"Jeu", d_fri:"Ven", d_sat:"Sam", d_sun:"Dim", create_rule:"+ Créer la règle",
+    benefit_mode_t:"Mode d'avantage employé", benefit_hint:"Choisissez comment vos employés bénéficient de l'avantage repas.", benefit_label:"Type d'avantage",
+    benefit_contribution:"Contribution (l'employé voit les prix et paie sa part)", benefit_free:"Repas offert (1 repas/jour offert, sans prix ; extras au tarif normal)",
+    show_prices_lbl:"Afficher les prix aux employés",
+    billing_mode_t:"Mode de facturation", billing_hint:"Comment votre entreprise règle la part employeur.", billing:"Facturation",
+    bill_invoice:"Facture mensuelle", bill_balance:"L'entreprise paie le solde", bill_full:"L'entreprise paie la totalité", save:"Enregistrer",
+    export_orders:"Export des commandes", from:"Du", to:"Au", download_csv:"Télécharger le CSV", invoice_pdf:"Facture (PDF)",
+    invoice_email:"Envoyer par email", invoice_email_confirm:"Envoyer la facture de {p} à l'email de contact de l'entreprise ?", invoice_email_ok:"Facture envoyée à {e} ✓",
+    invoice_note:"La facture reprend le mois affiché dans l'onglet « Rapport ». Utilisez « Enregistrer au format PDF » dans la fenêtre d'impression.",
+    connecting:"Connexion…", not_partner:"Ce compte n'est pas rattaché à une entreprise partenaire.",
+    rep_invited:"Employés invités", rep_active:"Utilisateurs actifs", rep_orders:"Commandes", rep_contribution:"Contribution entreprise",
+    rep_rating:"Note moyenne", rep_adoption:"Taux d'adoption", other_office:"Autre / non défini", orders_count:"commande(s)",
+    no_orders_month:"Aucune commande ce mois-ci.", bill_saved:"Mode de facturation enregistré.", err_prefix:"Erreur : ",
+    office_added:"Bureau ajouté.", office_name_required:"Le nom du bureau est requis.", no_offices:"Aucun bureau pour le moment.",
+    st_invited:"invité", st_active:"actif", st_removed:"retiré", remove:"Retirer",
+    remove_confirm:"Retirer {n} de l'avantage repas ? Il ne pourra plus commander.", removed_ok:"{n} a été retiré.",
+    email_required:"L'email est requis.", sending:"Envoi…", invite_sent:"Invitation envoyée à {e}.", no_employees:"Aucun employé actif pour le moment.",
+    rule_noname:"Règle sans nom", rule_priority:"priorité", rule_cap_month:"plafond Rs {n}/mois", no_rules:"Aucune règle configurée pour le moment.",
+    rule_name_required:"Le nom de la règle est requis.", amount_required:"Le montant fixe est requis.", percent_required:"Le pourcentage est requis.",
+    rule_created:"Règle créée.", err_generic:"Erreur",
+    inv_subtitle:"Facture — avantage repas entreprise", inv_mode:"Mode", inv_detail_office:"Détail par bureau",
+    inv_office:"Bureau", inv_orders_col:"Commandes", inv_contrib_col:"Contribution", inv_no_orders:"Aucune commande",
+    inv_total:"Total à facturer à l'entreprise", inv_period:"Période", inv_to:"au", inv_generated:"Document généré automatiquement par Bondipain.",
+    inv_print:"Imprimer / Enregistrer en PDF", inv_title:"Facture",
+  },
+  en: {
+    badge_hr:"HR portal", login_title:"Employer space", login_sub:"Manage your offices, employees and contribution rules.",
+    err_login:"Incorrect email or password.", email:"Work email", password:"Password", signin:"Sign in",
+    logout:"Log out", tab_report:"Report", tab_offices:"Offices", tab_employees:"Employees", tab_rules:"Rules", tab_billing:"Billing",
+    monthly_report:"Monthly report", loading:"Loading…", by_office:"Breakdown by office",
+    offices_title:"Offices / delivery points", office_name:"Office name", delivery_slot:"Delivery slot",
+    address:"Address", address_ph:"Full address", add_office:"+ Add office",
+    nav_home_btn:"← Home",
+    full_name:"Full name", office:"Office", department:"Department (optional)", invite_emp:"+ Invite employee",
+    bulk_title:"Bulk import (Excel / CSV)", bulk_hint:"Import several employees at once. Expected columns: email, last name, first name (or full name), department (optional), office (optional).",
+    bulk_template:"⬇ Download CSV template", bulk_file:"File (.xlsx or .csv)", bulk_btn:"Import employees",
+    bulk_nofile:"Please choose a file first.", bulk_liberr:"Import module not loaded, please reload the page.", bulk_reading:"Reading file…",
+    bulk_parseerr:"Could not read this file. Check the format (.xlsx or .csv).", bulk_empty:"No valid email found in the file.",
+    bulk_sending:"Sending {n} invitation(s)…", bulk_progress:"Sending {i} / {n}…", bulk_done:"{ok} / {n} employee(s) invited.", bulk_errors:"{e} failed",
+    rules_title:"Contribution rules", rules_hint:"If several rules are eligible for an order, the one with the highest priority applies.",
+    rule_name:"Rule name", rule_name_ph:"Standard lunch", priority:"Priority", mode:"Mode",
+    mode_fixed:"Fixed amount (Rs)", mode_percent:"Percentage (%)", amount:"Amount (Rs / meal)", percent:"Percentage",
+    daily_cap:"Daily cap (Rs, optional)", monthly_cap:"Monthly cap (Rs, optional)", eligible_days:"Eligible days",
+    d_mon:"Mon", d_tue:"Tue", d_wed:"Wed", d_thu:"Thu", d_fri:"Fri", d_sat:"Sat", d_sun:"Sun", create_rule:"+ Create rule",
+    benefit_mode_t:"Employee benefit mode", benefit_hint:"Choose how your employees get the meal benefit.", benefit_label:"Benefit type",
+    benefit_contribution:"Contribution (employee sees prices and pays their share)", benefit_free:"Free meal (1 free meal/day, no price; extras at normal price)",
+    show_prices_lbl:"Show prices to employees",
+    billing_mode_t:"Billing mode", billing_hint:"How your company settles the employer share.", billing:"Billing",
+    bill_invoice:"Monthly invoice", bill_balance:"Company pays the balance", bill_full:"Company pays the full amount", save:"Save",
+    export_orders:"Export orders", from:"From", to:"To", download_csv:"Download CSV", invoice_pdf:"Invoice (PDF)",
+    invoice_email:"Send by email", invoice_email_confirm:"Send the {p} invoice to the company contact email?", invoice_email_ok:"Invoice sent to {e} ✓",
+    invoice_note:"The invoice uses the month shown in the “Report” tab. Use “Save as PDF” in the print dialog.",
+    connecting:"Signing in…", not_partner:"This account is not linked to a partner company.",
+    rep_invited:"Invited employees", rep_active:"Active users", rep_orders:"Orders", rep_contribution:"Employer contribution",
+    rep_rating:"Average rating", rep_adoption:"Adoption rate", other_office:"Other / undefined", orders_count:"order(s)",
+    no_orders_month:"No orders this month.", bill_saved:"Billing mode saved.", err_prefix:"Error: ",
+    office_added:"Office added.", office_name_required:"Office name is required.", no_offices:"No offices yet.",
+    st_invited:"invited", st_active:"active", st_removed:"removed", remove:"Remove",
+    remove_confirm:"Remove {n} from the meal benefit? They will no longer be able to order.", removed_ok:"{n} has been removed.",
+    email_required:"Email is required.", sending:"Sending…", invite_sent:"Invitation sent to {e}.", no_employees:"No active employees yet.",
+    rule_noname:"Unnamed rule", rule_priority:"priority", rule_cap_month:"cap Rs {n}/month", no_rules:"No rules configured yet.",
+    rule_name_required:"Rule name is required.", amount_required:"Fixed amount is required.", percent_required:"Percentage is required.",
+    rule_created:"Rule created.", err_generic:"Error",
+    inv_subtitle:"Invoice — company meal benefit", inv_mode:"Mode", inv_detail_office:"Breakdown by office",
+    inv_office:"Office", inv_orders_col:"Orders", inv_contrib_col:"Contribution", inv_no_orders:"No orders",
+    inv_total:"Total to invoice the company", inv_period:"Period", inv_to:"to", inv_generated:"Document generated automatically by Bondipain.",
+    inv_print:"Print / Save as PDF", inv_title:"Invoice",
+  },
+};
+let lang = localStorage.getItem("bp_lang") || "fr";
+const T = (k) => (L[lang][k] !== undefined ? L[lang][k] : k);
+function applyLang() {
+  localStorage.setItem("bp_lang", lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.getAttribute("data-i18n")); });
+  document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = T(el.getAttribute("data-ph")); });
+  document.querySelectorAll("#langToggle").forEach(lt => { lt.innerHTML = ["fr","en"].map(l => `<button onclick="setLang('${l}')" style="background:${l===lang?'var(--brand)':'#fff'};color:${l===lang?'#fff':'var(--muted)'};border:1.5px solid var(--line);font-family:'Rubik';font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;cursor:pointer;">${l.toUpperCase()}</button>`).join(" "); });
+  if (company) { loadOffices(); loadEmployees(); loadRules(); loadReporting(); }
+}
+function setLang(l) { lang = l; applyLang(); }
+document.addEventListener("DOMContentLoaded", applyLang);
+
 function showMsg(id, text, ok) {
   const el = document.getElementById(id);
   el.textContent = text;
@@ -246,12 +421,12 @@ async function doLogin() {
   const btn   = document.getElementById("loginBtn");
   const err   = document.getElementById("loginErr");
   err.classList.remove("show");
-  btn.disabled = true; btn.textContent = "Connexion…";
+  btn.disabled = true; btn.textContent = T("connecting");
 
   const { data, error } = await _supa.auth.signInWithPassword({ email, password: pwd });
   if (error || !data.session) {
-    err.classList.add("show");
-    btn.disabled = false; btn.textContent = "Se connecter";
+    err.textContent = T("err_login"); err.classList.add("show");
+    btn.disabled = false; btn.textContent = T("signin");
     return;
   }
   await initPortal();
@@ -286,28 +461,154 @@ async function initPortal() {
   const { data: { user } } = await _supa.auth.getUser();
   const { data: companies, error } = await _supa.from("companies").select("*").eq("contact_email", user.email).limit(1);
   if (error || !companies?.length) {
-    document.getElementById("loginErr").textContent = "Ce compte n'est pas rattaché à une entreprise partenaire.";
+    document.getElementById("loginErr").textContent = T("not_partner");
     document.getElementById("loginErr").classList.add("show");
     document.getElementById("loginBtn").disabled = false;
-    document.getElementById("loginBtn").textContent = "Se connecter";
+    document.getElementById("loginBtn").textContent = T("signin");
     await _supa.auth.signOut();
     return;
   }
   company = companies[0];
   document.getElementById("companyNameBadge").textContent = company.name;
   document.getElementById("billing_mode").value = company.billing_mode || "invoice";
+  document.getElementById("benefit_mode").value = company.benefit_mode || "contribution";
+  document.getElementById("show_prices").checked = (company.show_prices !== false);
   document.getElementById("loginScreen").classList.add("hidden");
   document.getElementById("dashScreen").classList.remove("hidden");
+  applyLang(); // rend l'interface + charge données dans la langue courante
+}
 
-  await Promise.all([loadOffices(), loadEmployees(), loadRules()]);
+/* ── REPORTING (Phase 3) ── */
+const REP_MONTHS = {
+  fr: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
+  en: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+};
+const repMonthName = () => REP_MONTHS[lang][repMonth];
+let repMonth = new Date().getMonth();   // 0-based
+let repYear  = new Date().getFullYear();
+let repData  = null;
+
+async function emailInvoice() {
+  const { from, to } = monthRange(repYear, repMonth);
+  const periodLabel = `${repMonthName()} ${repYear}`;
+  if (!confirm(T("invoice_email_confirm").replace("{p}", periodLabel))) return;
+  const { data: { session } } = await _supa.auth.getSession();
+  try {
+    const res = await fetch("/api/send-invoice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
+      body: JSON.stringify({ from, to, periodLabel }),
+    });
+    const p = await res.json();
+    if (!res.ok) throw new Error(p.error || "Erreur");
+    alert(T("invoice_email_ok").replace("{e}", p.to));
+  } catch (e) { alert(T("err_prefix") + e.message); }
+}
+
+function monthRange(y, m) {
+  const from = `${y}-${String(m+1).padStart(2,"0")}-01`;
+  const to   = new Date(y, m+1, 0);
+  return { from, to: `${y}-${String(m+1).padStart(2,"0")}-${String(to.getDate()).padStart(2,"0")}` };
+}
+
+async function changeMonth(delta) {
+  repMonth += delta;
+  if (repMonth < 0) { repMonth = 11; repYear--; }
+  if (repMonth > 11) { repMonth = 0; repYear++; }
+  await loadReporting();
+}
+
+async function loadReporting() {
+  document.getElementById("repMonthLabel").textContent = `${repMonthName()} ${repYear}`;
+  const { from, to } = monthRange(repYear, repMonth);
+
+  const { data: emps } = await _supa.from("employees").select("id, status").eq("company_id", company.id);
+  const invited = (emps || []).filter(e => e.status !== "removed").length;
+
+  const { data: orders } = await _supa.from("b2e_orders")
+    .select("employee_id, office_id, order_total, employer_contribution, employee_amount, rating")
+    .eq("company_id", company.id).gte("delivery_date", from).lte("delivery_date", to);
+  const os = orders || [];
+
+  const activeUsers = new Set(os.map(o => o.employee_id)).size;
+  const totalContribution = os.reduce((s,o)=>s+Number(o.employer_contribution||0),0);
+  const rated = os.filter(o=>o.rating);
+  const avgRating = rated.length ? (rated.reduce((s,o)=>s+o.rating,0)/rated.length) : null;
+
+  const byOffice = {};
+  os.forEach(o => { const k=o.office_id||"—"; if(!byOffice[k]) byOffice[k]={count:0,contrib:0}; byOffice[k].count++; byOffice[k].contrib+=Number(o.employer_contribution||0); });
+
+  repData = { from, to, invited, activeUsers, orders: os.length, totalContribution, avgRating, byOffice };
+  renderReporting();
+}
+
+function renderReporting() {
+  const r = repData;
+  document.getElementById("repStats").innerHTML = `
+    <div class="rep-stat"><div class="l">${T("rep_invited")}</div><div class="v">${r.invited}</div></div>
+    <div class="rep-stat"><div class="l">${T("rep_active")}</div><div class="v">${r.activeUsers}</div></div>
+    <div class="rep-stat"><div class="l">${T("rep_orders")}</div><div class="v">${r.orders}</div></div>
+    <div class="rep-stat green"><div class="l">${T("rep_contribution")}</div><div class="v">Rs ${Math.round(r.totalContribution)}</div></div>
+    <div class="rep-stat"><div class="l">${T("rep_rating")}</div><div class="v">${r.avgRating!=null?r.avgRating.toFixed(1):"—"}</div></div>
+    <div class="rep-stat"><div class="l">${T("rep_adoption")}</div><div class="v">${r.invited?Math.round(r.activeUsers/r.invited*100):0}%</div></div>`;
+
+  const officeName = (id) => offices.find(o=>o.id===id)?.name || T("other_office");
+  const rows = Object.entries(r.byOffice);
+  document.getElementById("repByOffice").innerHTML = rows.length
+    ? rows.map(([id,v])=>`<div class="office-row"><span>${officeName(id)}</span><span><b>${v.count}</b> ${T("orders_count")} · Rs ${Math.round(v.contrib)}</span></div>`).join("")
+    : `<p class="empty">${T("no_orders_month")}</p>`;
+}
+
+function printInvoice() {
+  if (!repData) return;
+  const r = repData;
+  const modeLabel = { invoice:T("bill_invoice"), balance:T("bill_balance"), full:T("bill_full") }[company.billing_mode||"invoice"];
+  const officeName = (id) => offices.find(o=>o.id===id)?.name || T("other_office");
+  const officeRows = Object.entries(r.byOffice).map(([id,v])=>`<tr><td>${officeName(id)}</td><td style="text-align:center">${v.count}</td><td style="text-align:right">Rs ${Math.round(v.contrib)}</td></tr>`).join("");
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html lang="${lang}"><head><meta charset="utf-8"><title>${T("inv_title")} ${company.name} — ${repMonthName()} ${repYear}</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;color:#2A2622;max-width:720px;margin:32px auto;padding:0 24px;}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #C9711B;padding-bottom:16px;margin-bottom:24px;}
+    .top h1{font-size:26px;color:#C9711B;margin:0;} .muted{color:#777;font-size:13px;}
+    h2{font-size:16px;margin:24px 0 8px;} table{width:100%;border-collapse:collapse;font-size:14px;}
+    th,td{padding:9px 10px;border-bottom:1px solid #eee;text-align:left;} th{background:#FAF6F1;font-size:12px;text-transform:uppercase;color:#777;}
+    .totals{margin-top:20px;border-top:2px solid #2A2622;padding-top:14px;text-align:right;}
+    .totals .big{font-size:24px;font-weight:800;color:#2E7D52;}
+    .grid{display:flex;gap:40px;flex-wrap:wrap;} .grid div{font-size:14px;}
+    @media print{ .noprint{display:none;} }
+  </style></head><body>
+    <div class="top">
+      <div><h1>Bondipain</h1><div class="muted">${T("inv_subtitle")}</div></div>
+      <div style="text-align:right"><div><b>${company.name}</b></div><div class="muted">${repMonthName()} ${repYear}</div><div class="muted">${T("inv_mode")} : ${modeLabel}</div></div>
+    </div>
+    <div class="grid">
+      <div><b>${T("rep_invited")}</b><br>${r.invited}</div>
+      <div><b>${T("rep_active")}</b><br>${r.activeUsers}</div>
+      <div><b>${T("rep_orders")}</b><br>${r.orders}</div>
+      <div><b>${T("rep_rating")}</b><br>${r.avgRating!=null?r.avgRating.toFixed(1):"—"}</div>
+    </div>
+    <h2>${T("inv_detail_office")}</h2>
+    <table><thead><tr><th>${T("inv_office")}</th><th style="text-align:center">${T("inv_orders_col")}</th><th style="text-align:right">${T("inv_contrib_col")}</th></tr></thead>
+    <tbody>${officeRows || `<tr><td colspan="3" style="text-align:center;color:#999">${T("inv_no_orders")}</td></tr>`}</tbody></table>
+    <div class="totals"><div class="muted">${T("inv_total")}</div><div class="big">Rs ${Math.round(r.totalContribution)}</div></div>
+    <p class="muted" style="margin-top:30px">${T("inv_period")} : ${r.from} ${T("inv_to")} ${r.to} · ${T("inv_generated")}</p>
+    <button class="noprint" onclick="window.print()" style="margin-top:20px;padding:10px 20px;background:#F2A24C;color:#fff;border:none;border-radius:999px;font-weight:700;cursor:pointer">${T("inv_print")}</button>
+  </body></html>`);
+  w.document.close();
 }
 
 async function saveBilling() {
   const mode = document.getElementById("billing_mode").value;
-  const { error } = await _supa.from("companies").update({ billing_mode: mode }).eq("id", company.id);
-  if (error) { showMsg("billingMsg", "Erreur : " + error.message, false); return; }
+  const benefit = document.getElementById("benefit_mode").value;
+  const showPrices = document.getElementById("show_prices").checked;
+  const { error } = await _supa.from("companies").update({ billing_mode: mode, benefit_mode: benefit, show_prices: showPrices }).eq("id", company.id);
+  if (error) { showMsg("benefitMsg", T("err_prefix") + error.message, false); return; }
   company.billing_mode = mode;
-  showMsg("billingMsg", "Mode de facturation enregistré.", true);
+  company.benefit_mode = benefit;
+  company.show_prices = showPrices;
+  showMsg("benefitMsg", T("bill_saved"), true);
+  showMsg("billingMsg", T("bill_saved"), true);
 }
 
 /* ── BUREAUX ── */
@@ -317,7 +618,7 @@ async function loadOffices() {
   const list = document.getElementById("officesList");
   list.innerHTML = offices.length ? offices.map(o => `
     <div class="row-item"><span class="main">${o.name}</span><span class="sub">${o.delivery_slot || ""} ${o.address ? "· " + o.address : ""}</span></div>
-  `).join("") : `<p class="empty">Aucun bureau pour le moment.</p>`;
+  `).join("") : `<p class="empty">${T("no_offices")}</p>`;
 
   const select = document.getElementById("emp_office");
   select.innerHTML = `<option value="">—</option>` + offices.map(o => `<option value="${o.id}">${o.name}</option>`).join("");
@@ -327,15 +628,15 @@ async function addOffice() {
   const name = document.getElementById("of_name").value.trim();
   const slot = document.getElementById("of_slot").value.trim();
   const addr = document.getElementById("of_addr").value.trim();
-  if (!name) { showMsg("officeMsg", "Le nom du bureau est requis.", false); return; }
+  if (!name) { showMsg("officeMsg", T("office_name_required"), false); return; }
 
   const { error } = await _supa.from("company_offices").insert({ company_id: company.id, name, delivery_slot: slot, address: addr });
-  if (error) { showMsg("officeMsg", "Erreur : " + error.message, false); return; }
+  if (error) { showMsg("officeMsg", T("err_prefix") + error.message, false); return; }
 
   document.getElementById("of_name").value = "";
   document.getElementById("of_slot").value = "";
   document.getElementById("of_addr").value = "";
-  showMsg("officeMsg", "Bureau ajouté.", true);
+  showMsg("officeMsg", T("office_added"), true);
   await loadOffices();
 }
 
@@ -348,17 +649,17 @@ async function loadEmployees() {
     <div class="row-item">
       <span class="main">${e.full_name || e.work_email}</span>
       <span class="sub">${e.work_email}${e.company_offices ? " · " + e.company_offices.name : ""}</span>
-      <span class="badge-status ${e.status === "invited" ? "invited" : ""}">${e.status}</span>
-      <button class="row-remove" onclick="removeEmployee('${e.id}', '${(e.full_name || e.work_email).replace(/'/g, "")}')">Retirer</button>
+      <span class="badge-status ${e.status === "invited" ? "invited" : ""}">${T("st_"+e.status) || e.status}</span>
+      <button class="row-remove" onclick="removeEmployee('${e.id}', '${(e.full_name || e.work_email).replace(/'/g, "")}')">${T("remove")}</button>
     </div>
-  `).join("") : `<p class="empty">Aucun employé actif pour le moment.</p>`;
+  `).join("") : `<p class="empty">${T("no_employees")}</p>`;
 }
 
 async function removeEmployee(id, label) {
-  if (!confirm("Retirer " + label + " de l'avantage repas ? Il ne pourra plus commander.")) return;
+  if (!confirm(T("remove_confirm").replace("{n}", label))) return;
   const { error } = await _supa.from("employees").update({ status: "removed" }).eq("id", id);
-  if (error) { showMsg("employeeMsg", "Erreur : " + error.message, false); return; }
-  showMsg("employeeMsg", label + " a été retiré.", true);
+  if (error) { showMsg("employeeMsg", T("err_prefix") + error.message, false); return; }
+  showMsg("employeeMsg", T("removed_ok").replace("{n}", label), true);
   await loadEmployees();
 }
 
@@ -367,10 +668,10 @@ async function inviteEmployee() {
   const fullName = document.getElementById("emp_name").value.trim();
   const officeId = document.getElementById("emp_office").value || null;
   const department = document.getElementById("emp_dept").value.trim();
-  if (!email) { showMsg("employeeMsg", "L'email est requis.", false); return; }
+  if (!email) { showMsg("employeeMsg", T("email_required"), false); return; }
 
   const btn = document.getElementById("inviteBtn");
-  btn.disabled = true; btn.textContent = "Envoi…";
+  btn.disabled = true; btn.textContent = T("sending");
 
   try {
     const res = await fetch("/api/invite-employee", {
@@ -379,18 +680,97 @@ async function inviteEmployee() {
       body: JSON.stringify({ email, fullName, officeId, department }),
     });
     const payload = await res.json();
-    if (!res.ok) throw new Error(payload.error || "Erreur");
+    if (!res.ok) throw new Error(payload.error || T("err_generic"));
 
     document.getElementById("emp_email").value = "";
     document.getElementById("emp_name").value = "";
     document.getElementById("emp_dept").value = "";
-    showMsg("employeeMsg", "Invitation envoyée à " + email + ".", true);
+    showMsg("employeeMsg", T("invite_sent").replace("{e}", email), true);
     await loadEmployees();
   } catch (err) {
-    showMsg("employeeMsg", "Erreur : " + err.message, false);
+    showMsg("employeeMsg", T("err_prefix") + err.message, false);
   } finally {
-    btn.disabled = false; btn.textContent = "+ Inviter l'employé";
+    btn.disabled = false; btn.textContent = T("invite_emp");
   }
+}
+
+/* ── IMPORT EN MASSE (Excel / CSV) ── */
+function downloadTemplate() {
+  const csv = "email,prenom,nom,departement,bureau\njason@acme.com,Jason,Nirmal,Marketing,\nsarah@acme.com,Sarah,Payen,Finance,\n";
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "modele-employes-bondipain.csv";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+function normKey(k) {
+  return String(k || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z]/g, "");
+}
+function pick(row, keys) {
+  for (const want of keys) { for (const k in row) { if (normKey(k) === want) return String(row[k] ?? "").trim(); } }
+  return "";
+}
+
+async function bulkImport() {
+  const fileInput = document.getElementById("bulkFile");
+  const file = fileInput.files[0];
+  const btn = document.getElementById("bulkBtn");
+  const prog = document.getElementById("bulkProgress");
+  if (!file) { showMsg("bulkMsg", T("bulk_nofile"), false); return; }
+  if (typeof XLSX === "undefined") { showMsg("bulkMsg", T("bulk_liberr"), false); return; }
+
+  btn.disabled = true; showMsg("bulkMsg", T("bulk_reading"), true); prog.textContent = "";
+  let rows;
+  try {
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: "array" });
+    rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: "" });
+  } catch (e) { showMsg("bulkMsg", T("bulk_parseerr"), false); btn.disabled = false; return; }
+
+  // Construit la liste des employés à inviter
+  const officeByName = {};
+  (offices || []).forEach(o => { officeByName[normKey(o.name)] = o.id; });
+  const list = [];
+  for (const row of rows) {
+    const email = pick(row, ["email", "mail", "emailpro", "emailprofessionnel", "workemail"]);
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) continue;
+    let fullName = pick(row, ["nomcomplet", "fullname", "name", "nomprenom"]);
+    if (!fullName) {
+      const first = pick(row, ["prenom", "firstname", "first"]);
+      const last = pick(row, ["nom", "lastname", "last", "surname"]);
+      fullName = [first, last].filter(Boolean).join(" ").trim();
+    }
+    const department = pick(row, ["departement", "department", "service", "dept"]);
+    const officeName = pick(row, ["bureau", "office", "site"]);
+    const officeId = officeName ? (officeByName[normKey(officeName)] || null) : (document.getElementById("emp_office").value || null);
+    list.push({ email: email.toLowerCase(), fullName, department, officeId });
+  }
+
+  if (!list.length) { showMsg("bulkMsg", T("bulk_empty"), false); btn.disabled = false; return; }
+  showMsg("bulkMsg", T("bulk_sending").replace("{n}", list.length), true);
+
+  let ok = 0; const errors = [];
+  for (let i = 0; i < list.length; i++) {
+    prog.textContent = T("bulk_progress").replace("{i}", i + 1).replace("{n}", list.length);
+    try {
+      const res = await fetch("/api/invite-employee", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(await authHeader()) },
+        body: JSON.stringify(list[i]),
+      });
+      const p = await res.json();
+      if (!res.ok) throw new Error(p.error || "err");
+      ok++;
+    } catch (e) { errors.push(list[i].email + " (" + e.message + ")"); }
+  }
+
+  prog.textContent = "";
+  fileInput.value = "";
+  const msg = T("bulk_done").replace("{ok}", ok).replace("{n}", list.length);
+  showMsg("bulkMsg", errors.length ? msg + " — " + T("bulk_errors").replace("{e}", errors.length) : msg, errors.length === 0);
+  if (errors.length) prog.innerHTML = errors.slice(0, 10).map(e => "⚠ " + e).join("<br>");
+  await loadEmployees();
+  btn.disabled = false;
 }
 
 /* ── RÈGLES ── */
@@ -399,10 +779,10 @@ async function loadRules() {
   const list = document.getElementById("rulesList");
   list.innerHTML = data?.length ? data.map(r => `
     <div class="row-item">
-      <span class="main">${r.name || "Règle sans nom"}</span>
-      <span class="sub">${r.mode === "fixed" ? "Rs " + r.amount : r.percent + "%"} · priorité ${r.priority}${r.monthly_cap ? " · plafond Rs " + r.monthly_cap + "/mois" : ""}</span>
+      <span class="main">${r.name || T("rule_noname")}</span>
+      <span class="sub">${r.mode === "fixed" ? "Rs " + r.amount : r.percent + "%"} · ${T("rule_priority")} ${r.priority}${r.monthly_cap ? " · " + T("rule_cap_month").replace("{n}", r.monthly_cap) : ""}</span>
     </div>
-  `).join("") : `<p class="empty">Aucune règle configurée pour le moment.</p>`;
+  `).join("") : `<p class="empty">${T("no_rules")}</p>`;
 }
 
 async function addRule() {
@@ -415,18 +795,18 @@ async function addRule() {
   const monthlyCap = document.getElementById("ru_monthly_cap").value ? Number(document.getElementById("ru_monthly_cap").value) : null;
   const days = Array.from(document.querySelectorAll("#ru_days input:checked")).map(i => i.value);
 
-  if (!name) { showMsg("ruleMsg", "Le nom de la règle est requis.", false); return; }
-  if (mode === "fixed" && !amount) { showMsg("ruleMsg", "Le montant fixe est requis.", false); return; }
-  if (mode === "percent" && !percent) { showMsg("ruleMsg", "Le pourcentage est requis.", false); return; }
+  if (!name) { showMsg("ruleMsg", T("rule_name_required"), false); return; }
+  if (mode === "fixed" && !amount) { showMsg("ruleMsg", T("amount_required"), false); return; }
+  if (mode === "percent" && !percent) { showMsg("ruleMsg", T("percent_required"), false); return; }
 
   const { error } = await _supa.from("contribution_rules").insert({
     company_id: company.id, name, mode, amount, percent,
     daily_cap: dailyCap, monthly_cap: monthlyCap,
     eligible_days: days, priority, active: true,
   });
-  if (error) { showMsg("ruleMsg", "Erreur : " + error.message, false); return; }
+  if (error) { showMsg("ruleMsg", T("err_prefix") + error.message, false); return; }
 
-  showMsg("ruleMsg", "Règle créée.", true);
+  showMsg("ruleMsg", T("rule_created"), true);
   await loadRules();
 }
 
@@ -440,7 +820,7 @@ async function exportCsv() {
 
   try {
     const res = await fetch("/api/export-invoice?" + params.toString(), { headers: await authHeader() });
-    if (!res.ok) { const payload = await res.json(); throw new Error(payload.error || "Erreur"); }
+    if (!res.ok) { const payload = await res.json(); throw new Error(payload.error || T("err_generic")); }
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -449,7 +829,7 @@ async function exportCsv() {
     a.click();
     URL.revokeObjectURL(url);
   } catch (err) {
-    showMsg("exportMsg", "Erreur : " + err.message, false);
+    showMsg("exportMsg", T("err_prefix") + err.message, false);
   }
 }
 
@@ -459,5 +839,6 @@ async function exportCsv() {
   if (session) await initPortal();
 })();
 </script>
+<script src="./pwd-eye.js"></script>
 </body>
 </html>

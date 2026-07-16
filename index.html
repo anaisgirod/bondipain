@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bondipain | Pain artisanal livré à Moka</title>
-  <link rel="icon" type="image/png" id="favicon" />
+  <link rel="icon" type="image/png" id="favicon" href="./logo-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
@@ -56,8 +56,8 @@
     .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 
     /* ── TOP UTILITY BAR ── */
-    .topbar { background: var(--brand); color: #fff; font-size: 13.5px; font-weight: 600; }
-    .topbar .container { display: flex; align-items: center; justify-content: center; position: relative; min-height: 38px; gap: 10px; text-align: center; }
+    .topbar { background: var(--brand); color: #fff; font-size: 18px; font-weight: 800; }
+    .topbar .container { display: flex; align-items: center; justify-content: center; position: relative; min-height: 54px; gap: 10px; text-align: center; }
     .topbar .promo { display:flex; align-items:center; gap:8px; }
     .lang-switch { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); display: flex; gap: 2px; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px; }
     .lang-switch button { color: #fff; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; opacity: .8; }
@@ -68,7 +68,7 @@
     header.site.scrolled { box-shadow: var(--shadow-sm); }
     .nav { display: flex; align-items: center; justify-content: space-between; min-height: 74px; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 12px; }
-    .brand img { width: 50px; height: 50px; border-radius: 50%; }
+    .brand img { height: 46px; width: auto; }
     .brand .name { font-family: 'Rubik'; font-weight: 800; font-size: 22px; color: var(--brand-deep); letter-spacing: -.5px; }
     .nav-links { display: flex; gap: 28px; }
     .nav-links a { font-family: 'Rubik'; font-weight: 500; font-size: 15px; color: var(--ink); position: relative; }
@@ -77,6 +77,9 @@
     .icon-btn { position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #fff; border: 1.5px solid var(--line); transition: border-color .15s; }
     .icon-btn:hover { border-color: var(--brand); }
     .icon-btn svg { width: 21px; height: 21px; stroke: var(--ink); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .nav-item .icon-lbl { font-family: 'Rubik'; font-weight: 600; font-size: 11px; color: var(--muted); line-height: 1; }
+    .nav-item:hover .icon-lbl { color: var(--brand-deep); }
     .cart-count { position: absolute; top: -5px; right: -5px; background: var(--brand-deep); color: #fff; font-size: 11px; font-weight: 800; font-family: 'Rubik'; min-width: 19px; height: 19px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; }
     .menu-toggle { display: none; }
 
@@ -84,20 +87,27 @@
     .hero { position: relative; min-height: 520px; display: grid; place-items: center; text-align: center; color: #fff; overflow: hidden; }
     .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(30,18,5,.35) 0%, rgba(30,18,5,.55) 100%); z-index: 1; }
     .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-bg { position: absolute; inset: 0; }
+    .hero-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease-in-out; }
+    .hero-bg img.active { opacity: 1; }
+    .hero-dots { position: absolute; bottom: 18px; left: 0; right: 0; z-index: 3; display: flex; justify-content: center; gap: 9px; }
+    .hero-dots button { width: 11px; height: 11px; border-radius: 50%; border: none; background: rgba(255,255,255,.5); cursor: pointer; padding: 0; transition: all .2s; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+    .hero-dots button.active { background: #fff; width: 26px; border-radius: 999px; }
     .hero-content { position: relative; z-index: 2; padding: 60px 20px; max-width: 760px; }
-    .hero .eyebrow { font-family: 'Caveat'; font-size: 30px; color: var(--brand); font-weight: 700; }
+    .hero .eyebrow { font-family: 'Caveat'; font-size: clamp(38px, 6vw, 52px); color: var(--brand); font-weight: 700; }
     .hero h1 { font-size: clamp(44px, 8vw, 92px); font-weight: 900; letter-spacing: -2px; text-shadow: 0 4px 24px rgba(0,0,0,.4); }
     .hero p.sub { font-size: 19px; margin: 14px auto 28px; max-width: 520px; font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
     .hero .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .hero-preview { margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .hero-preview .hp-label { font-size: 13px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; opacity: .9; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
+    .hero-preview { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .hero-preview .hp-label { font-size: 14px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; opacity: .9; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
     .hero-preview .hp-chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-    .hero-preview .hp-chip { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(4px); color: #fff; font-size: 13.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px; }
+    .hero-preview .hp-chip { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(4px); color: #fff; font-size: 13.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer; transition: all .15s; }
+    .hero-preview .hp-chip:hover { background: var(--brand); border-color: var(--brand); }
 
     /* ── INFO STRIP ── */
-    .info-strip { background: var(--ink); color: #fff; padding: 18px 0; }
-    .info-strip .container { display: flex; align-items: center; justify-content: center; gap: 14px; text-align: center; font-size: 14.5px; font-weight: 500; }
-    .info-strip svg { width: 26px; height: 26px; stroke: var(--brand); flex-shrink: 0; }
+    .info-strip { background: var(--ink); color: #fff; padding: 24px 0; }
+    .info-strip .container { display: flex; align-items: center; justify-content: center; gap: 16px; text-align: center; font-size: 18px; font-weight: 700; }
+    .info-strip svg { width: 32px; height: 32px; stroke: var(--brand); flex-shrink: 0; }
 
     /* ── SECTION HEADINGS ── */
     section.block { padding: 72px 0; }
@@ -133,16 +143,25 @@
     .feature-list li { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; }
     .feature-list svg { width: 24px; height: 24px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
 
-    /* ── STEPS ── */
-    .steps-infog { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; margin-top: 48px; }
-    .steps-infog::before { content:""; position:absolute; top:38px; left:12.5%; right:12.5%; height:2px; background: linear-gradient(90deg, var(--brand) 0%, var(--brand-soft) 100%); z-index:0; }
+    /* ── STEPS (infographie animée) ── */
+    .steps-infog { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; margin-top: 56px; }
+    .steps-infog::before { content:""; position:absolute; top:56px; left:12.5%; right:12.5%; height:3px; z-index:0;
+      background-image: linear-gradient(90deg, var(--brand-deep) 45%, transparent 45%);
+      background-size: 16px 3px; opacity:.5; animation: dashmove 1.2s linear infinite; }
+    @keyframes dashmove { to { background-position: 16px 0; } }
     .step-inf { display:flex; flex-direction:column; align-items:center; text-align:center; padding: 0 16px 32px; position:relative; z-index:1; }
-    .step-inf .si-icon { width:76px; height:76px; border-radius:50%; background:var(--brand); display:flex; align-items:center; justify-content:center; margin-bottom:18px; box-shadow:0 4px 18px rgba(242,162,76,.35); }
-    .step-inf .si-icon svg { width:34px; height:34px; stroke:#fff; stroke-width:1.8; fill:none; }
-    .step-inf .si-num { position:absolute; top:-8px; right:calc(50% - 46px); background:var(--brand-deep); color:#fff; font-family:'Rubik'; font-weight:800; font-size:11px; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
-    .step-inf h4 { font-family:'Rubik'; font-weight:700; font-size:16px; margin-bottom:6px; }
+    .step-inf .si-icon { width:112px; height:112px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+      box-shadow:0 10px 26px rgba(60,40,15,.14); animation: bob 3s ease-in-out infinite; transition: transform .25s; }
+    .step-inf:nth-child(2) .si-icon { animation-delay:.4s; }
+    .step-inf:nth-child(3) .si-icon { animation-delay:.8s; }
+    .step-inf:nth-child(4) .si-icon { animation-delay:1.2s; }
+    .step-inf .si-icon:hover { transform: scale(1.08) rotate(-3deg); animation-play-state: paused; }
+    @keyframes bob { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-9px); } }
+    .step-inf .si-icon svg { width:112px; height:112px; display:block; }
+    .step-inf .si-num { position:absolute; top:-6px; right:calc(50% - 58px); background:var(--brand-deep); color:#fff; font-family:'Rubik'; font-weight:800; font-size:13px; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:3px solid #fff; box-shadow:0 3px 8px rgba(60,40,15,.2); z-index:2; }
+    .step-inf h4 { font-family:'Rubik'; font-weight:800; font-size:16.5px; margin-bottom:6px; }
     .step-inf p { color:var(--muted); font-size:13.5px; line-height:1.45; }
-    @media(max-width:640px){ .steps-infog { grid-template-columns:1fr 1fr; } .steps-infog::before { display:none; } }
+    @media(max-width:640px){ .steps-infog { grid-template-columns:1fr 1fr; row-gap:12px; } .steps-infog::before { display:none; } }
 
     /* ── CONTACT ── */
     .contact { background: var(--ink); color: #fff; }
@@ -161,6 +180,15 @@
     .foot-grid { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
     .foot-grid .brand .name { color: #fff; }
     footer.site .legal { width: 100%; border-top: 1px solid rgba(255,255,255,.1); margin-top: 28px; padding-top: 18px; text-align: center; color: #8c8175; font-size: 13px; }
+    .news-form { width: 100%; max-width: 460px; }
+    .news-form .news-title { font-family: 'Rubik'; font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 10px; }
+    .news-form .news-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .news-form input { flex: 1; min-width: 180px; padding: 11px 14px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #fff; font-family: inherit; font-size: 14px; }
+    .news-form input::placeholder { color: #a99d8f; }
+    .news-form input:focus { outline: none; border-color: var(--brand); }
+    .news-form .news-msg { font-size: 13px; margin-top: 8px; min-height: 16px; }
+    .news-form .news-msg.ok { color: #7BD49A; }
+    .news-form .news-msg.err { color: #F0A58C; }
 
     /* ── MODAL / DRAWER SYSTEM ── */
     .overlay { position: fixed; inset: 0; background: rgba(25,15,5,.5); backdrop-filter: blur(2px); z-index: 100; opacity: 0; visibility: hidden; transition: opacity .25s; }
@@ -172,6 +200,11 @@
     .modal-head h3 { font-size: 22px; font-weight: 800; }
     .modal-close { width: 38px; height: 38px; border-radius: 50%; background: #fff; border: 1.5px solid var(--line); display: grid; place-items: center; }
     .modal-close svg { width: 18px; height: 18px; stroke: var(--ink); }
+    .modal-back { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 7px 14px 7px 11px; font-family: 'Rubik'; font-weight: 700; font-size: 13px; color: var(--ink); cursor: pointer; transition: all .15s; }
+    .modal-back:hover { border-color: var(--brand); color: var(--brand-deep); }
+    .modal-back svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.4; fill: none; }
+    .head-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .head-left h3 { overflow: hidden; text-overflow: ellipsis; }
     .modal-body { padding: 22px 24px; }
     .modal-foot { position: sticky; bottom: 0; background: var(--cream); padding: 16px 24px; border-top: 1px solid var(--line); }
 
@@ -188,6 +221,10 @@
     .opt-group > label.gl { font-family: 'Rubik'; font-weight: 700; font-size: 15px; display: block; margin-bottom: 4px; }
     .opt-group .hint { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
     .opt-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; }
+    .cond-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; cursor: pointer; }
+    .cond-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--brand-strong); flex-shrink: 0; }
+    .cond-row .label { flex: 1; font-weight: 600; }
+    .cond-row .op { font-size: 13px; font-weight: 700; }
     .opt-row .label { font-weight: 600; }
     .opt-row .op { color: var(--muted); font-size: 13.5px; font-weight: 600; }
     .stepper { display: flex; align-items: center; gap: 10px; }
@@ -211,8 +248,16 @@
     .cart-line .ci-main { flex: 1; min-width: 0; }
     .cart-line .ci-title { font-family: 'Rubik'; font-weight: 700; font-size: 15.5px; }
     .cart-line .ci-extras { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .cart-line .ci-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-    .cart-line .ci-price { font-family: 'Rubik'; font-weight: 800; }
+    .cart-day-group { margin-bottom: 6px; }
+    .cart-day-head { font-family: 'Rubik'; font-weight: 800; font-size: 14px; color: var(--brand-deep); padding: 12px 0 4px; border-bottom: 2px solid var(--brand-soft); margin-bottom: 4px; }
+    .cart-line .ci-day { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .cart-line .ci-day-lbl { font-size: 12.5px; font-weight: 700; color: var(--brand-deep); }
+    .cart-line .ci-day-sel { font-family: inherit; font-size: 13px; font-weight: 600; padding: 5px 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--cream-2); color: var(--ink); cursor: pointer; }
+    .cart-line .ci-day-none { font-size: 12.5px; font-weight: 700; color: var(--danger); margin-top: 8px; }
+    .cart-line .ci-bottom { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+    .cart-line .ci-price { font-family: 'Rubik'; font-weight: 800; margin-right: auto; }
+    .cart-line .ci-edit { color: var(--brand-deep); font-size: 12.5px; font-weight: 700; }
+    .cart-line .ci-edit:hover { text-decoration: underline; }
     .cart-line .ci-remove { color: var(--danger); font-size: 12.5px; font-weight: 600; }
     .cart-empty { text-align: center; color: var(--muted); padding: 50px 20px; }
     .cart-empty svg { width: 56px; height: 56px; stroke: var(--line); margin: 0 auto 14px; }
@@ -232,9 +277,15 @@
 
     /* day picker */
     .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+    .day-recap { display: flex; flex-direction: column; gap: 8px; }
+    .day-recap-row { display: flex; gap: 12px; padding: 10px 14px; background: var(--cream-2); border-radius: 10px; font-size: 14px; }
+    .day-recap-row b { font-family: 'Rubik'; color: var(--brand-deep); white-space: nowrap; }
+    .day-recap-row span { color: var(--muted); }
     .day-opt { border: 1.5px solid var(--line); border-radius: 12px; background: #fff; padding: 12px 6px; text-align: center; transition: all .15s; }
     .day-opt:hover { border-color: var(--brand); }
     .day-opt.selected { border-color: var(--brand); background: var(--brand-soft); }
+    .day-opt.disabled { opacity: .38; cursor: not-allowed; background: #F2ECE4; }
+    .day-opt.disabled:hover { border-color: var(--line); }
     .day-opt .dow { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
     .day-opt .dnum { font-family: 'Rubik'; font-weight: 800; font-size: 22px; margin: 2px 0; }
     .day-opt .mon { font-size: 12px; color: var(--muted); }
@@ -247,6 +298,15 @@
     .pay-opt .pd { font-size: 13px; color: var(--muted); margin-top: 2px; }
     .juice-box { display: none; background: #fff; border: 1.5px dashed var(--brand); border-radius: 12px; padding: 14px; margin: 4px 0 14px; font-size: 14px; }
     .juice-box.show { display: block; }
+    .card-box { display: none; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; margin: 4px 0 14px; }
+    .card-box.show { display: block; }
+    .card-box .field label { font-family: 'Rubik'; font-weight: 600; font-size: 13px; display: block; margin-bottom: 5px; }
+    .card-box input { width: 100%; font-family: inherit; font-size: 15px; padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 10px; }
+    .card-box input:focus { outline: none; border-color: var(--brand); }
+    .card-box .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card-box .card-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .ordernum-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--brand-soft); border-radius: 12px; padding: 12px 15px; margin-bottom: 14px; font-size: 13.5px; color: var(--brand-deep); }
+    .ordernum-banner b { font-family: 'Rubik'; font-weight: 800; font-size: 16px; letter-spacing: .5px; }
 
     /* b2b */
     .b2b-code-row { display: flex; gap: 8px; align-items: flex-start; }
@@ -260,14 +320,81 @@
     /* b2e */
     .b2e-banner { background: #E8F5E9; border: 1.5px solid #2E7D52; border-radius: var(--radius); padding: 14px 18px; margin: 0 0 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font-size: 14px; color: #1E5C38; }
     .b2e-banner b { font-family: 'Rubik'; }
-    .b2e-banner .b2e-logout { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--danger); }
+    .b2e-banner .b2e-space { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--brand-deep); text-decoration: underline; }
+    .b2e-banner .b2e-logout { font-size: 12.5px; font-weight: 700; color: var(--danger); }
     .b2e-line { color: var(--green-ok); }
+    .b2e-free-tag { display: inline-block; background: var(--green-soft, #E8F5E9); color: var(--green-ok); font-family: 'Rubik'; font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-left: 4px; vertical-align: middle; }
+    .b2e-free-note { background: #fff; border: 1px solid var(--green-ok); color: #1E5C38; font-weight: 700; border-radius: 999px; padding: 3px 12px; }
     .b2e-filterbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 28px; }
     .b2e-chips { display: flex; gap: 8px; }
     .b2e-chip { font-family: 'Rubik'; font-weight: 700; font-size: 13px; padding: 7px 16px; border-radius: 999px; background: #fff; border: 1.5px solid var(--line); color: var(--muted); }
     .b2e-chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
     .b2e-cutoff { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--brand-deep); }
 
+    /* formules */
+    .formula-card { display: flex; align-items: center; gap: 18px; background: #fff; border: 1.5px solid var(--brand-soft); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 16px 18px; margin: 0 0 28px; }
+    .formula-card img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+    .formula-card .fc-body { flex: 1; }
+    .formula-card .fc-tag { display: inline-block; background: var(--brand); color: #fff; font-family: 'Rubik'; font-weight: 700; font-size: 11px; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px; }
+    .formula-card h3 { font-size: 18px; font-weight: 800; }
+    .formula-card p { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+    .formula-card .fc-price { font-family: 'Rubik'; font-weight: 800; color: var(--brand-deep); margin-top: 4px; }
+    @media (max-width: 560px){ .formula-card { flex-wrap: wrap; } .formula-card img { width: 100%; height: 150px; } }
+    .fslot { border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+    .fslot-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .fslot-label { font-family: 'Rubik'; font-weight: 700; font-size: 13px; color: var(--muted); }
+    .fslot-sel { font-weight: 600; }
+    .fslot-change { font-family: 'Rubik'; font-weight: 700; font-size: 12.5px; color: var(--brand-deep); background: var(--brand-soft); border-radius: 999px; padding: 4px 12px; }
+    .fslot-change:hover { background: var(--brand); color: #fff; }
+    .fslot-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+    .fslot-opt { display: flex; justify-content: space-between; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 14px; }
+    .fslot-opt:hover { border-color: var(--brand); }
+    .fslot-opt.sel { border-color: var(--brand); background: var(--brand-soft); }
+
+    /* menu du jour hebdo */
+    /* ── BEST SELLERS ── */
+    .bs-band { background: linear-gradient(135deg, #FFF6EA, #FDEBD3); border: 1.5px solid var(--brand-soft); border-radius: var(--radius); padding: 20px 20px 22px; margin-bottom: 26px; }
+    .bs-band-head { font-family: 'Rubik'; font-weight: 800; font-size: 17px; color: var(--brand-deep); margin-bottom: 14px; }
+    .bs-row { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+    .bs-card { flex: 0 0 190px; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; overflow: hidden; cursor: pointer; text-align: left; transition: transform .15s, box-shadow .15s; padding: 0; }
+    .bs-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--brand); }
+    .bs-card img { width: 100%; height: 110px; object-fit: cover; display: block; }
+    .bs-card-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .bs-card-name { font-family: 'Rubik'; font-weight: 700; font-size: 14px; color: var(--ink); line-height: 1.25; }
+    .bs-card-price { font-family: 'Rubik'; font-weight: 800; font-size: 14px; color: var(--brand-deep); }
+    .bs-badge { display: inline-block; background: var(--brand-deep); color: #fff; font-family: 'Rubik'; font-weight: 700; font-size: 10.5px; padding: 2px 8px; border-radius: 999px; vertical-align: middle; margin-left: 4px; }
+    .week-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+    .day-col { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; flex-direction: column; }
+    .day-col.today { border: 2px solid var(--brand); }
+    .day-col .day-head { background: var(--cream-2); padding: 13px 14px; text-align: center; font-family: 'Rubik'; font-weight: 800; font-size: 16px; border-bottom: 1px solid var(--line); }
+    .day-col .day-head .day-date { display: block; font-family: 'Barlow'; font-weight: 700; font-size: 13px; color: var(--brand-deep); margin-top: 2px; }
+    .day-col.today .day-head .day-date { color: rgba(255,255,255,.9); }
+    .day-col.today .day-head { background: var(--brand); color: #fff; }
+    .day-col .day-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .day-dish { text-align: left; font-size: 14.5px; font-weight: 600; padding: 0 0 12px; border: 1.5px solid var(--line); border-radius: 14px; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; align-items: stretch; gap: 7px; width: 100%; overflow: hidden; background: #fff; }
+    .day-dish:hover { border-color: var(--brand); box-shadow: var(--shadow-sm); }
+    .day-dish .dd-photo { width: 100%; height: 92px; object-fit: cover; display: block; }
+    .day-dish .dd-name { line-height: 1.3; padding: 0 12px; }
+    .day-dish .dd-price { font-family: 'Rubik'; font-weight: 800; color: var(--brand-deep); font-size: 14.5px; white-space: nowrap; padding: 0 12px; }
+    .day-dish.friday { border-color: var(--brand); }
+    .day-dish[disabled] { opacity: .55; cursor: not-allowed; }
+    .day-dish[disabled] .dd-name { text-decoration: line-through; }
+    .day-col.closed { opacity: .6; }
+    .day-col.closed .day-head { background: var(--line); color: var(--muted); }
+    .day-badge { font-size: 10.5px; font-weight: 700; color: var(--brand-deep); text-transform: uppercase; letter-spacing: .3px; margin-top: 2px; text-align: center; }
+    @media (max-width: 820px){ .week-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px){ .week-grid { grid-template-columns: 1fr; } }
+
+    /* pop-up d'accueil */
+    .welcome-ov { position: fixed; inset: 0; background: rgba(30,20,10,.55); backdrop-filter: blur(3px); display: grid; place-items: center; z-index: 3000; padding: 20px; animation: wfade .2s ease; }
+    @keyframes wfade { from { opacity: 0; } to { opacity: 1; } }
+    .welcome-card { background: #fff; border-radius: 22px; max-width: 420px; width: 100%; padding: 34px 30px 28px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: wpop .25s cubic-bezier(.2,.8,.3,1.2); }
+    @keyframes wpop { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .welcome-x { position: absolute; top: 14px; right: 16px; font-size: 26px; line-height: 1; color: var(--muted); background: none; border: none; cursor: pointer; }
+    .welcome-emoji { font-size: 44px; margin-bottom: 8px; }
+    .welcome-card h3 { font-family: 'Rubik'; font-weight: 800; font-size: 24px; color: var(--ink); margin-bottom: 10px; }
+    .welcome-card p { color: var(--muted); font-size: 15.5px; line-height: 1.55; margin-bottom: 22px; }
+    .welcome-card .welcome-cta { width: 100%; }
     .notice { background: var(--brand-soft); border-radius: 12px; padding: 13px 15px; font-size: 13.5px; color: var(--brand-deep); display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px; }
     .notice svg { width: 20px; height: 20px; stroke: var(--brand-deep); flex-shrink: 0; margin-top: 1px; }
 
@@ -307,10 +434,10 @@
       .nav-links { display: none; }
       .menu-toggle { display: grid; }
       .menu-grid { grid-template-columns: 1fr; }
-      .info-strip .container { font-size: 13px; }
+      .info-strip .container { font-size: 15px; gap: 12px; }
       .two-col { grid-template-columns: 1fr; }
       .brand .name { font-size: 19px; }
-      .topbar .promo { font-size: 12px; }
+      .topbar .promo { font-size: 15px; }
       .lang-switch { position: static; transform: none; }
       .topbar .container { flex-direction: column; padding: 8px 22px; }
     }
@@ -381,25 +508,35 @@
   <header class="site" id="header">
     <div class="container nav">
       <a href="#top" class="brand">
-        <img class="logo-img" src="./logo.png" alt="Bondipain" />
-        <span class="name">Bondipain</span>
+        <img class="logo-img" src="./logo-full.png" alt="Bondipain" />
       </a>
       <nav class="nav-links">
         <a href="#top" data-i18n="nav_home"></a>
+        <a href="#menudujour" data-i18n="nav_weekly"></a>
         <a href="#menu" data-i18n="nav_menu"></a>
         <a href="#about" data-i18n="nav_about"></a>
+        <a href="entreprises.html" data-i18n="nav_entreprises"></a>
         <a href="#contact" data-i18n="nav_contact"></a>
       </nav>
       <div class="nav-right">
-        <a class="icon-btn" href="compte.html" aria-label="Mon compte" title="Mon compte">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <a class="nav-item" href="compte.html" id="accountLink" aria-label="Mon compte" title="Mon compte">
+          <span class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </span>
+          <span class="icon-lbl" data-i18n="hdr_profile"></span>
         </a>
-        <button class="icon-btn" id="profileBtn" onclick="openProfile()" aria-label="Profile" style="display:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <button class="nav-item" id="profileBtn" onclick="openProfile()" aria-label="Profile" style="display:none">
+          <span class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </span>
+          <span class="icon-lbl" data-i18n="hdr_profile"></span>
         </button>
-        <button class="icon-btn" onclick="openCart()" aria-label="Cart">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H3"/></svg>
-          <span class="cart-count hidden" id="cartCount">0</span>
+        <button class="nav-item" onclick="openCart()" aria-label="Cart">
+          <span class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 3H3"/></svg>
+            <span class="cart-count hidden" id="cartCount">0</span>
+          </span>
+          <span class="icon-lbl" data-i18n="hdr_cart"></span>
         </button>
         <button class="menu-toggle icon-btn" onclick="toggleMobileNav(true)" aria-label="Menu">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -411,12 +548,14 @@
   <!-- MOBILE NAV -->
   <div class="mobile-nav" id="mobileNav">
     <div class="mn-head">
-      <span class="name" style="font-family:'Rubik';font-weight:800;color:var(--brand-deep);font-size:22px;">Bondipain</span>
+      <img src="./logo-full.png" alt="Bondipain" style="height:34px;width:auto;" />
       <button class="modal-close" onclick="toggleMobileNav(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <a href="#top" onclick="toggleMobileNav(false)" data-i18n="nav_home"></a>
+    <a href="#menudujour" onclick="toggleMobileNav(false)" data-i18n="nav_weekly"></a>
     <a href="#menu" onclick="toggleMobileNav(false)" data-i18n="nav_menu"></a>
     <a href="#about" onclick="toggleMobileNav(false)" data-i18n="nav_about"></a>
+    <a href="entreprises.html" data-i18n="nav_entreprises"></a>
     <a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a>
     <a href="#" id="mobileProfileBtn" onclick="toggleMobileNav(false);openProfile()" style="display:none" data-i18n="prof_title"></a>
     <a href="compte.html">Mon compte</a>
@@ -426,13 +565,14 @@
 
   <!-- HERO -->
   <section class="hero">
-    <img class="bg" src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80" alt="Sandwich baguette" />
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-dots" id="heroDots"></div>
     <div class="hero-content">
       <div class="eyebrow" data-i18n="hero_eyebrow"></div>
       <h1 data-i18n="hero_title"></h1>
       <p class="sub" data-i18n="hero_sub"></p>
       <div class="btn-row">
-        <a href="#menu" class="btn btn-primary" data-i18n="hero_cta"></a>
+        <a href="#menudujour" class="btn btn-primary" data-i18n="hero_cta"></a>
         <a href="b2e-login.html" class="btn btn-ghost" data-i18n="hero_cta_b2e"></a>
       </div>
       <div class="hero-preview" id="heroPreview"></div>
@@ -447,18 +587,34 @@
     </div>
   </div>
 
-  <!-- MENU -->
-  <section class="block" id="menu">
+  <!-- MENU DU JOUR (section pleine largeur, en premier) -->
+  <section class="block" id="menudujour">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow" data-i18n="week_eyebrow"></div>
+        <h2 data-i18n="week_title"></h2>
+        <p data-i18n="week_sub"></p>
+      </div>
+      <div id="b2eBanner"></div>
+      <div id="weekSelector" style="display:flex;justify-content:center;margin-bottom:20px;"></div>
+      <div class="week-grid" id="weekGrid"></div>
+    </div>
+  </section>
+
+  <!-- MENU (à la carte : les pains) -->
+  <section class="block" id="menu" style="padding-top:0;">
     <div class="container">
       <div class="section-head">
         <div class="eyebrow" data-i18n="menu_eyebrow"></div>
         <h2 data-i18n="menu_title"></h2>
         <p data-i18n="menu_sub"></p>
       </div>
-      <div id="b2eBanner"></div>
+      <div id="bestSellers"></div>
+      <div id="formulasBand"></div>
       <div class="menu-grid" id="menuGrid"></div>
     </div>
   </section>
+
 
   <!-- STEPS -->
   <section class="block" style="padding-top:0;">
@@ -518,10 +674,17 @@
   <footer class="site">
     <div class="container foot-grid">
       <a href="#top" class="brand">
-        <img class="logo-img" src="./logo.png" alt="Bondipain" style="width:42px;height:42px;border-radius:50%;" />
-        <span class="name" style="font-family:'Rubik';font-weight:800;font-size:20px;">Bondipain</span>
+        <img src="./logo-full-white.png" alt="Bondipain" style="height:40px;width:auto;" />
       </a>
       <span data-i18n="footer_tag"></span>
+      <form class="news-form" id="newsForm" onsubmit="return subscribeNews(event)">
+        <div class="news-title" data-i18n="news_title"></div>
+        <div class="news-row">
+          <input id="newsEmail" type="email" required data-ph="news_ph" />
+          <button class="btn btn-primary" type="submit" data-i18n="news_btn"></button>
+        </div>
+        <div class="news-msg" id="newsMsg"></div>
+      </form>
       <div class="legal" data-i18n="footer_legal"></div>
     </div>
   </footer>
@@ -544,7 +707,10 @@
   <!-- DISH DETAIL MODAL -->
   <div class="modal" id="dishModal" role="dialog">
     <div class="modal-head">
-      <h3 id="dishTitle"></h3>
+      <div class="head-left">
+        <button class="modal-back" id="dishBack" onclick="closeDish()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span data-i18n="back_btn"></span></button>
+        <h3 id="dishTitle"></h3>
+      </div>
       <button class="modal-close" onclick="closeDish()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body" id="dishBody"></div>
@@ -553,10 +719,34 @@
     </div>
   </div>
 
+  <!-- FORMULA MODAL -->
+  <div class="modal" id="formulaModal" role="dialog">
+    <div class="modal-head">
+      <h3 id="formulaTitle"></h3>
+      <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body" id="formulaBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-primary btn-block" id="formulaAdd" onclick="addFormulaToCart()"></button>
+    </div>
+  </div>
+
+  <!-- WEEK MENU MODAL (menu du jour Lun→Ven) -->
+  <div class="modal" id="weekModal" role="dialog" style="width:min(760px,96vw);">
+    <div class="modal-head">
+      <h3 id="weekModalTitle"></h3>
+      <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body" id="weekModalBody"></div>
+  </div>
+
   <!-- CART DRAWER -->
   <div class="drawer" id="cartDrawer" role="dialog">
     <div class="drawer-head">
-      <h3 data-i18n="cart_title"></h3>
+      <div class="head-left">
+        <button class="modal-back" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span data-i18n="back_btn"></span></button>
+        <h3 data-i18n="cart_title"></h3>
+      </div>
       <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <div class="drawer-body" id="cartBody"></div>
@@ -566,7 +756,10 @@
   <!-- CHECKOUT MODAL -->
   <div class="modal" id="checkoutModal" role="dialog">
     <div class="modal-head">
-      <h3 data-i18n="checkout_title"></h3>
+      <div class="head-left">
+        <button class="modal-back" onclick="backToCart()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span data-i18n="back_cart"></span></button>
+        <h3 data-i18n="checkout_title"></h3>
+      </div>
       <button class="modal-close" onclick="closeAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body" id="checkoutBody"></div>
@@ -596,7 +789,11 @@
   const I18N = {
     fr: {
       topbar: "Commandes livrées en 24h · Livraison entre 11h et 14h · Livraison gratuite",
-      nav_home: "Accueil", nav_menu: "Nos plats", nav_about: "À propos", nav_contact: "Contact",
+      nav_home: "Accueil", nav_menu: "Menu", nav_weekly: "Menu de la semaine", nav_about: "À propos", nav_entreprises: "Entreprises", nav_contact: "Contact",
+      back_btn: "Retour", back_cart: "Panier", hdr_profile: "Mon profil", hdr_cart: "Panier",
+      bestseller: "Best Seller", bestseller_title: "Les plats les plus commandés",
+      week_eyebrow: "Chaque semaine", week_title: "Menu de la semaine", week_sub: "Ce qu'on prépare chaque jour de la semaine. Le Briani, c'est le vendredi uniquement !",
+      week_friday_only: "Vendredi uniquement",
       hero_eyebrow: "Bienvenue",
       hero_title: "Chez Bondipain",
       hero_sub: "Le pain garni, fait maison et livré chez vous à Moka.",
@@ -605,8 +802,14 @@
       hero_preview_label: "Au menu aujourd'hui",
       dish_details: "Détails",
       b2e_banner_you_pay: "Vous payez",
+      b2e_free_tag: "1 offert / jour", b2e_free_banner: "1 repas offert par jour · articles en plus au tarif normal",
+      b2e_covered_tag: "Offert", b2e_covered_banner: "Vos repas sont entièrement pris en charge par votre entreprise", b2e_covered_line: "Pris en charge par votre entreprise",
+      b2e_covered_nopay: "Rien à payer : vos repas sont pris en charge par votre entreprise. Vous recevrez un email de confirmation.",
+      b2e_free_line: "Repas offert par votre entreprise", b2e_free_nopay: "Rien à payer : votre repas est offert par votre entreprise. Vous recevrez un email de confirmation.",
+      co_place_free: "Confirmer ma commande",
       b2e_banner_budget: "utilisé sur",
       b2e_logout: "Se déconnecter",
+      b2e_my_space: "Mon espace",
       co_b2e_t: "Votre avantage entreprise",
       co_b2e_contribution: "Contribution",
       b2e_filter_all: "Tout",
@@ -615,10 +818,10 @@
       b2e_cutoff: "Commandez avant 16h pour une livraison le lendemain 11h–14h",
       b2e_budget_line: "Budget entreprise",
       b2e_budget_remaining: "restant",
-      info_strip: "Commandes acceptées jusqu'à 16h–17h · Minimum 24h à l'avance · Zone de Moka uniquement",
+      info_strip: "Commandez avant 15h la veille · Livraison entre 11h et 14h · Zone de Moka uniquement",
       menu_eyebrow: "Notre carte",
       menu_title: "Nos plats",
-      menu_sub: "5 catégories, plus de 20 recettes. Commandez sous 24h, livraison entre 11h et 14h.",
+      menu_sub: "Nos pains garnis, préparés maison. Commandez avant 15h la veille, livraison entre 11h et 14h.",
       choose: "Voir la carte",
       pm_choose: "Choisissez votre plat",
       pm_choose_h: "Sélectionnez une option ci-dessous",
@@ -636,14 +839,17 @@
       contact_phone_t: "Téléphone",
       contact_hours_t: "Créneau de livraison", contact_hours_v: "Tous les jours, entre 11h et 14h",
       footer_tag: "Le pain garni, livré à Moka.",
+      news_title: "Recevez nos nouveautés et offres", news_ph: "Votre email", news_btn: "S'inscrire",
+      news_ok: "Merci ! Vous êtes inscrit(e).", news_err: "Erreur, réessayez.", news_bad: "Email invalide.",
       footer_legal: "© 2026 Bondipain.com — Tous droits réservés.",
       pm_qty: "Quantité",
       pm_sides_t: "Accompagnements", pm_sides_h: "Ajoutez des accompagnements (optionnel)",
       pm_drinks_t: "Boissons", pm_drinks_h: "Choisissez vos boissons (optionnel)",
+      pm_condiments_t: "Condiments", pm_condiments_h: "Ajoutez vos condiments (optionnel)",
       pm_add: "Ajouter au panier",
       cart_title: "Mon panier",
       cart_empty: "Votre panier est vide.",
-      cart_remove: "Retirer",
+      cart_remove: "Retirer", cart_edit: "Modifier",
       cart_subtotal: "Sous-total",
       cart_delivery: "Livraison",
       cart_delivery_free: "Offerte",
@@ -651,9 +857,9 @@
       cart_checkout: "Passer la commande",
       cart_with: "avec",
       checkout_title: "Finaliser ma commande",
-      co_notice: "Commande à passer au moins 24h à l'avance · Livraison uniquement à Moka, entre 11h et 14h.",
+      co_notice: "Commandez avant 15h la veille de la livraison · Livraison uniquement à Moka, entre 11h et 14h.",
       co_day_t: "Jour de livraison",
-      co_day_h: "Choisissez un jour disponible (délai de 24h respecté).",
+      co_day_h: "Choisissez un jour disponible (commande avant 15h la veille).",
       co_info_t: "Vos coordonnées",
       co_name: "Nom complet", co_phone: "Téléphone", co_email: "Email (pour le suivi)",
       co_addr_t: "Adresse de livraison",
@@ -666,7 +872,13 @@
       co_pay_juice_d: "Payez à l'avance via l'application Juice by MCB.",
       co_pay_card_t: "Carte de crédit / débit",
       co_pay_card_d: "Paiement sécurisé par carte bancaire (Visa, Mastercard).",
+      co_card_num: "Numéro de carte",
+      co_card_exp: "Date d'expiration",
+      co_card_cvc: "CVC",
+      co_card_note: "Le paiement par carte sera bientôt disponible. Vos informations ne sont pas encore débitées.",
       co_juice_box: "Envoyez le montant via <b>Juice by MCB</b> au numéro marchand <b>+230 5492 2393</b> et indiquez votre numéro de commande en référence. Votre commande sera confirmée à réception du paiement.",
+      co_ordernum: "Votre n° de commande",
+      co_juice_ref: "Référence à indiquer :",
       co_place: "Confirmer la commande",
       co_summary: "Récapitulatif",
       err_required: "Ce champ est requis",
@@ -711,7 +923,11 @@
     },
     en: {
       topbar: "Orders delivered within 24h · Delivery between 11am and 2pm · Free delivery",
-      nav_home: "Home", nav_menu: "Our menu", nav_about: "About", nav_contact: "Contact",
+      nav_home: "Home", nav_menu: "Menu", nav_weekly: "Weekly menu", nav_about: "About", nav_entreprises: "Companies", nav_contact: "Contact",
+      back_btn: "Back", back_cart: "Cart", hdr_profile: "My profile", hdr_cart: "Cart",
+      bestseller: "Best Seller", bestseller_title: "Our most-ordered dishes",
+      week_eyebrow: "Every week", week_title: "Weekly menu", week_sub: "What we cook each day of the week. Biryani is Fridays only!",
+      week_friday_only: "Fridays only",
       hero_eyebrow: "Welcome",
       hero_title: "To Bondipain",
       hero_sub: "Homemade stuffed bread, delivered to your door in Moka.",
@@ -720,8 +936,14 @@
       hero_preview_label: "On today's menu",
       dish_details: "Details",
       b2e_banner_you_pay: "You pay",
+      b2e_free_tag: "1 free / day", b2e_free_banner: "1 free meal per day · extra items at normal price",
+      b2e_covered_tag: "Covered", b2e_covered_banner: "Your meals are fully covered by your company", b2e_covered_line: "Covered by your company",
+      b2e_covered_nopay: "Nothing to pay: your meals are covered by your company. You'll receive a confirmation email.",
+      b2e_free_line: "Meal covered by your company", b2e_free_nopay: "Nothing to pay: your meal is covered by your company. You'll receive a confirmation email.",
+      co_place_free: "Confirm my order",
       b2e_banner_budget: "used of",
       b2e_logout: "Log out",
+      b2e_my_space: "My account",
       co_b2e_t: "Your company benefit",
       co_b2e_contribution: "Contribution",
       b2e_filter_all: "All",
@@ -730,10 +952,10 @@
       b2e_cutoff: "Order before 4pm for next-day delivery 11am–2pm",
       b2e_budget_line: "Company budget",
       b2e_budget_remaining: "remaining",
-      info_strip: "Orders accepted until 4–5pm · Minimum 24h in advance · Moka area only",
+      info_strip: "Order before 3pm the day before · Delivery between 11am and 2pm · Moka area only",
       menu_eyebrow: "Our menu",
       menu_title: "Our dishes",
-      menu_sub: "5 categories, over 20 recipes. Order within 24h, delivery between 11am and 2pm.",
+      menu_sub: "Our homemade stuffed breads. Order before 3pm the day before, delivery between 11am and 2pm.",
       choose: "View menu",
       pm_choose: "Choose your dish",
       pm_choose_h: "Select an option below",
@@ -751,14 +973,17 @@
       contact_phone_t: "Phone",
       contact_hours_t: "Delivery window", contact_hours_v: "Every day, between 11am and 2pm",
       footer_tag: "Stuffed bread, delivered in Moka.",
+      news_title: "Get our news and offers", news_ph: "Your email", news_btn: "Subscribe",
+      news_ok: "Thanks! You're subscribed.", news_err: "Error, please retry.", news_bad: "Invalid email.",
       footer_legal: "© 2026 Bondipain.com — All rights reserved.",
       pm_qty: "Quantity",
       pm_sides_t: "Sides", pm_sides_h: "Add some sides (optional)",
       pm_drinks_t: "Drinks", pm_drinks_h: "Choose your drinks (optional)",
+      pm_condiments_t: "Condiments", pm_condiments_h: "Add your condiments (optional)",
       pm_add: "Add to cart",
       cart_title: "My cart",
       cart_empty: "Your cart is empty.",
-      cart_remove: "Remove",
+      cart_remove: "Remove", cart_edit: "Edit",
       cart_subtotal: "Subtotal",
       cart_delivery: "Delivery",
       cart_delivery_free: "Free",
@@ -766,7 +991,7 @@
       cart_checkout: "Checkout",
       cart_with: "with",
       checkout_title: "Complete my order",
-      co_notice: "Order at least 24h in advance · Delivery in Moka only, between 11am and 2pm.",
+      co_notice: "Order before 3pm the day before delivery · Delivery in Moka only, between 11am and 2pm.",
       co_day_t: "Delivery day",
       co_day_h: "Pick an available day (24h lead time respected).",
       co_info_t: "Your details",
@@ -781,7 +1006,13 @@
       co_pay_juice_d: "Pay in advance via the Juice by MCB app.",
       co_pay_card_t: "Credit / debit card",
       co_pay_card_d: "Secure card payment (Visa, Mastercard).",
+      co_card_num: "Card number",
+      co_card_exp: "Expiry date",
+      co_card_cvc: "CVC",
+      co_card_note: "Card payment is coming soon. Your details are not charged yet.",
       co_juice_box: "Send the amount via <b>Juice by MCB</b> to merchant number <b>+230 5492 2393</b> and add your order number as reference. Your order is confirmed once payment is received.",
+      co_ordernum: "Your order number",
+      co_juice_ref: "Reference to include:",
       co_place: "Confirm order",
       co_summary: "Summary",
       err_required: "This field is required",
@@ -884,21 +1115,23 @@
       ]
     },
     {
-      id: "ancienne",
-      name: { fr: "🥖 Pain à l'Ancienne", en: "🥖 Traditional Bread" },
-      desc: { fr: "Recette traditionnelle mauricienne.", en: "Traditional Mauritian recipe." },
-      img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
-      tag: { fr: "Spécial", en: "Special" },
+      id: "sautes",
+      name: { fr: "🍜 Mine Frit & Riz Frit", en: "🍜 Fried Noodles & Fried Rice" },
+      desc: { fr: "Nos plats sautés maison.", en: "Our homemade fried dishes." },
+      img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
+      tag: { fr: "Sauté", en: "Fried" },
       diet: "mixed",
-      from: 250,
+      from: 190,
       items: [
-        { id: "a1", name: { fr: "Pain à l'Ancienne", en: "Traditional Bread" }, price: 250 },
+        { id: "mf1", name: { fr: "Mine Frit",  en: "Fried Noodles" }, price: 190 },
+        { id: "rf1", name: { fr: "Riz Frit",   en: "Fried Rice"    }, price: 190 },
       ]
     },
     {
       id: "menujour",
-      name: { fr: "🍽️ Menu du Jour", en: "🍽️ Daily Special" },
-      desc: { fr: "Mine ou riz frite au poulet.", en: "Chicken fried noodles or fried rice." },
+      name: { fr: "🍽️ Menu", en: "🍽️ Menu" },
+      desc: { fr: "Le plat du jour, du lundi au vendredi.", en: "The dish of the day, Monday to Friday." },
+      weekly: true,
       img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
       tag: { fr: "Du jour", en: "Daily" },
       diet: "nonveg",
@@ -915,6 +1148,7 @@
       img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=800&q=80",
       tag: { fr: "Vendredi", en: "Friday" },
       diet: "mixed",
+      fridayOnly: true,
       from: 190,
       items: [
         { id: "b1", name: { fr: "Briani Veg",    en: "Veg Biryani"     }, price: 190 },
@@ -929,6 +1163,54 @@
     { id: "eau",  name: { fr: "Eau",          en: "Water"       }, price: 25 },
     { id: "jus",  name: { fr: "Jus de fruit", en: "Fruit juice" }, price: 45 }
   ];
+
+  // Formules = 1 plat au choix + 1 boisson au choix, à prix combo (remise ajustable).
+  const FORMULAS = [
+    {
+      id: "midi",
+      name: { fr: "Formule Midi", en: "Lunch Combo" },
+      desc: { fr: "Un plat au choix + une boisson, à prix combo.", en: "Any dish + a drink, at a combo price." },
+      img: "./sandwich-hero.jpg",
+      discount: 20, // Rs de remise vs achat séparé — ajuster ici
+      slots: [
+        { key: "plat",    label: { fr: "Votre plat",    en: "Your dish"  }, pool: "dishes", default: "nv1" },
+        { key: "boisson", label: { fr: "Votre boisson", en: "Your drink" }, pool: "drinks", default: "jus" },
+      ]
+    }
+  ];
+
+  // Menu du jour — chargé depuis Supabase (table daily_menu), géré par Bondipain.
+  const DAY_DEFS = [
+    { key: "mon", wd: 1, label: { fr: "Lundi",    en: "Monday"    } },
+    { key: "tue", wd: 2, label: { fr: "Mardi",    en: "Tuesday"   } },
+    { key: "wed", wd: 3, label: { fr: "Mercredi", en: "Wednesday" } },
+    { key: "thu", wd: 4, label: { fr: "Jeudi",    en: "Thursday"  } },
+    { key: "fri", wd: 5, label: { fr: "Vendredi", en: "Friday"    } },
+  ];
+  // Condiments — Ketchup/Mayo par défaut, surchargés depuis la base (gérés dans l'admin)
+  let CONDIMENTS = [
+    { id: "ketchup", name: { fr: "Ketchup",    en: "Ketchup"    }, price: 0 },
+    { id: "mayo",    name: { fr: "Mayonnaise", en: "Mayonnaise" }, price: 0 },
+  ];
+  async function loadCondiments() {
+    if (!_supa) return;
+    const { data, error } = await _supa.from("condiments").select("*").eq("available", true).order("sort");
+    if (!error && data && data.length) {
+      CONDIMENTS = data.map(c => ({ id: c.id, name: { fr: c.name_fr, en: c.name_en || c.name_fr }, price: Number(c.price) || 0 }));
+    }
+  }
+
+  let DAILY_MENU = {}; // { mon:[{type,name_fr,name_en,price,ingredients,allergens,available}], ... }
+  async function loadDailyMenu() {
+    if (!_supa) return;
+    const { data, error } = await _supa.from("daily_menu").select("*");
+    if (error || !data) return;
+    const m = {};
+    // veg avant nonveg pour un affichage stable
+    data.sort((a, b) => (a.type === "veg" ? -1 : 1) - (b.type === "veg" ? -1 : 1));
+    data.forEach(r => { (m[r.day] = m[r.day] || []).push(r); });
+    DAILY_MENU = m;
+  }
 
   const STEPS = [
     { fr: ["Choisissez une catégorie", "Veg, Non-Veg, Briani…"], en: ["Choose a category",  "Veg, Non-Veg, Biryani…"] },
@@ -949,7 +1231,7 @@
   let cart = JSON.parse(localStorage.getItem("bp_cart") || "[]");
   let currentCat = null;
   let cfg = null;
-  let checkout = { day: null, pay: "cash" };
+  let checkout = { day: null, pay: "juice" };
   let b2b = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
   let b2eSession = { active: false, employee: null, company: null, office: null, rules: [], budgetUsed: 0 };
   let menuDiet = "all"; // filtre régime côté menu employé : all | veg | nonveg
@@ -961,10 +1243,34 @@
   /* ============================================================
      RENDER STATIC i18n
   ============================================================ */
+  async function subscribeNews(evt) {
+    evt.preventDefault();
+    const email = ($("#newsEmail")?.value || "").trim();
+    const msg = $("#newsMsg");
+    const btn = $("#newsForm button");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = "news-msg err"; msg.textContent = t("news_bad"); return false; }
+    btn.disabled = true;
+    try {
+      const res = await fetch("/api/newsletter-subscribe", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, lang }),
+      });
+      if (!res.ok) throw new Error();
+      msg.className = "news-msg ok"; msg.textContent = t("news_ok");
+      $("#newsEmail").value = "";
+    } catch (e) {
+      msg.className = "news-msg err"; msg.textContent = t("news_err");
+    } finally { btn.disabled = false; }
+    return false;
+  }
+
   function applyI18n() {
     document.documentElement.lang = lang;
     document.querySelectorAll("[data-i18n]").forEach(el => {
       el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-ph]").forEach(el => {
+      el.setAttribute("placeholder", t(el.getAttribute("data-ph")));
     });
     document.querySelectorAll(".lang-switch button").forEach(b =>
       b.classList.toggle("active", b.dataset.lang === lang));
@@ -973,9 +1279,9 @@
   function setLang(l) {
     lang = l; localStorage.setItem("bp_lang", l);
     /* logo inlined as data URI */
-  const LOGO = "./logo.png";
+  const LOGO = "./logo-full.png";
   document.querySelectorAll('.logo-img').forEach(i => i.src = LOGO);
-  { const fav = document.getElementById('favicon'); if (fav) fav.href = LOGO; }
+  { const fav = document.getElementById('favicon'); if (fav) fav.href = "./logo-icon.png"; }
 
   renderAll();
     if ($("#productModal").classList.contains("open") && currentCat) { renderCategoryBody(); $("#pmTitle").textContent = currentCat.name[lang]; }
@@ -985,25 +1291,282 @@
 
   function renderAll() {
     applyI18n();
+    renderWeeklyMenu();
+    renderBestSellers();
     renderMenu();
     renderSteps();
     renderAboutFeatures();
     updateCartCount();
     renderB2EBanner();
     renderHeroPreview();
+    renderFormulas();
+  }
+
+  function renderBestSellers() {
+    const el = $("#bestSellers");
+    if (!el) return;
+    // plats phares marqués depuis l'admin (hors menu du jour / briani, gérés ailleurs)
+    const picks = [];
+    CATEGORIES.forEach(c => {
+      if (c.weekly || c.fridayOnly) return;
+      c.items.forEach(item => { if (item.bestseller) picks.push({ c, item }); });
+    });
+    if (!picks.length) { el.innerHTML = ""; return; }
+    el.innerHTML = `
+      <div class="bs-band">
+        <div class="bs-band-head">★ ${t("bestseller_title")}</div>
+        <div class="bs-row">
+          ${picks.map(({ c, item }) => `
+            <button class="bs-card" onclick="openDish('${c.id}','${item.id}')">
+              <img src="${dishPhoto(item, c)}" alt="" />
+              <div class="bs-card-body">
+                <span class="bs-card-name">${item.name[lang]}</span>
+                <span class="bs-card-price">${money(item.price)}</span>
+              </div>
+            </button>`).join("")}
+        </div>
+      </div>`;
+  }
+
+  let weekView = null; // index de semaine affiché (0 = cette semaine, 1 = +1, 2 = +2)
+  const WEEK_OPTIONS = [0, 1, 2]; // jusqu'à 2 semaines à l'avance
+  function mondayLabel(weekIndex) {
+    const d = weekMenuDate(1, weekIndex); // lundi de la semaine
+    return `${lang==="fr"?"Semaine du":"Week of"} ${d.getDate()} ${t("months")[d.getMonth()]}`;
+  }
+  function setWeekView(i) { weekView = parseInt(i, 10); renderWeeklyMenu(); }
+  function renderWeekSelector() {
+    const sel = $("#weekSelector");
+    if (!sel) return;
+    sel.innerHTML = `<select onchange="setWeekView(this.value)" style="font-family:'Rubik';font-weight:700;font-size:14px;padding:9px 16px;border:1.5px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer;">
+      ${WEEK_OPTIONS.map(w => `<option value="${w}" ${w===weekView?"selected":""}>${mondayLabel(w)}</option>`).join("")}
+    </select>`;
+  }
+  function renderWeeklyMenu() {
+    const el = $("#weekGrid");
+    if (!el) return;
+    // semaine par défaut : la 1re qui a encore un jour commandable
+    if (weekView === null) weekView = WEEK_OPTIONS.find(w => DAY_DEFS.some(d => isDateOrderable(weekMenuDate(d.wd, w)))) ?? 0;
+    if (!Object.keys(DAILY_MENU).length) {
+      el.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px;">${lang==="fr"?"Chargement du menu…":"Loading menu…"}</div>`;
+      loadDailyMenu().then(() => { renderWeekSelector(); el.innerHTML = weekGridHtml(weekView); });
+      return;
+    }
+    renderWeekSelector();
+    el.innerHTML = weekGridHtml(weekView);
+  }
+
+  /* ============================================================
+     MENU DU JOUR (hebdomadaire)
+  ============================================================ */
+  function findDishCat(id) {
+    for (const c of CATEGORIES) { const it = c.items.find(i => i.id === id); if (it) return { catId: c.id, item: it, fridayOnly: !!c.fridayOnly }; }
+    return null;
+  }
+
+  // Grille Lun→Ven (depuis daily_menu) : jours commandables (cutoff Maurice) cliquables, autres grisés.
+  // Date d'un jour (Lun–Ven) pour la semaine affichée dans le menu de la semaine.
+  // On reste sur la semaine en cours ; si plus aucun jour n'y est commandable
+  // (week-end / fin de semaine), on bascule sur la semaine suivante.
+  function weekMenuDate(wd, weekShift) {
+    const mt = mtNow();
+    const dow = mt.getDay(); // 0 = dimanche … 6 = samedi
+    const mondayOffset = (dow === 0 ? -6 : 1 - dow); // décalage vers le lundi de cette semaine
+    return new Date(mt.getFullYear(), mt.getMonth(), mt.getDate() + mondayOffset + weekShift * 7 + (wd - 1), 11, 0, 0, 0);
+  }
+  function weekGridHtml(weekShift) {
+    if (weekShift == null) weekShift = DAY_DEFS.some(d => isDateOrderable(weekMenuDate(d.wd, 0))) ? 0 : 1;
+    const mt = mtNow();
+    const todayStr = mt.toDateString();
+    return DAY_DEFS.map(d => {
+      const items = DAILY_MENU[d.key] || [];
+      const theDate = weekMenuDate(d.wd, weekShift);
+      const isToday = theDate.toDateString() === todayStr;
+      const closed = !isDateOrderable(theDate);
+      const dateStr = `${theDate.getDate()} ${t("months")[theDate.getMonth()]}`;
+      const dishesHtml = items.length ? items.map((it, idx) => {
+        const disabled = closed || it.available === false;
+        const label = (it.type === "veg" ? "🌿 " : "🍗 ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
+        const priceHtml = b2eIsFree()
+          ? `<span class="dd-price" style="color:var(--green-ok)">${lang==="fr"?"Offert":"Free"}</span>`
+          : `<span class="dd-price">${money(it.price)}</span>`;
+        return `<button class="day-dish" ${disabled ? "disabled" : `onclick="closeAll();openDailyDish('${d.key}',${idx})"`}>
+          <img class="dd-photo" src="${dailyRowPhoto(it)}" alt="" loading="lazy" />
+          <span class="dd-name">${label}</span>${priceHtml}
+        </button>`;
+      }).join("") : `<div class="day-badge" style="color:var(--muted)">—</div>`;
+      return `
+        <div class="day-col${isToday?' today':''}${closed?' closed':''}">
+          <div class="day-head">${d.label[lang]}<span class="day-date">${dateStr}</span></div>
+          <div class="day-body">
+            ${dishesHtml}
+            ${closed ? `<div class="day-badge" style="color:var(--muted)">${lang==="fr"?"Commande clôturée":"Ordering closed"}</div>` : ""}
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  // Photo pour une ligne brute daily_menu (champs name_fr / type / image_url)
+  function dailyRowPhoto(it) {
+    if (it.image_url) return it.image_url;
+    const n = ((it.name_fr || "") + " " + (it.name_en || "")).toLowerCase();
+    if (/poisson|fish|crevette|prawn/.test(n)) return DISH_PHOTOS.poisson;
+    if (/briani|biryani/.test(n)) return DISH_PHOTOS.briani;
+    if (/nouille|noodle|mine/.test(n)) return DISH_PHOTOS.mine;
+    if (/riz|rice/.test(n)) return DISH_PHOTOS.riz;
+    if (it.type === "veg") return DISH_PHOTOS.veg;
+    return DISH_PHOTOS.poulet;
+  }
+
+  // Photo d'un plat du jour : la vraie (uploadée par l'admin) sinon une générique selon le nom/type
+  function dailyPhoto(item) {
+    if (item.image_url) return item.image_url;
+    const n = (item.name.fr + " " + (item.name.en || "")).toLowerCase();
+    if (/poisson|fish|crevette|prawn/.test(n)) return DISH_PHOTOS.poisson;
+    if (/briani|biryani/.test(n)) return DISH_PHOTOS.briani;
+    if (/nouille|noodle|mine/.test(n)) return DISH_PHOTOS.mine;
+    if (/riz|rice/.test(n)) return DISH_PHOTOS.riz;
+    if (item.type === "veg") return DISH_PHOTOS.veg;
+    return DISH_PHOTOS.poulet;
+  }
+  function openDailyDish(dayKey, idx) {
+    const it = (DAILY_MENU[dayKey] || [])[idx];
+    if (!it) return;
+    const name = { fr: it.name_fr, en: it.name_en || it.name_fr };
+    dish = { daily: true, dayKey, item: { id: "daily-" + dayKey + "-" + it.type, name, price: Number(it.price), ingredients: it.ingredients, allergens: it.allergens, type: it.type, image_url: it.image_url }, qty: 1, fromCategory: false };
+    $("#dishTitle").textContent = name[lang];
+    renderDishBody();
+    openModal("#dishModal");
+  }
+  async function openWeekMenu() {
+    if (!Object.keys(DAILY_MENU).length) await loadDailyMenu();
+    $("#weekModalTitle").textContent = t("week_title");
+    $("#weekModalBody").innerHTML = `<p style="color:var(--muted);margin-bottom:16px;">${t("week_sub")}</p><div class="week-grid">${weekGridHtml()}</div>`;
+    openModal("#weekModal");
+  }
+
+  /* ============================================================
+     FORMULES (plat + boisson)
+  ============================================================ */
+  function formulaPool(kind) { return kind === "drinks" ? DRINKS : CATEGORIES.filter(c => !c.weekly && !c.fridayOnly).flatMap(c => c.items); }
+  function findMenuItem(id) {
+    for (const c of CATEGORIES) { const it = c.items.find(i => i.id === id); if (it) return it; }
+    return DRINKS.find(d => d.id === id);
+  }
+  function formulaSeparate(def, sel) {
+    return def.slots.reduce((s, slot) => s + (findMenuItem(sel[slot.key])?.price || 0), 0);
+  }
+  function formulaTotal(def, sel) { return Math.max(0, formulaSeparate(def, sel) - (def.discount || 0)); }
+
+  function renderFormulas() {
+    const el = $("#formulasBand");
+    if (!el) return;
+    el.innerHTML = FORMULAS.map(f => {
+      const sel = {}; f.slots.forEach(s => sel[s.key] = s.default);
+      const total = formulaTotal(f, sel);
+      return `
+      <div class="formula-card">
+        <img src="${f.img}" alt="${f.name[lang]}" loading="lazy" />
+        <div class="fc-body">
+          <span class="fc-tag">${lang==="fr"?"Formule":"Combo"}</span>
+          <h3>${f.name[lang]}</h3>
+          <p>${f.desc[lang]}</p>
+          <div class="fc-price">${lang==="fr"?"À partir de":"From"} ${money(total)}${f.discount?` · <span style="color:var(--green-ok)">${lang==="fr"?"économisez":"save"} ${money(f.discount)}</span>`:""}</div>
+        </div>
+        <button class="btn btn-primary" onclick="openFormula('${f.id}')">${lang==="fr"?"Composer":"Build"}</button>
+      </div>`;
+    }).join("");
+  }
+
+  let formula = null; // { def, sel:{}, openSlot:null }
+  function openFormula(id) {
+    const def = FORMULAS.find(f => f.id === id);
+    if (!def) return;
+    const sel = {}; def.slots.forEach(s => sel[s.key] = s.default);
+    formula = { def, sel, openSlot: null };
+    $("#formulaTitle").textContent = def.name[lang];
+    renderFormulaBody();
+    openModal("#formulaModal");
+  }
+
+  function renderFormulaBody() {
+    const { def, sel, openSlot } = formula;
+    const separate = formulaSeparate(def, sel);
+    const total = formulaTotal(def, sel);
+    const contrib = b2ePerItemContrib() ? b2eContributionFor(total) : 0;
+    const youPay = total - contrib;
+
+    const slotsHtml = def.slots.map(slot => {
+      const cur = findMenuItem(sel[slot.key]);
+      const pool = formulaPool(slot.pool);
+      const listHtml = openSlot === slot.key ? `
+        <div class="fslot-list">
+          ${pool.map(it => `
+            <div class="fslot-opt ${sel[slot.key]===it.id?'sel':''}" onclick="setFormulaSlot('${slot.key}','${it.id}')">
+              <span>${it.name[lang]}</span><b>${money(it.price)}</b>
+            </div>`).join("")}
+        </div>` : "";
+      return `
+        <div class="fslot">
+          <div class="fslot-head">
+            <div><div class="fslot-label">${slot.label[lang]}</div><div class="fslot-sel">${cur?cur.name[lang]:"—"} · ${money(cur?cur.price:0)}</div></div>
+            <button class="fslot-change" onclick="toggleFormulaSlot('${slot.key}')">${openSlot===slot.key?(lang==="fr"?"Fermer":"Close"):(lang==="fr"?"Changer":"Change")}</button>
+          </div>
+          ${listHtml}
+        </div>`;
+    }).join("");
+
+    $("#formulaBody").innerHTML = `
+      <p style="color:var(--muted);margin-bottom:14px;">${def.desc[lang]}</p>
+      ${slotsHtml}
+      <div class="confirm-recap" style="margin-top:14px;">
+        <div class="r"><span>${lang==="fr"?"Total séparé":"Separate total"}</span><b>${money(separate)}</b></div>
+        ${def.discount?`<div class="r" style="color:var(--green-ok)"><span>${lang==="fr"?"Remise formule":"Combo discount"}</span><b>−${money(def.discount)}</b></div>`:""}
+        ${b2ePerItemContrib()?`<div class="r b2e-line"><span>${t("co_b2e_contribution")}</span><b>−${money(contrib)}</b></div>`:""}
+        <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;">
+          <span>${b2ePerItemContrib()?t("b2e_banner_you_pay"):(lang==="fr"?"Total formule":"Combo total")}</span><b style="font-size:17px;">${money(youPay)}</b>
+        </div>
+      </div>
+      <div class="opt-group">
+        <label class="gl">${t("co_day_t")}</label>
+        <div style="margin-top:6px;">${daySelectHtml("formula-" + def.id, "formulaDay", formula.day)}</div>
+      </div>`;
+    $("#formulaAdd").textContent = b2eHidePrices() ? t("pm_add") : `${t("pm_add")} · ${money(youPay)}`;
+  }
+
+  function toggleFormulaSlot(key) { formula.openSlot = formula.openSlot === key ? null : key; renderFormulaBody(); }
+  function setFormulaSlot(key, id) { formula.sel[key] = id; formula.openSlot = null; renderFormulaBody(); }
+
+  function addFormulaToCart() {
+    const { def, sel } = formula;
+    const day = readDaySelect("formulaDay");
+    if (!day) { alert(lang === "fr" ? "Aucun jour de livraison disponible." : "No delivery day available."); return; }
+    const total = formulaTotal(def, sel);
+    const plat = findMenuItem(sel.plat), boisson = findMenuItem(sel.boisson);
+    cart.push({
+      uid: Date.now() + "_" + Math.floor(Math.random()*9999),
+      pid: "formula-" + def.id, name: def.name, img: def.img,
+      base: total, qty: 1, day,
+      sides: plat ? [{ id: plat.id, name: plat.name, qty: 1, price: plat.price }] : [],
+      drinks: boisson ? [{ id: boisson.id, name: boisson.name, qty: 1, price: boisson.price }] : [],
+      lineTotal: total
+    });
+    saveCart();
+    closeAll();
+    openCart();
   }
 
   function renderHeroPreview() {
     const el = $("#heroPreview");
     if (!el) return;
-    // Aperçu : un plat représentatif de 3 catégories du jour
+    // Aperçu : un plat représentatif de 3 catégories du jour, cliquable vers sa fiche
     const picks = ["menujour", "veg", "nonveg"]
       .map(id => CATEGORIES.find(c => c.id === id))
       .filter(c => c && c.items.length)
-      .map(c => c.items[0].name[lang]);
+      .map(c => ({ catId: c.id, item: c.items[0] }));
     el.innerHTML = `
       <div class="hp-label">${t("hero_preview_label")}</div>
-      <div class="hp-chips">${picks.map(n => `<span class="hp-chip">${n}</span>`).join("")}</div>`;
+      <div class="hp-chips">${picks.map(p => `<button class="hp-chip" onclick="openDish('${p.catId}','${p.item.id}')">${p.item.name[lang]}</button>`).join("")}</div>`;
   }
 
   // Contribution employeur estimée sur un prix "à partir de" (aperçu par carte).
@@ -1018,7 +1581,10 @@
   }
 
   function renderMenu() {
+    if (!$("#menuGrid")) return;
     const cats = CATEGORIES.filter(c => {
+      if (c.fridayOnly) return false; // le Briani n'apparaît plus dans le catalogue, seulement dans le menu du jour
+      if (c.weekly) return false; // le Menu du jour a désormais sa propre section pleine largeur
       if (!b2eSession.active || menuDiet === "all") return true;
       if (menuDiet === "veg")    return c.diet === "veg" || c.diet === "mixed";
       if (menuDiet === "nonveg") return c.diet === "nonveg" || c.diet === "mixed";
@@ -1026,7 +1592,7 @@
     });
     $("#menuGrid").innerHTML = cats.map(c => {
       let priceBlock;
-      if (b2eSession.active) {
+      if (b2ePerItemContrib()) {
         const contrib = b2eContributionFor(c.from);
         const youPay = c.from - contrib;
         priceBlock = `
@@ -1035,23 +1601,32 @@
             <span class="b2e-line" style="font-weight:700;margin-left:6px;">−${money(contrib)}</span>
             <div style="font-family:'Rubik';font-weight:800;font-size:17px;color:var(--ink);">${t("b2e_banner_you_pay")} ${money(youPay)}</div>
           </div>`;
+      } else if (b2eHidePrices()) {
+        priceBlock = `<span class="price"><span class="b2e-free-tag">${t("b2e_covered_tag")}</span></span>`;
+      } else if (b2eIsFree()) {
+        priceBlock = `<span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>`;
       } else {
         priceBlock = `<span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>`;
       }
+      const action = c.weekly ? "openWeekMenu()" : `openCategory('${c.id}')`;
+      const cta = c.weekly ? (lang==="fr"?"Voir le menu du jour":"See daily menu") : t("choose");
+      const avail = c.weekly
+        ? `${lang==="fr"?"Lun→Ven · commande avant 15h la veille":"Mon→Fri · order before 3pm the day before"}`
+        : `${c.items.length} ${lang==="fr"?"plats · commande avant 15h la veille":"dishes · order before 3pm the day before"}`;
       return `
       <div class="card">
-        <div class="ph" onclick="openCategory('${c.id}')" style="cursor:pointer">
+        <div class="ph" onclick="${action}" style="cursor:pointer">
           <img src="${c.img}" alt="${c.name[lang]}" loading="lazy" />
           <span class="tag">${c.tag[lang]}</span>
         </div>
         <div class="body">
-          <h3 onclick="openCategory('${c.id}')" style="cursor:pointer">${c.name[lang]}</h3>
+          <h3 onclick="${action}" style="cursor:pointer">${c.name[lang]}</h3>
           <p class="desc">${c.desc[lang]}</p>
           <div class="price-row">
             ${priceBlock}
-            <button class="btn btn-primary" onclick="openCategory('${c.id}')">${t("choose")}</button>
+            <button class="btn btn-primary" onclick="${action}">${cta}</button>
           </div>
-          <div class="avail"><span class="dot"></span>${c.items.length} ${lang==="fr"?"plats · commande sous 24h":"dishes · order within 24h"}<span style="color:var(--green-ok);font-weight:600;margin-left:8px">${lang==="fr"?"· Livraison gratuite":"· Free delivery"}</span></div>
+          <div class="avail"><span class="dot"></span>${avail}<span style="color:var(--green-ok);font-weight:600;margin-left:8px">${lang==="fr"?"· Livraison gratuite":"· Free delivery"}</span></div>
         </div>
       </div>`;
     }).join("");
@@ -1060,11 +1635,46 @@
   function setMenuDiet(d) { menuDiet = d; renderB2EBanner(); renderMenu(); }
 
   function renderSteps() {
+    // Illustrations "dessin animé" — SVG colorés, remplis, faits maison
     const icons = [
-      `<svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>`,
-      `<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="m9 12 2 2 4-4"/></svg>`,
-      `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>`,
-      `<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`
+      /* 1. Choisir une catégorie — ardoise de menu */
+      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#FBE5CC"/>
+        <rect x="34" y="26" width="44" height="60" rx="6" fill="#8C5A2B"/>
+        <rect x="39" y="31" width="34" height="50" rx="3" fill="#33302C"/>
+        <rect x="44" y="39" width="24" height="4" rx="2" fill="#F2A24C"/>
+        <rect x="44" y="49" width="24" height="3" rx="1.5" fill="#E8DED2"/>
+        <rect x="44" y="57" width="18" height="3" rx="1.5" fill="#E8DED2"/>
+        <rect x="44" y="65" width="21" height="3" rx="1.5" fill="#E8DED2"/>
+        <circle cx="56" cy="24" r="4" fill="#C9711B"/></svg>`,
+      /* 2. Sélectionner son plat — assiette garnie */
+      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#E8F5E9"/>
+        <ellipse cx="56" cy="70" rx="34" ry="9" fill="#000" opacity=".07"/>
+        <circle cx="56" cy="56" r="30" fill="#fff"/>
+        <circle cx="56" cy="56" r="30" fill="none" stroke="#D9CBB8" stroke-width="2"/>
+        <circle cx="56" cy="56" r="20" fill="#FDF1E5"/>
+        <circle cx="49" cy="52" r="8" fill="#E86B4C"/>
+        <circle cx="63" cy="53" r="7" fill="#F2A24C"/>
+        <circle cx="56" cy="63" r="6.5" fill="#2E7D52"/>
+        <path d="M84 40v34" stroke="#B98A4B" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M28 40c-3 0-3 10 0 10v24" stroke="#B98A4B" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg>`,
+      /* 3. Commander sous 24h — téléphone + horloge */
+      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#FBE5CC"/>
+        <rect x="38" y="24" width="36" height="64" rx="8" fill="#33302C"/>
+        <rect x="42" y="30" width="28" height="46" rx="3" fill="#FDF1E5"/>
+        <circle cx="56" cy="82" r="3" fill="#837A70"/>
+        <circle cx="56" cy="52" r="15" fill="#2E7D52"/>
+        <path d="M56 44v8l5 4" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="80" cy="34" r="9" fill="#E86B4C"/>
+        <path d="M76 34h8M80 30v8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+      /* 4. Livré à Moka — scooter de livraison */
+      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#E8F5E9"/>
+        <circle cx="38" cy="74" r="11" fill="#33302C"/><circle cx="38" cy="74" r="4" fill="#B7ADA0"/>
+        <circle cx="80" cy="74" r="11" fill="#33302C"/><circle cx="80" cy="74" r="4" fill="#B7ADA0"/>
+        <path d="M38 74h30l6-16h8" stroke="#C9711B" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="24" y="40" width="20" height="16" rx="3" fill="#F2A24C"/>
+        <path d="M44 50l14-2 6 8H44z" fill="#E86B4C"/>
+        <path d="M48 38l-3 12" stroke="#33302C" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="47" cy="34" r="6" fill="#8C5A2B"/></svg>`
     ];
     $("#stepsGrid").innerHTML = STEPS.map((s, i) => `
       <div class="step-inf">
@@ -1085,8 +1695,9 @@
   ============================================================ */
   function openCategory(id) {
     currentCat = CATEGORIES.find(c => c.id === id);
-    cfg = { qty: 1, selectedItem: currentCat.items.length === 1 ? currentCat.items[0].id : null, drinks: {} };
+    cfg = { qty: 1, selectedItem: currentCat.items.length === 1 ? currentCat.items[0].id : null, drinks: {}, condiments: {} };
     DRINKS.forEach(d => cfg.drinks[d.id] = 0);
+    CONDIMENTS.forEach(c => cfg.condiments[c.id] = false);
     $("#pmTitle").textContent = currentCat.name[lang];
     renderCategoryBody();
     openModal("#productModal");
@@ -1135,20 +1746,28 @@
     openModal("#dishModal");
   }
   function renderDishBody() {
-    const { item, cat, qty } = dish;
-    const contrib = b2eSession.active ? b2eContributionFor(item.price) : 0;
+    const { item, cat, qty, daily } = dish;
+    const photo = daily ? dailyPhoto(item) : dishPhoto(item, cat);
+    const desc = daily ? (item.ingredients || (lang === "fr" ? "Plat du jour, préparé maison." : "Dish of the day, homemade.")) : dishDesc(item, cat);
+    const allergensHtml = daily && item.allergens ? `<div style="margin-top:8px;font-size:13px;color:var(--danger);font-weight:600;">⚠ ${lang==="fr"?"Allergènes":"Allergens"} : ${item.allergens}</div>` : "";
+    const contrib = b2ePerItemContrib() ? b2eContributionFor(item.price) : 0;
     const youPay = item.price - contrib;
-    const priceHtml = b2eSession.active
+    const priceHtml = b2ePerItemContrib()
       ? `<div style="margin:14px 0;">
            <span style="text-decoration:line-through;color:var(--muted);font-weight:600;">${money(item.price)}</span>
            <span class="b2e-line" style="font-weight:700;margin-left:8px;">−${money(contrib)}</span>
            <div style="font-family:'Rubik';font-weight:800;font-size:22px;margin-top:2px;">${t("b2e_banner_you_pay")} ${money(youPay)}</div>
          </div>`
+      : b2eHidePrices()
+      ? `<div style="margin:14px 0;"><span class="b2e-free-tag" style="font-size:15px;">${t("b2e_covered_tag")}</span></div>`
+      : b2eIsFree()
+      ? `<div style="margin:14px 0;"><span style="font-family:'Rubik';font-weight:800;font-size:22px;">${money(item.price)}</span></div>`
       : `<div style="font-family:'Rubik';font-weight:800;font-size:22px;margin:14px 0;">${money(item.price)}</div>`;
     $("#dishBody").innerHTML = `
-      <img src="${dishPhoto(item, cat)}" alt="${item.name[lang]}" style="width:100%;height:220px;object-fit:cover;border-radius:12px;" />
+      <img src="${photo}" alt="${item.name[lang]}" style="width:100%;height:220px;object-fit:cover;border-radius:12px;" />
       <h3 style="font-family:'Rubik';font-weight:800;font-size:20px;margin-top:16px;">${item.name[lang]}</h3>
-      <p style="color:var(--muted);margin-top:6px;">${dishDesc(item, cat)}</p>
+      <p style="color:var(--muted);margin-top:6px;">${desc}</p>
+      ${allergensHtml}
       ${priceHtml}
       <div class="opt-group">
         <label class="gl">${t("pm_qty")}</label>
@@ -1157,6 +1776,10 @@
           <span class="q" id="q_dish" style="font-size:18px;">${qty}</span>
           <button onclick="stepDishQty(1)">+</button>
         </div>
+      </div>
+      <div class="opt-group">
+        <label class="gl">${t("co_day_t")}</label>
+        <div style="margin-top:6px;">${daySelectHtml(item.id, "dishDay", dish.day)}</div>
       </div>`;
     updateDishButton();
   }
@@ -1173,14 +1796,16 @@
   }
   function stepDishQty(d) { dish.qty = Math.max(1, dish.qty + d); $("#q_dish").textContent = dish.qty; updateDishButton(); }
   function updateDishButton() {
-    $("#dishAdd").textContent = `${t("pm_add")} · ${money(dish.item.price * dish.qty)}`;
+    $("#dishAdd").textContent = b2eHidePrices() ? t("pm_add") : `${t("pm_add")} · ${money(dish.item.price * dish.qty)}`;
   }
   function addDishToCart() {
-    const { item, cat, qty } = dish;
+    const { item, cat, qty, daily } = dish;
+    const day = readDaySelect("dishDay");
+    if (!day) { alert(lang === "fr" ? "Aucun jour de livraison disponible pour ce plat." : "No delivery day available for this dish."); return; }
     cart.push({
       uid: Date.now() + "_" + Math.floor(Math.random()*9999),
-      pid: item.id, name: item.name, img: dishPhoto(item, cat),
-      base: item.price, qty, sides: [], drinks: [],
+      pid: item.id, name: item.name, img: daily ? dailyPhoto(item) : dishPhoto(item, cat),
+      base: item.price, qty, sides: [], drinks: [], day,
       lineTotal: item.price * qty
     });
     saveCart();
@@ -1209,7 +1834,7 @@
             <label class="item-opt${sel===item.id?" selected":""}" onclick="selectItem('${item.id}')">
               <input type="radio" name="catitem" value="${item.id}" ${sel===item.id?"checked":""} />
               <img class="it-thumb" src="${dishPhoto(item, c)}" alt="" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')" style="cursor:pointer" />
-              <span class="it it-clickable" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')">${item.name[lang]}</span>
+              <span class="it it-clickable" onclick="event.preventDefault();event.stopPropagation();openDish('${c.id}','${item.id}')">${item.name[lang]}${item.bestseller ? ` <span class="bs-badge">★ ${t("bestseller")}</span>` : ""}</span>
               <span class="ip">${money(item.price)}</span>
             </label>`).join("")}
         </div>
@@ -1223,12 +1848,29 @@
         </div>
       </div>
       <div class="opt-group">
+        <label class="gl">${t("co_day_t")}</label>
+        <div style="margin-top:6px;">${daySelectHtml(c.items[0].id, "catDay", cfg.day)}</div>
+      </div>
+      <div class="opt-group">
         <label class="gl">${t("pm_drinks_t")}</label>
         <div class="hint">${t("pm_drinks_h")}</div>
         ${DRINKS.map(d => drinkRow(d)).join("")}
-      </div>`;
+      </div>
+      ${CONDIMENTS.length ? `
+      <div class="opt-group">
+        <label class="gl">${t("pm_condiments_t")}</label>
+        <div class="hint">${t("pm_condiments_h")}</div>
+        ${CONDIMENTS.map(cd => `
+          <label class="cond-row">
+            <input type="checkbox" ${cfg.condiments[cd.id]?"checked":""} onchange="toggleCondiment('${cd.id}')" />
+            <span class="label">${cd.name[lang]}</span>
+            ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
+          </label>`).join("")}
+      </div>` : ""}`;
     updatePmButton();
   }
+
+  function toggleCondiment(id) { cfg.condiments[id] = !cfg.condiments[id]; updatePmButton(); }
 
   function selectItem(id) {
     cfg.selectedItem = id;
@@ -1252,6 +1894,7 @@
     const item = currentCat.items.find(i => i.id === cfg.selectedItem);
     let extras = 0;
     DRINKS.forEach(d => extras += cfg.drinks[d.id] * d.price);
+    CONDIMENTS.forEach(c => { if (cfg.condiments[c.id]) extras += c.price; });
     return (item.price + extras) * cfg.qty;
   }
 
@@ -1259,18 +1902,21 @@
     const btn = $("#pmAdd");
     btn.disabled = !cfg.selectedItem;
     btn.textContent = cfg.selectedItem
-      ? `${t("pm_add")} · ${money(configLineTotal())}`
+      ? (b2eHidePrices() ? t("pm_add") : `${t("pm_add")} · ${money(configLineTotal())}`)
       : t("pm_choose_first");
   }
 
   function addConfiguredToCart() {
     if (!cfg.selectedItem) return;
+    const day = readDaySelect("catDay");
+    if (!day) { alert(lang === "fr" ? "Aucun jour de livraison disponible." : "No delivery day available."); return; }
     const item = currentCat.items.find(i => i.id === cfg.selectedItem);
     const drinks = DRINKS.filter(d => cfg.drinks[d.id] > 0).map(d => ({ id: d.id, name: d.name, qty: cfg.drinks[d.id], price: d.price }));
+    const condiments = CONDIMENTS.filter(c => cfg.condiments[c.id]).map(c => ({ id: c.id, name: c.name, price: c.price }));
     cart.push({
       uid: Date.now() + "_" + Math.floor(Math.random()*9999),
       pid: cfg.selectedItem, name: item.name, img: item.img || currentCat.img,
-      base: item.price, qty: cfg.qty, sides: [], drinks,
+      base: item.price, qty: cfg.qty, sides: [], drinks, condiments, day,
       lineTotal: configLineTotal()
     });
     saveCart();
@@ -1289,8 +1935,76 @@
   }
   function cartSubtotal() { return cart.reduce((s, i) => s + i.lineTotal, 0); }
 
+  // Disponibilité par jour des plats. Un plat sans restriction est disponible tous les jours.
+  // Une catégorie peut définir fridayOnly (=vendredi) ou availableDays: ["lun","mar",...].
+  const WD_KEY = { dim: 0, lun: 1, mar: 2, mer: 3, jeu: 4, ven: 5, sam: 6 };
+  function itemAllowedWeekdays(pid) {
+    // Plat du jour : "daily-<jour>-<type>" → livrable uniquement ce jour de la semaine
+    if (typeof pid === "string" && pid.startsWith("daily-")) {
+      const wd = { mon: 1, tue: 2, wed: 3, thu: 4, fri: 5 }[pid.split("-")[1]];
+      return wd ? [wd] : null;
+    }
+    const cat = CATEGORIES.find(c => c.items.some(i => i.id === pid));
+    if (!cat) return null;
+    if (cat.fridayOnly) return [5];
+    if (cat.availableDays) return cat.availableDays.map(k => WD_KEY[k]);
+    return null; // tous les jours
+  }
+  // Jours (numéros JS) autorisés pour l'ensemble du panier (intersection). null = aucun blocage.
+  function cartAllowedWeekdays() {
+    let allowed = null;
+    for (const line of cart) {
+      const wd = itemAllowedWeekdays(line.pid);
+      if (wd) allowed = allowed ? allowed.filter(x => wd.includes(x)) : wd.slice();
+    }
+    return allowed;
+  }
+  function dayAllowedForCart(ts) { const a = cartAllowedWeekdays(); return !a || a.includes(new Date(ts).getDay()); }
+
+  /* ── Livraison PAR LIGNE (parcours particulier : plusieurs jours dans un même panier) ── */
+  function allowedDaysForLine(line) {
+    const wd = itemAllowedWeekdays(line.pid); // null = tous les jours ouvrés
+    return availableDays().filter(d => !wd || wd.includes(d.getDay()));
+  }
+  // Attribue à chaque ligne un jour de livraison valide (1er dispo) si absent/invalide
+  function ensureLineDays() {
+    let changed = false;
+    cart.forEach(l => {
+      const days = allowedDaysForLine(l);
+      if (!days.length) { if (l.day !== null) { l.day = null; changed = true; } return; }
+      if (!l.day || !days.some(d => d.getTime() === l.day)) { l.day = days[0].getTime(); changed = true; }
+    });
+    if (changed) saveCart();
+  }
+  function setLineDay(uid, ts) { const l = cart.find(i => i.uid === uid); if (l) { l.day = +ts; saveCart(); renderCart(); } }
+  // Sélecteur de jour de livraison affiché DANS la fiche d'un article (au moment de l'ajout)
+  function daySelectHtml(pid, elId, current) {
+    const days = allowedDaysForLine({ pid });
+    if (!days.length) return `<div class="ci-day-none">${lang==="fr"?"Aucun jour disponible (délai dépassé)":"No day available (deadline passed)"}</div>`;
+    const cur = (current && days.some(d => d.getTime() === current)) ? current : days[0].getTime();
+    const fixed = days.length === 1;
+    return `<select id="${elId}" class="ci-day-sel" ${fixed?"disabled":""} style="font-size:14px;padding:8px 12px;">
+      ${days.map(d => `<option value="${d.getTime()}" ${cur===d.getTime()?"selected":""}>${dayLabelShort(d.getTime())}</option>`).join("")}
+    </select>${fixed?`<input type="hidden" id="${elId}_fixed" value="${cur}">`:""}`;
+  }
+  function readDaySelect(elId) {
+    const sel = document.getElementById(elId);
+    if (sel && sel.value) return +sel.value;
+    const hid = document.getElementById(elId + "_fixed");
+    return hid ? +hid.value : null;
+  }
+  function dayLabelShort(ts) { const d = new Date(+ts); return `${t("days")[d.getDay()]} ${d.getDate()} ${t("months")[d.getMonth()]}`; }
+  // Récapitulatif du panier groupé par jour de livraison → [{ts, label, lines:[]}]
+  function cartByDay() {
+    const groups = {};
+    cart.forEach(l => { const k = l.day || 0; (groups[k] = groups[k] || []).push(l); });
+    return Object.keys(groups).map(k => ({ ts: +k, label: +k ? dayLabelShort(+k) : (lang === "fr" ? "À définir" : "To be set"), lines: groups[k] }))
+      .sort((a, b) => a.ts - b.ts);
+  }
+
   function extrasLabel(item) {
-    const parts = [...item.sides, ...item.drinks].map(x => `${x.qty}× ${x.name[lang]}`);
+    const parts = [...item.sides, ...item.drinks].map(x => `${x.qty}× ${x.name[lang]}`)
+      .concat((item.condiments || []).map(x => x.name[lang]));
     return parts.length ? `${t("cart_with")} ${parts.join(", ")}` : "";
   }
 
@@ -1303,29 +2017,66 @@
       foot.innerHTML = "";
       return;
     }
-    body.innerHTML = cart.map(item => `
+    // Chaque ligne porte son jour de livraison → panier groupé par jour
+    ensureLineDays();
+    const lineHtml = (item) => `
       <div class="cart-line">
         <img src="${item.img}" alt="" />
         <div class="ci-main">
           <div class="ci-title">${item.qty}× ${item.name[lang]}</div>
           ${extrasLabel(item) ? `<div class="ci-extras">${extrasLabel(item)}</div>` : ""}
           <div class="ci-bottom">
-            <span class="ci-price">${money(item.lineTotal)}</span>
+            <span class="ci-price">${b2eHidePrices() ? `<span class="b2e-free-tag">${t("b2e_covered_tag")}</span>` : money(item.lineTotal)}</span>
+            <button class="ci-edit" onclick="editLine('${item.uid}')">${t("cart_edit")}</button>
             <button class="ci-remove" onclick="removeLine('${item.uid}')">${t("cart_remove")}</button>
           </div>
         </div>
+      </div>`;
+    body.innerHTML = cartByDay().map(g => `
+      <div class="cart-day-group">
+        <div class="cart-day-head">📅 ${g.label}${g.ts ? "" : ` <span style="color:var(--danger);font-weight:700;">(${lang==="fr"?"délai dépassé":"deadline passed"})</span>`}</div>
+        ${g.lines.map(lineHtml).join("")}
       </div>`).join("");
     foot.innerHTML = `
       <div style="padding:0 0 12px">
-        <button class="btn btn-ghost btn-block" onclick="closeAll();setTimeout(()=>document.getElementById('menu').scrollIntoView({behavior:'smooth'}),300)">${lang==="fr"?"+ Ajouter un autre pain":"+ Add another bread"}</button>
+        <button class="btn btn-ghost btn-block" onclick="closeAll();setTimeout(()=>document.getElementById('menudujour').scrollIntoView({behavior:'smooth'}),300)">${lang==="fr"?"+ Ajouter des plats":"+ Add more dishes"}</button>
       </div>
+      ${b2eHidePrices() ? `
+      <div class="totals grand"><span>${t("b2e_covered_line")}</span><span class="b2e-line">✓</span></div>` :
+      b2eIsFree() ? (function(){
+        const free = b2eFreeItemValue();
+        const pay = Math.max(0, cartSubtotal() - free);
+        return `
+      <div class="totals"><span>${t("cart_subtotal")}</span><span>${money(cartSubtotal())}</span></div>
+      <div class="totals b2e-line"><span>${t("b2e_free_line")}</span><span>−${money(free)}</span></div>
+      <div class="totals grand"><span>${pay > 0 ? t("b2e_banner_you_pay") : t("cart_total")}</span><span>${money(pay)}</span></div>`;
+      })() : `
       <div class="totals"><span>${t("cart_subtotal")}</span><span>${money(cartSubtotal())}</span></div>
       <div class="totals"><span>${t("cart_delivery")}</span><span>${t("cart_delivery_free")}</span></div>
-      <div class="totals grand"><span>${t("cart_total")}</span><span>${money(cartSubtotal())}</span></div>
+      <div class="totals grand"><span>${t("cart_total")}</span><span>${money(cartSubtotal())}</span></div>`}
       <button class="btn btn-primary btn-block" onclick="goCheckout()">${t("cart_checkout")}</button>`;
   }
 
   function removeLine(uid) { cart = cart.filter(i => i.uid !== uid); saveCart(); renderCart(); }
+
+  // « Modifier » : retire la ligne et rouvre la section d'origine de l'article
+  function editLine(uid) {
+    const line = cart.find(i => i.uid === uid);
+    if (!line) return;
+    cart = cart.filter(i => i.uid !== uid); saveCart();
+    const pid = line.pid || "";
+    closeAll();
+    if (pid.startsWith("formula-")) { openFormula(pid.replace("formula-", "")); return; }
+    if (pid.startsWith("daily-")) {
+      const [, day, type] = pid.split("-");
+      const idx = (DAILY_MENU[day] || []).findIndex(x => x.type === type);
+      if (idx >= 0) openDailyDish(day, idx); else openWeekMenu();
+      return;
+    }
+    const cat = CATEGORIES.find(c => c.items.some(i => i.id === pid));
+    if (cat) openCategory(cat.id);
+    else setTimeout(() => document.getElementById("menu").scrollIntoView({ behavior: "smooth" }), 200);
+  }
 
   /* ============================================================
      B2B
@@ -1373,11 +2124,19 @@
     const { data: { session } } = await _supa.auth.getSession();
     if (!session) { localStorage.removeItem("bp_b2e_active"); return; }
 
-    const { data: employee, error } = await _supa
+    let { data: employee, error } = await _supa
       .from("employees")
-      .select("*, companies(id, name), company_offices(id, name, delivery_slot)")
+      .select("*, companies(id, name, benefit_mode, show_prices), company_offices(id, name, delivery_slot)")
       .eq("id", session.user.id)
       .single();
+    if (error) {
+      // colonne benefit_mode pas encore ajoutée en base : on retombe sans elle
+      ({ data: employee, error } = await _supa
+        .from("employees")
+        .select("*, companies(id, name), company_offices(id, name, delivery_slot)")
+        .eq("id", session.user.id)
+        .single());
+    }
     if (error || !employee || employee.status === "removed") { localStorage.removeItem("bp_b2e_active"); if (employee?.status === "removed") await _supa.auth.signOut(); return; }
 
     const { data: rules } = await _supa
@@ -1401,10 +2160,31 @@
       employee,
       company: employee.companies,
       office: employee.company_offices,
+      benefitMode: employee.companies?.benefit_mode || "contribution",
+      showPrices: employee.companies?.show_prices !== false,
       rules: rules || [],
       budgetUsed: ledger?.contributed || 0,
     };
     renderAll();
+  }
+
+  /* Mode 1 « repas offert » : l'entreprise prend en charge 1 article/jour (le plus cher), les extras au tarif normal */
+  function b2eIsFree() { return b2eSession.active && b2eSession.benefitMode === "free_daily"; }
+  // L'entreprise a désactivé l'affichage des prix : cantine 100% prise en charge, aucun prix visible, rien à payer
+  function b2eHidePrices() { return b2eSession.active && b2eSession.showPrices === false; }
+  // Affiche la contribution par article (barré + « vous payez ») uniquement en mode contribution classique (prix visibles)
+  function b2ePerItemContrib() { return b2eSession.active && !b2eIsFree() && !b2eHidePrices(); }
+  // Valeur de l'article offert = prix unitaire le plus élevé du panier (1 unité prise en charge)
+  // 1 repas offert PAR JOUR : on prend le plat le plus cher de chaque jour, puis on additionne.
+  function b2eFreeItemValue() {
+    if (!cart.length) return 0;
+    const byDay = {};
+    cart.forEach(l => {
+      const k = l.day || 0;
+      const unit = (l.qty ? Number(l.lineTotal) / l.qty : Number(l.lineTotal)) || 0;
+      byDay[k] = Math.max(byDay[k] || 0, unit);
+    });
+    return Object.values(byDay).reduce((s, v) => s + v, 0);
   }
 
   function b2eMonthlyCap() {
@@ -1431,8 +2211,9 @@
     el.innerHTML = `
       <div class="b2e-banner">
         <span>${lang === "fr" ? "Vous commandez avec l'avantage" : "You are ordering with the"} <b>${b2eSession.company?.name || ""}</b></span>
-        ${cap != null ? `<span>${money(b2eSession.budgetUsed)} ${t("b2e_banner_budget")} ${money(cap)}</span>` : ""}
+        ${b2eHidePrices() ? `<span class="b2e-free-note">🎁 ${t("b2e_covered_banner")}</span>` : b2eIsFree() ? `<span class="b2e-free-note">🎁 ${t("b2e_free_banner")}</span>` : (cap != null ? `<span>${money(b2eSession.budgetUsed)} ${t("b2e_banner_budget")} ${money(cap)}</span>` : "")}
         ${b2eSession.office ? `<span>${b2eSession.office.name}${b2eSession.office.delivery_slot ? " — " + b2eSession.office.delivery_slot : ""}</span>` : ""}
+        <a href="mon-espace-b2e.html" class="b2e-space">${t("b2e_my_space")}</a>
         <button class="b2e-logout" onclick="b2eLogout()">${t("b2e_logout")}</button>
       </div>
       <div class="b2e-filterbar">
@@ -1448,6 +2229,7 @@
   async function b2eLogout() {
     if (_supa) await _supa.auth.signOut();
     localStorage.removeItem("bp_b2e_active");
+    cart = []; saveCart(); // vider le panier entreprise en repassant en mode particulier
     b2eSession = { active: false, employee: null, company: null, office: null, rules: [], budgetUsed: 0 };
     renderAll();
   }
@@ -1455,32 +2237,53 @@
   /* ============================================================
      CHECKOUT
   ============================================================ */
+  // Cutoff : pour être livré un jour J, commander avant 15h la veille — HEURE DE MAURICE (UTC+4).
+  const CUTOFF_HOUR = 15;
+  const MU_OFFSET_H = 4; // Maurice = UTC+4, pas d'heure d'été
+  // "Maintenant" à Maurice, lisible via les getters locaux (getDay/getDate/getHours = valeurs Maurice)
+  function mtNow() { const d = new Date(); return new Date(d.getTime() + d.getTimezoneOffset() * 60000 + MU_OFFSET_H * 3600000); }
   function availableDays() {
-    const now = new Date();
-    const earliest = now.getTime() + 24 * 3600 * 1000; // 24h
+    const mt = mtNow();
+    const Y = mt.getFullYear(), M = mt.getMonth(), D = mt.getDate();
+    const nowMs = Date.now(); // vrai instant UTC
     const days = [];
-    for (let i = 0; i < 16 && days.length < 7; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, 11, 0, 0, 0);
-      if (d.getTime() >= earliest) days.push(d);
+    for (let i = 1; i < 16 && days.length < 7; i++) {
+      const deliv = new Date(Y, M, D + i, 11, 0, 0, 0); // date de livraison (calendrier Maurice)
+      const veille = new Date(Y, M, D + i - 1);
+      // 15h Maurice la veille = (15 - 4)h UTC ce jour-là
+      const deadlineMs = Date.UTC(veille.getFullYear(), veille.getMonth(), veille.getDate(), CUTOFF_HOUR - MU_OFFSET_H, 0, 0);
+      if (nowMs <= deadlineMs) days.push(deliv);
     }
     return days;
+  }
+  function isDateOrderable(d) { return availableDays().some(a => a.toDateString() === d.toDateString()); }
+  function nextDateForWeekday(wd) {
+    const mt = mtNow();
+    const Y = mt.getFullYear(), M = mt.getMonth(), D = mt.getDate();
+    for (let i = 0; i < 14; i++) { const d = new Date(Y, M, D + i, 11, 0, 0, 0); if (d.getDay() === wd) return d; }
+    return null;
   }
 
   function goCheckout() {
     if (!cart.length) return;
-    checkout = { day: null, pay: "cash" };
+    // Numéro de commande généré dès l'initiation → sert de référence pour le paiement Juice
+    checkout = { day: null, pay: "juice", orderNum: makeOrderNumber() };
     closeDrawerOnly();
     renderCheckout();
     openModal("#checkoutModal");
   }
 
   function renderCheckout() {
-    const days = availableDays();
+    ensureLineDays(); // chaque ligne porte son jour de livraison (multi-jours, particulier + employé)
     const sub    = cartSubtotal();
-    const b2eContribution = b2eSession.active ? b2ePreviewContribution() : 0;
-    const empAmt = b2eSession.active ? (sub - b2eContribution) : employeeAmount();
+    const b2eContribution = b2eHidePrices() ? sub : (b2eIsFree() ? b2eFreeItemValue() : (b2eSession.active ? b2ePreviewContribution() : 0));
+    const empAmt = b2eSession.active ? Math.max(0, sub - b2eContribution) : employeeAmount();
+    const noPayment = (b2eIsFree() && empAmt <= 0) || b2eHidePrices(); // 100% pris en charge → pas de paiement
     const subAmt = subsidyAmount();
     $("#checkoutBody").innerHTML = `
+      <div class="ordernum-banner">
+        <span>${t("co_ordernum")}</span><b>${checkout.orderNum || ""}</b>
+      </div>
       <div class="notice">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
         <span>${t("co_notice")}</span>
@@ -1488,16 +2291,10 @@
 
       <div class="opt-group">
         <label class="gl">${t("co_day_t")}</label>
-        <div class="hint">${t("co_day_h")}</div>
-        <div class="day-grid" id="dayGrid">
-          ${days.map((d) => `
-            <button class="day-opt${checkout.day===d.getTime()?' selected':''}" data-time="${d.getTime()}" onclick="pickDay(${d.getTime()})">
-              <div class="dow">${t("days")[d.getDay()]}</div>
-              <div class="dnum">${d.getDate()}</div>
-              <div class="mon">${t("months")[d.getMonth()]}</div>
-            </button>`).join("")}
+        <div class="hint">${lang==="fr"?"Chaque plat est livré le jour choisi dans votre panier.":"Each dish is delivered on the day selected in your cart."}</div>
+        <div class="day-recap">
+          ${cartByDay().map(g => `<div class="day-recap-row"><b>${g.label}</b><span>${g.lines.map(l => l.qty + "× " + l.name[lang]).join(", ")}</span></div>`).join("")}
         </div>
-        <div class="field" id="dayErrWrap" style="margin-top:8px;"><div class="err">${t("err_day")}</div></div>
       </div>
 
       <div class="opt-group">
@@ -1568,30 +2365,59 @@
       </div>
       `}
 
+      ${noPayment ? `
+      <div class="opt-group">
+        <div class="b2b-success" style="align-items:flex-start;">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>${b2eHidePrices() ? t("b2e_covered_nopay") : t("b2e_free_nopay")}</span>
+        </div>
+      </div>
+      ` : `
       <div class="opt-group">
         <label class="gl">${t("co_pay_t")}</label>
-        <label class="pay-opt${checkout.pay==="cash"?" selected":""}" id="pay_cash" onclick="pickPay('cash')">
-          <input type="radio" name="pay" value="cash" ${checkout.pay==="cash"?"checked":""} />
-          <div><div class="pt">${t("co_pay_cash_t")}</div><div class="pd">${t("co_pay_cash_d")}</div></div>
-        </label>
         <label class="pay-opt${checkout.pay==="juice"?" selected":""}" id="pay_juice" onclick="pickPay('juice')">
           <input type="radio" name="pay" value="juice" ${checkout.pay==="juice"?"checked":""} />
           <div><div class="pt">${t("co_pay_juice_t")}</div><div class="pd">${t("co_pay_juice_d")}</div></div>
         </label>
-        <div class="juice-box${checkout.pay==="juice"?" show":""}" id="juiceBox">${t("co_juice_box")}</div>
-        <label class="pay-opt ${checkout.pay==='card'?'selected':''}" onclick="checkout.pay='card';renderCheckout()">
+        <div class="juice-box${checkout.pay==="juice"?" show":""}" id="juiceBox">${t("co_juice_box")}<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">${t("co_juice_ref")} <b>${checkout.orderNum || ""}</b></div></div>
+        <label class="pay-opt ${checkout.pay==='card'?'selected':''}" onclick="pickPay('card')">
           <input type="radio" name="pay" value="card" ${checkout.pay==='card'?'checked':''}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="26" height="26"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
           <div><div class="pt">${t("co_pay_card_t")}</div><div class="pd">${t("co_pay_card_d")}</div></div>
         </label>
+        <div class="card-box${checkout.pay==="card"?" show":""}" id="cardBox">
+          <div class="field" style="margin-bottom:10px;">
+            <label>${t("co_card_num")}</label>
+            <input id="i_card_num" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNum(this)" />
+          </div>
+          <div class="two-col">
+            <div class="field" style="margin:0;">
+              <label>${t("co_card_exp")}</label>
+              <input id="i_card_exp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" oninput="formatCardExp(this)" />
+            </div>
+            <div class="field" style="margin:0;">
+              <label>${t("co_card_cvc")}</label>
+              <input id="i_card_cvc" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" />
+            </div>
+          </div>
+          <div class="card-note">${t("co_card_note")}</div>
+        </div>
       </div>
+      `}
 
       <div class="opt-group">
         <label class="gl">${t("co_summary")}</label>
+        ${b2eHidePrices() ? `
         <div class="confirm-recap" style="margin-top:8px;">
-          <div class="r"><span>${t("cart_subtotal")}</span><b>${money(sub)}</b></div>
+          ${cart.map(it => `<div class="r" style="color:var(--muted);font-size:14px;"><span>${it.qty}× ${it.name[lang]}</span></div>`).join("")}
+          <div class="r b2e-line" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t("b2e_covered_line")}</span><b>✓</b></div>
+        </div>
+        ` : `
+        <div class="confirm-recap" style="margin-top:8px;">
+          ${cart.map(it => `<div class="r" style="color:var(--muted);font-size:14px;"><span>${it.qty}× ${it.name[lang]}${extrasLabel(it) ? ` <span style="font-size:12px;">(${extrasLabel(it)})</span>` : ""}</span><b>${money(it.lineTotal)}</b></div>`).join("")}
+          <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t("cart_subtotal")}</span><b>${money(sub)}</b></div>
           ${b2eSession.active ? `
-          <div class="r b2e-line"><span>${t("co_b2e_contribution")} · ${b2eSession.company?.name || ""}</span><b>−${money(b2eContribution)}</b></div>
+          <div class="r b2e-line"><span>${b2eIsFree() ? t("b2e_free_line") + " · " + (b2eSession.company?.name || "") : t("co_b2e_contribution") + " · " + (b2eSession.company?.name || "")}</span><b>−${money(b2eContribution)}</b></div>
           ` : b2b.valid ? `
           <div class="r" style="color:var(--green-ok);"><span>${t("cart_subsidy")} · ${b2b.companyName}</span><b>−${money(subAmt)}</b></div>
           ` : `
@@ -1602,6 +2428,7 @@
             <b>${money(empAmt)}</b>
           </div>
         </div>
+        `}
       </div>`;
     // Pré-remplissage depuis le profil sauvegardé
     const _p = getProfile();
@@ -1611,7 +2438,17 @@
       if ($("#i_phone") && !$("#i_phone").value) $("#i_phone").value = _p.phone || "";
       if ($("#i_addr") && !$("#i_addr").value) $("#i_addr").value = _p.addr || "";
     }
-    $("#placeOrderBtn").textContent = `${t("co_place")} · ${money(empAmt)}`;
+    // Employé connecté : nom / email / téléphone / bureau pré-remplis automatiquement depuis son profil entreprise
+    if (b2eSession.active && b2eSession.employee) {
+      const emp = b2eSession.employee;
+      if ($("#i_name") && emp.full_name) $("#i_name").value = emp.full_name;
+      if ($("#i_email") && emp.work_email) $("#i_email").value = emp.work_email;
+      if ($("#i_phone") && !$("#i_phone").value && emp.phone) $("#i_phone").value = emp.phone;
+      if ($("#i_addr") && !$("#i_addr").value && b2eSession.office) {
+        $("#i_addr").value = [b2eSession.office.name, b2eSession.office.address].filter(Boolean).join(" — ");
+      }
+    }
+    $("#placeOrderBtn").textContent = noPayment ? t("co_place_free") : `${t("co_place")} · ${money(empAmt)}`;
   }
 
   function pickDay(time) {
@@ -1622,6 +2459,15 @@
   function pickPay(p) {
     checkout.pay = p;
     renderCheckout();
+  }
+  // Mise en forme des champs carte (affichage uniquement, non débité)
+  function formatCardNum(el) {
+    el.value = el.value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
+  }
+  function formatCardExp(el) {
+    let v = el.value.replace(/\D/g, "").slice(0, 4);
+    if (v.length >= 3) v = v.slice(0, 2) + "/" + v.slice(2);
+    el.value = v;
   }
 
   async function placeOrder() {
@@ -1638,77 +2484,82 @@
     setErr("#f_email", !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
     setErr("#f_addr", !addr);
     setErr("#f_moka", !moka);
-    if (!checkout.day) { $("#dayErrWrap").classList.add("invalid"); ok = false; }
 
     if (!ok) { $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" }); return; }
 
-    if (b2eSession.active) { await placeB2EOrder(name, phone, addr, moka); return; }
-
-    // Vérification limite 20 repas/jour pour les commandes B2B
-    if (b2b.valid && _supa) {
-      const btn = $("#placeOrderBtn");
-      btn.disabled = true;
-      btn.textContent = lang === "fr" ? "Vérification…" : "Checking…";
-      const delivDate = new Date(checkout.day).toISOString().split("T")[0];
-      const { count, error: countErr } = await _supa.from("b2b_orders")
-        .select("id", { count: "exact", head: true })
-        .eq("company_id", b2b.companyId)
-        .eq("delivery_date", delivDate);
-      btn.disabled = false;
-      renderCheckout();
-      if (!countErr && count >= 20) {
-        const errEl = $("#b2bErr");
-        if (errEl) { errEl.textContent = t("co_b2b_limit"); errEl.classList.add("show"); }
-        $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" });
-        return;
-      }
+    // Chaque ligne doit avoir un jour de livraison valide (multi-jours)
+    ensureLineDays();
+    if (cart.some(l => !l.day)) {
+      alert(lang === "fr"
+        ? "Un plat de votre panier n'a plus de jour de livraison disponible (délai dépassé). Retirez-le ou modifiez-le."
+        : "A dish in your cart no longer has an available delivery day (deadline passed). Please remove or edit it.");
+      $("#checkoutModal").scrollTo({ top: 0, behavior: "smooth" });
+      return;
     }
 
-    const orderNum = makeOrderNumber();
-    const dayDate  = new Date(checkout.day);
-    const dayStr   = `${t("days")[dayDate.getDay()]} ${dayDate.getDate()} ${t("months")[dayDate.getMonth()]}`;
-    const payLabel = checkout.pay === "cash" ? t("co_pay_cash_t") : checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+    if (b2eSession.active) { await placeB2EOrder(name, phone, addr, moka); return; }
 
-    // Capture amounts before clearing cart
-    const fullAmt  = cartSubtotal();
-    const empAmt   = employeeAmount();
-    const subAmt   = subsidyAmount();
+    // Parcours particulier multi-jours : la commande est répartie par jour de livraison
+    const groups = cartByDay(); // [{ts, label, lines}]
+    const orderNum = checkout.orderNum || makeOrderNumber();
+    const daysLabel = groups.map(g => g.label).join(" · ");
+    const payLabel = checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
     const savedB2b = b2b.valid ? { ...b2b } : null;
+    const fullAmt = cartSubtotal();
 
-    const order = { num: orderNum, name, phone, email, addr, day: checkout.day, pay: checkout.pay, items: [...cart], total: empAmt, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subAmt } : null, createdAt: Date.now() };
+    // Montant à payer (avec éventuelle subvention B2B appliquée par jour, plafond journalier)
+    let payTotal = 0, subTotal = 0;
+    const dayCalc = groups.map(g => {
+      const dayTotal = g.lines.reduce((s, l) => s + l.lineTotal, 0);
+      let daySub = 0;
+      if (savedB2b) daySub = Math.min(Math.round(dayTotal * savedB2b.subsidyPct / 100), B2B_DAILY_CAP);
+      const dayEmp = dayTotal - daySub;
+      payTotal += dayEmp; subTotal += daySub;
+      return { ...g, dayTotal, daySub, dayEmp, iso: new Date(g.ts).toISOString().split("T")[0] };
+    });
+    if (!savedB2b) payTotal = fullAmt;
+
+    // Historique local (une entrée, items portent chacun leur .day)
+    const order = { num: orderNum, name, phone, email, addr, days: groups.map(g => ({ day: g.ts, label: g.label })), pay: checkout.pay, items: [...cart], total: payTotal, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subTotal } : null, createdAt: Date.now() };
     const history = JSON.parse(localStorage.getItem("bp_orders") || "[]");
     history.push(order);
     localStorage.setItem("bp_orders", JSON.stringify(history));
 
-    // Enregistrement B2B dans Supabase
-    if (savedB2b && _supa) {
-      _supa.from("b2b_orders").insert({
-        company_id: savedB2b.companyId, employee_name: name, employee_phone: phone,
-        order_ref: orderNum, order_items: cart, order_total: fullAmt,
-        subsidy_amount: subAmt, employee_amount: empAmt,
-        delivery_date: new Date(checkout.day).toISOString().split("T")[0], status: "confirmed"
-      }).then(({ error }) => { if (error) console.warn("B2B sync:", error.message); });
-    }
-
-    // Enregistrement dans l'historique du compte client (si connecté via compte.html)
+    // Enregistrement Supabase : une ligne par jour de livraison
     if (_supa) {
-      _supa.auth.getUser().then(({ data: { user } }) => {
-        if (!user) return;
-        _supa.from("orders").insert({
-          customer_id: user.id, order_ref: orderNum, order_items: cart,
-          order_total: fullAmt, payment_method: checkout.pay,
-          delivery_date: new Date(checkout.day).toISOString().split("T")[0], status: "confirmed"
-        }).then(({ error }) => { if (error) console.warn("Account sync:", error.message); });
+      const { data: { user } } = await _supa.auth.getUser();
+      dayCalc.forEach(g => {
+        if (savedB2b) {
+          _supa.from("b2b_orders").insert({
+            company_id: savedB2b.companyId, employee_name: name, employee_phone: phone,
+            order_ref: orderNum, order_items: g.lines, order_total: g.dayTotal,
+            subsidy_amount: g.daySub, employee_amount: g.dayEmp,
+            delivery_date: g.iso, status: "confirmed"
+          }).then(({ error }) => { if (error) console.warn("B2B sync:", error.message); });
+        }
+        if (user) {
+          _supa.from("orders").insert({
+            customer_id: user.id, order_ref: orderNum, order_items: g.lines,
+            order_total: g.dayTotal, payment_method: checkout.pay,
+            delivery_date: g.iso, status: "confirmed"
+          }).then(({ error }) => { if (error) console.warn("Account sync:", error.message); });
+        }
       });
     }
 
     // Sauvegarde du profil pour les prochaines visites
     saveProfile(name, phone, email, addr, savedB2b?.code || null);
 
+    // Email de confirmation (best-effort)
+    fetch("/api/order-email", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to: email, orderRef: orderNum, items: order.items, total: payTotal, deliveryDate: daysLabel, payLabel, name, lang }),
+    }).catch(() => {});
+
     cart = []; saveCart();
     b2b  = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
 
-    renderConfirmation(orderNum, dayStr, payLabel, empAmt, email, savedB2b, subAmt);
+    renderConfirmation(orderNum, daysLabel, payLabel, payTotal, email, savedB2b, subTotal);
     closeAll();
     openModal("#confirmModal");
   }
@@ -1718,36 +2569,50 @@
     btn.disabled = true;
     btn.textContent = lang === "fr" ? "Envoi de la commande…" : "Placing order…";
 
-    const dayDate = new Date(checkout.day);
-    const deliveryDate = dayDate.toISOString().split("T")[0];
     const { data: { session } } = await _supa.auth.getSession();
+    const payLabel = checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+    const groups = cartByDay(); // une commande B2E par jour de livraison
 
+    let totalPay = 0, totalContribution = 0, firstRef = null, lastPickup = null;
+    const errors = [];
     try {
-      const res = await fetch("/api/place-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({
-          items: cart,
-          deliveryDate,
-          paymentMethod: checkout.pay,
-          officeId: b2eSession.office?.id || null,
-        }),
-      });
-      const payload = await res.json();
-      if (!res.ok) throw new Error(payload.error || "Erreur");
+      for (const g of groups) {
+        const deliveryDate = new Date(g.ts).toISOString().split("T")[0];
+        const res = await fetch("/api/place-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+          body: JSON.stringify({
+            items: g.lines,
+            deliveryDate,
+            paymentMethod: checkout.pay,
+            officeId: b2eSession.office?.id || null,
+            orderRef: (checkout.orderNum ? checkout.orderNum + "-" + deliveryDate.slice(5).replace("-", "") : null),
+          }),
+        });
+        const payload = await res.json();
+        if (!res.ok) { errors.push(`${g.label} : ${payload.error || "erreur"}`); continue; }
+        const order = payload.order;
+        totalPay += Number(order.employee_amount || 0);
+        totalContribution += Number(order.employer_contribution || 0);
+        if (!firstRef) firstRef = order.order_ref;
+        lastPickup = order.pickup_code;
+      }
 
-      const order = payload.order;
-      const dayStr = `${t("days")[dayDate.getDay()]} ${dayDate.getDate()} ${t("months")[dayDate.getMonth()]}`;
-      const payLabel = checkout.pay === "cash" ? t("co_pay_cash_t") : checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+      if (!firstRef) { // aucun jour n'a réussi
+        alert((lang === "fr" ? "Commande impossible :\n" : "Order failed:\n") + errors.join("\n"));
+        return;
+      }
 
       saveProfile(name, phone, session.user.email, addr, null);
+      b2eSession.budgetUsed += totalContribution;
       cart = []; saveCart();
-      b2eSession.budgetUsed += Number(order.employer_contribution || 0);
 
-      renderConfirmation(order.order_ref, dayStr, payLabel, order.employee_amount, session.user.email,
-        { companyName: b2eSession.company?.name }, order.employer_contribution, order.pickup_code);
+      const daysLabel = groups.map(g => g.label).join(" · ");
+      renderConfirmation(firstRef, daysLabel, payLabel, totalPay, session.user.email,
+        { companyName: b2eSession.company?.name }, totalContribution, lastPickup);
       closeAll();
       openModal("#confirmModal");
+      if (errors.length) setTimeout(() => alert((lang === "fr" ? "Certains jours n'ont pas pu être commandés :\n" : "Some days could not be ordered:\n") + errors.join("\n")), 400);
     } catch (err) {
       alert(lang === "fr" ? "Erreur lors de la commande. Réessayez." : "Error placing the order. Please retry.");
       console.warn("place-order:", err.message);
@@ -1794,6 +2659,7 @@
   function openModal(sel) { $("#overlay").classList.add("open"); $(sel).classList.add("open"); document.body.style.overflow = "hidden"; }
   function openCart() { renderCart(); $("#overlay").classList.add("open"); $("#cartDrawer").classList.add("open"); document.body.style.overflow = "hidden"; }
   function closeDrawerOnly() { $("#cartDrawer").classList.remove("open"); }
+  function backToCart() { $("#checkoutModal").classList.remove("open"); $("#checkoutModal").scrollTop = 0; openCart(); }
   function closeAll() {
     $("#overlay").classList.remove("open");
     document.querySelectorAll(".modal, .drawer").forEach(m => m.classList.remove("open"));
@@ -1972,7 +2838,11 @@
   ============================================================ */
   async function syncPricesFromSupabase() {
     if (!_supa) return;
-    const { data, error } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url");
+    let { data, error } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url, bestseller");
+    if (error) {
+      // colonne bestseller pas encore ajoutée en base : on retombe sur les champs de base
+      ({ data, error } = await _supa.from("products").select("id, price, active, name_fr, name_en, image_url"));
+    }
     if (error || !data) return;
     const byId = Object.fromEntries(data.map(p => [p.id, p]));
 
@@ -1983,6 +2853,7 @@
       if (o.name_fr) item.name.fr = o.name_fr;
       if (o.name_en) item.name.en = o.name_en;
       if (o.image_url) item.img = o.image_url;
+      item.bestseller = !!o.bestseller;
     };
 
     // Items not present in the table (not yet migrated) keep their hardcoded
@@ -1995,10 +2866,136 @@
     DRINKS.forEach(applyOverrides);
   }
 
+  // Catégories spéciales (menu du jour / vendredi) — conservées quel que soit le catalogue en base
+  const CATALOG_SPECIAL = CATEGORIES.filter(c => c.weekly || c.fridayOnly);
+
+  // Catalogue « Nos plats » piloté par la base (menu_categories + products).
+  // Si des catégories existent en base, elles remplacent le catalogue codé en dur.
+  async function loadCatalogFromDB() {
+    if (!_supa) return false;
+    const { data: cats } = await _supa.from("menu_categories").select("*").eq("active", true).order("sort");
+    if (!cats || !cats.length) return false; // pas encore migré → on garde le catalogue par défaut
+    let { data: prods } = await _supa.from("products")
+      .select("id, price, active, name_fr, name_en, image_url, bestseller, category_id, desc_fr, desc_en, sort");
+    prods = prods || [];
+    const built = cats.map(c => {
+      const items = prods
+        .filter(p => p.category_id === c.id && p.active !== false)
+        .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+        .map(p => ({
+          id: p.id,
+          name: { fr: p.name_fr || p.id, en: p.name_en || p.name_fr || p.id },
+          price: Number(p.price) || 0,
+          img: p.image_url || c.img,
+          desc: (p.desc_fr || p.desc_en) ? { fr: p.desc_fr || p.desc_en, en: p.desc_en || p.desc_fr } : null,
+          bestseller: !!p.bestseller,
+        }));
+      return {
+        id: c.id,
+        name: { fr: c.name_fr || c.id, en: c.name_en || c.name_fr || c.id },
+        desc: { fr: c.desc_fr || "", en: c.desc_en || c.desc_fr || "" },
+        tag: { fr: c.tag_fr || "", en: c.tag_en || c.tag_fr || "" },
+        img: c.img || "",
+        diet: c.diet || "mixed",
+        items,
+        from: items.length ? Math.min(...items.map(i => i.price)) : 0,
+      };
+    }).filter(c => c.items.length);
+    CATEGORIES.length = 0;
+    CATEGORIES.push(...built, ...CATALOG_SPECIAL);
+    return true;
+  }
+
   /* ============================================================
      INIT
   ============================================================ */
-  syncPricesFromSupabase().finally(renderAll);
+  // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag"];
+  async function loadSiteContent() {
+    if (!_supa) return;
+    const { data, error } = await _supa.from("site_content").select("key, fr, en");
+    if (error || !data) return;
+    for (const row of data) {
+      if (row.key === "about_features") {
+        if (row.fr) ABOUT_FEATURES.fr = row.fr.split("\n").map(s => s.trim()).filter(Boolean);
+        if (row.en) ABOUT_FEATURES.en = row.en.split("\n").map(s => s.trim()).filter(Boolean);
+        continue;
+      }
+      if (row.key === "popup_enabled") { WELCOME.enabled = (row.fr === "1"); continue; }
+      if (row.key === "popup_title") { WELCOME.title.fr = row.fr || ""; WELCOME.title.en = row.en || ""; continue; }
+      if (row.key === "popup_body")  { WELCOME.body.fr = row.fr || "";  WELCOME.body.en = row.en || "";  continue; }
+      if (!EDITABLE_KEYS.includes(row.key)) continue;
+      if (row.fr) I18N.fr[row.key] = row.fr;
+      if (row.en) I18N.en[row.key] = row.en;
+    }
+  }
+
+  /* ── POP-UP D'ACCUEIL (éditable dans l'admin) ── */
+  const WELCOME = { enabled: false, title: { fr: "", en: "" }, body: { fr: "", en: "" } };
+  function maybeShowWelcome() {
+    if (!WELCOME.enabled) return;
+    if (sessionStorage.getItem("bp_welcome_seen") === "1") return;
+    const title = WELCOME.title[lang] || WELCOME.title.fr || "Bienvenue";
+    const body  = WELCOME.body[lang]  || WELCOME.body.fr  || "";
+    const ov = document.createElement("div");
+    ov.className = "welcome-ov";
+    ov.innerHTML = `<div class="welcome-card">
+      <button class="welcome-x" aria-label="Fermer">&times;</button>
+      <div class="welcome-emoji">🥖</div>
+      <h3>${title}</h3>
+      <p>${body.replace(/\n/g, "<br>")}</p>
+      <button class="btn btn-primary welcome-cta">${lang === "fr" ? "C'est parti" : "Let's go"}</button>
+    </div>`;
+    const close = () => { ov.remove(); sessionStorage.setItem("bp_welcome_seen", "1"); };
+    ov.addEventListener("click", (e) => { if (e.target === ov) close(); });
+    ov.querySelector(".welcome-x").onclick = close;
+    ov.querySelector(".welcome-cta").onclick = close;
+    document.body.appendChild(ov);
+  }
+
+  /* ── Carrousel du hero (photos qui défilent) ── */
+  const HERO_IMAGES = [
+    "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1539252554453-80ab65ce3586?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1600&q=80",
+  ];
+  let _heroI = 0, _heroTimer = null;
+  function heroGo(n) {
+    const imgs = document.querySelectorAll("#heroBg img");
+    const dots = document.querySelectorAll("#heroDots button");
+    if (!imgs.length) return;
+    imgs[_heroI]?.classList.remove("active");
+    dots[_heroI]?.classList.remove("active");
+    _heroI = (n + imgs.length) % imgs.length;
+    imgs[_heroI]?.classList.add("active");
+    dots[_heroI]?.classList.add("active");
+  }
+  function heroSet(n) { heroGo(n); restartHeroTimer(); }
+  function restartHeroTimer() {
+    clearInterval(_heroTimer);
+    _heroTimer = setInterval(() => heroGo(_heroI + 1), 5000);
+  }
+  function initHeroCarousel() {
+    const el = $("#heroBg");
+    if (!el) return;
+    el.innerHTML = HERO_IMAGES.map((src, i) => `<img src="${src}" alt="" class="${i===0?"active":""}" loading="${i===0?"eager":"lazy"}" />`).join("");
+    const dotsEl = $("#heroDots");
+    if (dotsEl) dotsEl.innerHTML = HERO_IMAGES.map((_, i) => `<button class="${i===0?"active":""}" aria-label="Photo ${i+1}" onclick="heroSet(${i})"></button>`).join("");
+    _heroI = 0;
+    if (HERO_IMAGES.length > 1) restartHeroTimer();
+  }
+  initHeroCarousel();
+
+  (async function initCatalog() {
+    await loadSiteContent();
+    const fromDb = await loadCatalogFromDB();   // catalogue « Nos plats » depuis la base si migré
+    if (!fromDb) await syncPricesFromSupabase(); // sinon on applique les prix/photos sur le catalogue par défaut
+    renderAll();
+    maybeShowWelcome();
+  })();
+  loadDailyMenu();
+  loadCondiments();
   initProfile();
   initB2ESession();
 

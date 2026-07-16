@@ -214,6 +214,9 @@ on conflict (id) do nothing;
 alter table products add column if not exists name_fr text;
 alter table products add column if not exists name_en text;
 alter table products add column if not exists image_url text;
+alter table products add column if not exists bestseller boolean default false;
+-- Mode d'avantage employé par entreprise : 'contribution' (prix + part entreprise, défaut) ou 'free_daily' (1 repas offert/jour, extras au tarif normal)
+alter table companies add column if not exists benefit_mode text default 'contribution';
 
 -- 12. SEED DES NOMS ACTUELS (reprise des libellés codés en dur)
 update products set name_fr = v.name_fr, name_en = v.name_en from (values
@@ -458,3 +461,156 @@ drop trigger if exists enforce_daily_meal_limit on b2b_orders;
 -- optionnel : il pré-remplit l'entreprise/le bureau à l'inscription
 -- mais ne remplace pas le mot de passe.
 -- ============================================================
+
+-- ============================================================
+-- PHASE 2 — Dashboard employé : favoris
+-- ============================================================
+
+-- 24. FAVORIS EMPLOYÉ (pour la recommande en 1 clic)
+create table if not exists employee_favorites (
+  id          uuid default gen_random_uuid() primary key,
+  employee_id uuid references employees(id) on delete cascade,
+  label       text,
+  items       jsonb,   -- snapshot des lignes de panier à recommander
+  created_at  timestamptz default now()
+);
+
+alter table employee_favorites enable row level security;
+
+create policy "Employé gère ses favoris"
+  on employee_favorites for all
+  using (employee_id = auth.uid())
+  with check (employee_id = auth.uid());
+
+-- 25. L'employé peut noter ses propres commandes (colonne rating déjà présente)
+create policy "Employé note ses commandes"
+  on b2e_orders for update
+  using (employee_id = auth.uid())
+  with check (employee_id = auth.uid());
+
+-- ============================================================
+-- MENU DU JOUR — géré par Bondipain (change chaque semaine)
+-- ============================================================
+
+-- 26. TABLE MENU DU JOUR (5 jours × Veg/Non-Veg)
+create table if not exists daily_menu (
+  id          uuid default gen_random_uuid() primary key,
+  day         text not null,        -- 'mon','tue','wed','thu','fri'
+  type        text not null,        -- 'veg' | 'nonveg'
+  name_fr     text,
+  name_en     text,
+  price       numeric default 220,
+  ingredients text,
+  allergens   text,
+  available   boolean default true,
+  updated_at  timestamptz default now(),
+  unique(day, type)
+);
+
+alter table daily_menu enable row level security;
+
+create policy "Lecture publique menu du jour"
+  on daily_menu for select using (true);
+
+create policy "Admin gère le menu du jour"
+  on daily_menu for all
+  using (auth.email() = 'hello@bondipain.com')
+  with check (auth.email() = 'hello@bondipain.com');
+
+-- 27. SEED — le menu de la semaine (prix par défaut Rs 220, à ajuster dans l'admin)
+insert into daily_menu (day, type, name_fr, name_en, price) values
+  ('mon','veg',    'Macaroni au Fromage',                       'Mac & Cheese',              220),
+  ('mon','nonveg', 'Riz et poulet au miel',                     'Honey Chicken Rice',        220),
+  ('tue','veg',    'Riz et Salade de Fromage',                  'Rice & Cheese Salad',       220),
+  ('tue','nonveg', 'Nouilles sautées au poulet et gingembre',   'Ginger Chicken Noodles',    220),
+  ('wed','veg',    'Purée de pomme de terre et légumes',        'Mashed Potato & Veggies',   220),
+  ('wed','nonveg', 'Poisson grillé et légumes grillés',         'Grilled Fish & Veggies',    220),
+  ('thu','veg',    'Riz cantonais aux légumes',                 'Veg Cantonese Rice',        220),
+  ('thu','nonveg', 'Riz aux crevettes sauce rouge',             'Prawn Rice, Red Sauce',     220),
+  ('fri','veg',    'Briani Légumes',                            'Veg Biryani',               190),
+  ('fri','nonveg', 'Briani Poulet',                             'Chicken Biryani',           220)
+on conflict (day, type) do nothing;
+
+-- ============================================================
+-- CONDIMENTS — gérés par Bondipain (Ketchup, Mayonnaise… éditables)
+-- ============================================================
+
+-- 28. TABLE CONDIMENTS
+create table if not exists condiments (
+  id         text primary key,
+  name_fr    text,
+  name_en    text,
+  price      numeric default 0,
+  available  boolean default true,
+  sort       int default 0,
+  updated_at timestamptz default now()
+);
+
+alter table condiments enable row level security;
+
+create policy "Lecture publique condiments"
+  on condiments for select using (true);
+
+create policy "Admin gère les condiments"
+  on condiments for all
+  using (auth.email() = 'hello@bondipain.com')
+  with check (auth.email() = 'hello@bondipain.com');
+
+-- 29. SEED — condiments initiaux
+insert into condiments (id, name_fr, name_en, price, sort) values
+  ('ketchup', 'Ketchup',     'Ketchup',    0, 1),
+  ('mayo',    'Mayonnaise',  'Mayonnaise', 0, 2)
+on conflict (id) do nothing;
+
+-- 30. NEWSLETTER — abonnés
+create table if not exists newsletter_subscribers (
+  id uuid default gen_random_uuid() primary key,
+  email text unique not null,
+  lang text default 'fr',
+  source text default 'site',
+  active boolean default true,
+  created_at timestamptz default now()
+);
+alter table newsletter_subscribers enable row level security;
+-- Inscription publique (insert only) ; lecture/gestion réservées au service role (admin via API)
+create policy "Inscription newsletter publique"
+  on newsletter_subscribers for insert with check (true);
+
+-- 31. CONTENU ÉDITABLE DU SITE (mini-CMS) — textes des sections de la page d'accueil
+create table if not exists site_content (
+  key text primary key,
+  fr  text,
+  en  text,
+  updated_at timestamptz default now()
+);
+alter table site_content enable row level security;
+create policy "Lecture publique du contenu"
+  on site_content for select using (true);
+create policy "Admin modifie le contenu"
+  on site_content for all
+  using (auth.email() = 'hello@bondipain.com')
+  with check (auth.email() = 'hello@bondipain.com');
+
+alter table companies add column if not exists show_prices boolean default true;
+
+-- 32. CATALOGUE DYNAMIQUE « Nos plats » — catégories + produits pilotés depuis l'admin
+create table if not exists menu_categories (
+  id      text primary key,
+  name_fr text, name_en text,
+  desc_fr text, desc_en text,
+  tag_fr  text, tag_en  text,
+  img     text,
+  diet    text default 'mixed',   -- 'veg' | 'nonveg' | 'mixed'
+  sort    integer default 0,
+  active  boolean default true
+);
+alter table menu_categories enable row level security;
+create policy "Lecture publique des catégories" on menu_categories for select using (true);
+create policy "Admin gère les catégories" on menu_categories for all
+  using (auth.email() = 'hello@bondipain.com') with check (auth.email() = 'hello@bondipain.com');
+
+-- Produits enrichis (catégorie, description bilingue, tri)
+alter table products add column if not exists category_id text;
+alter table products add column if not exists desc_fr text;
+alter table products add column if not exists desc_en text;
+alter table products add column if not exists sort integer default 0;

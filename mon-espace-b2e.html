@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bondipain — Mon espace employé</title>
+<link rel="icon" type="image/png" href="./logo-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --brand:#F2A24C; --brand-deep:#C9711B; --brand-soft:#FBE5CC; --cream:#FFF8F1; --cream-2:#FDF1E5;
+    --ink:#2A2622; --muted:#837A70; --line:#EFE3D5; --green:#2E7D52; --green-soft:#E8F5E9; --danger:#C0392B;
+    --shadow:0 2px 12px rgba(60,40,15,.09); --radius:14px;
+  }
+  body { font-family:'Barlow',sans-serif; font-weight:500; background:#F5F0EB; color:var(--ink); min-height:100vh; }
+  h1,h2,h3,h4 { font-family:'Rubik',sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .hidden { display:none !important; }
+  button { font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .dash-header { background:#fff; border-bottom:1px solid var(--line); padding:0 28px; display:flex; align-items:center; justify-content:space-between; height:66px; }
+  .dash-logo { display:flex; align-items:center; gap:10px; }
+  .dash-logo img { width:38px; height:38px; border-radius:50%; }
+  .dash-logo span { font-family:'Rubik'; font-weight:800; font-size:20px; color:var(--brand-deep); }
+  .dash-right { display:flex; align-items:center; gap:12px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Rubik'; font-weight:600; font-size:14px; padding:10px 18px; border-radius:999px; transition:all .18s; }
+  .btn-primary { background:var(--brand); color:#fff; }
+  .btn-primary:hover { background:var(--brand-deep); }
+  .btn-ghost { background:#fff; border:1.5px solid var(--line); color:var(--ink); }
+  .btn-ghost:hover { border-color:var(--brand); color:var(--brand-deep); }
+  .btn-sm { padding:6px 14px; font-size:13px; }
+
+  .wrap { max-width:960px; margin:0 auto; padding:28px 22px 60px; }
+  .hello { font-size:24px; font-weight:800; }
+  .hello-sub { color:var(--muted); font-size:14.5px; margin-top:2px; margin-bottom:22px; }
+
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .stat { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
+  .stat .label { font-size:12.5px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+  .stat .value { font-family:'Rubik'; font-weight:800; font-size:30px; margin-top:6px; }
+  .stat .sub { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .stat.green .value { color:var(--green); }
+  .stat .bar { height:8px; background:var(--line); border-radius:999px; overflow:hidden; margin-top:10px; }
+  .stat .bar>div { height:100%; background:var(--brand); }
+
+  .section { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 24px; margin-bottom:20px; }
+  .section h3 { font-size:17px; font-weight:800; margin-bottom:14px; }
+
+  .fav { display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line); }
+  .fav:last-child { border-bottom:none; }
+  .fav .fav-main { flex:1; font-weight:600; }
+  .fav .fav-sub { color:var(--muted); font-size:13px; }
+
+  .order { padding:14px 0; border-bottom:1px solid var(--line); }
+  .order:last-child { border-bottom:none; }
+  .order-top { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .order-ref { font-family:'Rubik'; font-weight:700; color:var(--brand-deep); font-size:14px; }
+  .order-meta { color:var(--muted); font-size:13px; }
+  .order-amt { font-family:'Rubik'; font-weight:800; }
+  .pickup { display:inline-block; background:var(--green-soft); color:var(--green); font-family:'Rubik'; font-weight:800; font-size:13px; padding:3px 10px; border-radius:999px; }
+
+  /* tracker */
+  .tracker { display:flex; align-items:center; margin:12px 0 4px; }
+  .tk-step { flex:1; text-align:center; position:relative; font-size:11px; color:var(--muted); }
+  .tk-dot { width:16px; height:16px; border-radius:50%; background:var(--line); margin:0 auto 5px; border:2px solid var(--line); }
+  .tk-step.done .tk-dot { background:var(--green); border-color:var(--green); }
+  .tk-step.current .tk-dot { background:var(--brand); border-color:var(--brand); }
+  .tk-step.done, .tk-step.current { color:var(--ink); font-weight:600; }
+  .tk-step::before { content:""; position:absolute; top:7px; left:-50%; width:100%; height:2px; background:var(--line); z-index:0; }
+  .tk-step:first-child::before { display:none; }
+  .tk-step.done::before, .tk-step.current::before { background:var(--green); }
+
+  .stars { display:inline-flex; gap:3px; }
+  .stars button { font-size:20px; color:var(--line); line-height:1; }
+  .stars button.on { color:#F2B01E; }
+  .rated { color:#F2B01E; font-size:16px; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 12px; }
+  .chip { font-size:13px; font-weight:600; padding:7px 14px; border-radius:999px; background:var(--cream-2); border:1.5px solid var(--line); color:var(--muted); }
+  .chip.on { background:var(--brand); border-color:var(--brand); color:#fff; }
+  .empty { color:var(--muted); font-size:14px; padding:14px 0; text-align:center; }
+  .msg { font-size:13px; margin-top:10px; padding:9px 12px; border-radius:10px; display:none; }
+  .msg.show { display:block; } .msg.ok { background:var(--green-soft); color:var(--green); }
+
+  .login-wrap { min-height:100vh; display:grid; place-items:center; padding:24px; }
+  @media (max-width:700px){ .stats{ grid-template-columns:1fr; } .dash-header{ padding:0 16px; } }
+</style>
+</head>
+<body>
+
+<div id="loginRedirect" class="login-wrap">
+  <div style="text-align:center;color:var(--muted)">Chargement de votre espace…</div>
+</div>
+
+<div id="app" class="hidden">
+  <header class="dash-header">
+    <a class="dash-logo" href="index.html?mode=b2e">
+      <img src="./logo-full.png" alt="Bondipain" style="height:36px;width:auto;border-radius:0;" />
+    </a>
+    <div class="dash-right">
+      <span class="lang-toggle" id="langToggle"></span>
+      <a class="btn btn-ghost btn-sm" href="index.html" data-i18n="nav_home_btn">← Accueil</a>
+      <a class="btn btn-primary btn-sm" href="index.html?mode=b2e" data-i18n="order">Commander</a>
+      <button class="btn btn-ghost btn-sm" onclick="logout()" data-i18n="logout">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hello" id="hello">Bonjour</div>
+    <div class="hello-sub" id="helloSub"></div>
+
+    <div class="stats">
+      <div class="stat green">
+        <div class="label" data-i18n="budget_left">Budget restant</div>
+        <div class="value" id="statBudget">—</div>
+        <div class="sub" id="statBudgetSub"></div>
+        <div class="bar"><div id="statBudgetBar" style="width:0%"></div></div>
+      </div>
+      <div class="stat">
+        <div class="label" data-i18n="orders_month">Commandes ce mois</div>
+        <div class="value" id="statOrders">—</div>
+        <div class="sub" data-i18n="meals_ordered">repas commandés</div>
+      </div>
+      <div class="stat">
+        <div class="label" data-i18n="avg_rating">Note moyenne</div>
+        <div class="value" id="statRating">—</div>
+        <div class="sub" data-i18n="on_rated">sur vos repas notés</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 data-i18n="my_favorites">Mes favoris</h3>
+      <div id="favList"><p class="empty">Chargement…</p></div>
+    </div>
+
+    <div class="section">
+      <h3 data-i18n="my_diet">Mon profil alimentaire</h3>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px;" data-i18n="diet">Régime</div>
+      <div class="chips" id="prefChips"></div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px;" data-i18n="allergen_alerts">Alertes allergènes</div>
+      <div class="chips" id="allergenChips"></div>
+      <button class="btn btn-primary btn-sm" onclick="savePrefs()" data-i18n="save_prefs">Enregistrer mes préférences</button>
+      <div class="msg ok" id="prefMsg" data-i18n="prefs_saved">Préférences enregistrées.</div>
+    </div>
+
+    <div class="section">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+        <h3 data-i18n="my_orders" style="margin:0;">Mes commandes</h3>
+        <select id="orderMonth" onchange="filterOrders()" style="padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;background:#fff;"></select>
+      </div>
+      <div id="orderList"><p class="empty">Chargement…</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL="https://cqtplubyjgkhbnlujsoe.supabase.co";
+const SUPABASE_ANON="sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
+const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const money = (n) => `Rs ${Math.round(n ?? 0)}`;
+const MONTHS = {
+  fr: ["jan.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
+  en: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+};
+// valeur stockée en base (.v, français canonique) + libellé anglais
+const DIET_OPTIONS = [{v:"Végétarien",en:"Vegetarian"},{v:"Vegan",en:"Vegan"},{v:"Halal",en:"Halal"},{v:"Sans porc",en:"Pork-free"}];
+const ALLERGEN_OPTIONS = [{v:"Noix",en:"Nuts"},{v:"Gluten",en:"Gluten"},{v:"Lactose",en:"Lactose"},{v:"Fruits de mer",en:"Seafood"},{v:"Œuf",en:"Egg"}];
+const STATUSES = [
+  { key:"confirmed",  fr:"Confirmé",     en:"Confirmed"  },
+  { key:"delivering", fr:"En livraison", en:"Delivering" },
+  { key:"ready",      fr:"Prêt",         en:"Ready"      },
+  { key:"collected",  fr:"Récupéré",     en:"Collected"  },
+];
+
+/* ── i18n FR/EN ── */
+const L = {
+  fr: { order:"Commander", logout:"Déconnexion", budget_left:"Budget restant", orders_month:"Commandes ce mois",
+    meals_ordered:"repas commandés", avg_rating:"Note moyenne", on_rated:"sur vos repas notés",
+    my_favorites:"Mes favoris", my_diet:"Mon profil alimentaire", diet:"Régime", allergen_alerts:"Alertes allergènes",
+    save_prefs:"Enregistrer mes préférences", prefs_saved:"Préférences enregistrées.", my_orders:"Mes commandes",
+    loading:"Chargement…", hello:"Bonjour", benefit:"Votre avantage repas", used:"utilisés", unlimited:"Illimité",
+    covered_month:"pris en charge ce mois", order_word:"Commande", meal_word:"Repas", cancelled:"Commande annulée",
+    no_orders:"Aucune commande pour le moment.", delivery:"livraison", your_rating:"Votre note :", add_fav:"★ Ajouter aux favoris",
+    no_fav:"Aucun favori. Ajoutez-en depuis vos commandes passées.", fav_word:"Favori", items:"article(s)",
+    reorder:"Recommander", remove:"Retirer", all_months:"Tous les mois", nav_home_btn:"← Accueil" },
+  en: { order:"Order", logout:"Log out", budget_left:"Remaining budget", orders_month:"Orders this month",
+    meals_ordered:"meals ordered", avg_rating:"Average rating", on_rated:"on your rated meals",
+    my_favorites:"My favorites", my_diet:"My dietary profile", diet:"Diet", allergen_alerts:"Allergen alerts",
+    save_prefs:"Save my preferences", prefs_saved:"Preferences saved.", my_orders:"My orders",
+    loading:"Loading…", hello:"Hi", benefit:"Your meal benefit with", used:"used", unlimited:"Unlimited",
+    covered_month:"covered this month", order_word:"Order", meal_word:"Meal", cancelled:"Order cancelled",
+    no_orders:"No orders yet.", delivery:"delivery", your_rating:"Your rating:", add_fav:"★ Add to favorites",
+    no_fav:"No favorites yet. Add some from your past orders.", fav_word:"Favorite", items:"item(s)",
+    reorder:"Reorder", remove:"Remove", all_months:"All months", nav_home_btn:"← Home" },
+};
+let lang = localStorage.getItem("bp_lang") || "fr";
+const T = (k) => (L[lang][k] !== undefined ? L[lang][k] : k);
+function applyLang() {
+  localStorage.setItem("bp_lang", lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.getAttribute("data-i18n")); });
+  const lt = document.getElementById("langToggle");
+  if (lt) lt.innerHTML = ["fr","en"].map(l => `<button onclick="setLang('${l}')" style="background:${l===lang?'var(--brand)':'#fff'};color:${l===lang?'#fff':'var(--muted)'};border:1.5px solid var(--line);font-family:'Rubik';font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;cursor:pointer;">${l.toUpperCase()}</button>`).join(" ");
+  if (employee) { setHello(); renderChips(); loadStatsAndOrders(); loadFavorites(); }
+}
+function setLang(l) { lang = l; applyLang(); }
+function setHello() {
+  document.getElementById("hello").textContent = T("hello") + " " + (employee.full_name || "").split(" ")[0];
+  document.getElementById("helloSub").textContent = T("benefit") + " " + (employee.companies?.name || "")
+    + (employee.company_offices ? " · " + employee.company_offices.name + (employee.company_offices.delivery_slot ? " — " + employee.company_offices.delivery_slot : "") : "");
+}
+
+let employee=null, rules=[], prefs=[], allergens=[];
+
+async function logout(){ await _supa.auth.signOut(); localStorage.removeItem("bp_b2e_active"); window.location.href="b2e-login.html"; }
+
+async function init(){
+  const { data:{ session } } = await _supa.auth.getSession();
+  if(!session){ window.location.href="b2e-login.html"; return; }
+
+  const { data:emp, error } = await _supa.from("employees")
+    .select("*, companies(name), company_offices(name, delivery_slot)")
+    .eq("id", session.user.id).single();
+  if(error || !emp || emp.status==="removed"){ window.location.href="b2e-login.html"; return; }
+  employee = emp;
+  prefs = emp.dietary_prefs || [];
+  allergens = emp.allergen_alerts || [];
+
+  const { data:r } = await _supa.from("contribution_rules")
+    .select("*").eq("company_id", emp.company_id).eq("active", true)
+    .order("priority",{ascending:false});
+  rules = r || [];
+
+  document.getElementById("loginRedirect").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  applyLang(); // affiche titres + salutation + charge stats/commandes/favoris dans la langue courante
+}
+
+function monthCap(){ return rules[0]?.monthly_cap ?? null; }
+
+async function loadStatsAndOrders(){
+  const now = new Date();
+  const periodStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-01`;
+  const { data:ledger } = await _supa.from("employee_budget_ledger")
+    .select("contributed").eq("employee_id", employee.id).eq("period_month", periodStr).maybeSingle();
+  const used = Number(ledger?.contributed || 0);
+  const cap = monthCap();
+
+  if(cap!=null){
+    const remaining = Math.max(0, cap-used);
+    document.getElementById("statBudget").textContent = money(remaining);
+    document.getElementById("statBudgetSub").textContent = `${money(used)} / ${money(cap)} ${T("used")}`;
+    document.getElementById("statBudgetBar").style.width = Math.min(100, Math.round(used/cap*100)) + "%";
+  } else {
+    document.getElementById("statBudget").textContent = T("unlimited");
+    document.getElementById("statBudgetSub").textContent = `${money(used)} ${T("covered_month")}`;
+  }
+
+  const { data:orders } = await _supa.from("b2e_orders")
+    .select("*").eq("employee_id", employee.id).order("created_at",{ascending:false});
+  const all = orders || [];
+  const monthOrders = all.filter(o => { const d=new Date(o.created_at); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); });
+  document.getElementById("statOrders").textContent = monthOrders.length;
+  const rated = all.filter(o => o.rating);
+  document.getElementById("statRating").textContent = rated.length ? (rated.reduce((s,o)=>s+o.rating,0)/rated.length).toFixed(1) : "—";
+
+  ALL_ORDERS = all;
+  buildMonthFilter(all);
+  filterOrders();
+}
+
+let ALL_ORDERS = [];
+function orderMonthKey(o){ const d = new Date(o.delivery_date || o.created_at); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
+function buildMonthFilter(orders){
+  const sel = document.getElementById("orderMonth");
+  if(!sel) return;
+  const keys = [...new Set(orders.map(orderMonthKey))].sort().reverse();
+  const prev = sel.value;
+  sel.innerHTML = `<option value="all">${T("all_months")}</option>` +
+    keys.map(k=>{ const [y,m]=k.split("-"); return `<option value="${k}">${MONTHS[lang][+m-1]} ${y}</option>`; }).join("");
+  if(prev && [...sel.options].some(o=>o.value===prev)) sel.value = prev;
+}
+function filterOrders(){
+  const sel = document.getElementById("orderMonth");
+  const v = sel ? sel.value : "all";
+  const list = (v && v!=="all") ? ALL_ORDERS.filter(o=>orderMonthKey(o)===v) : ALL_ORDERS;
+  renderOrders(list);
+}
+
+function mealName(o){
+  const items = o.order_items || [];
+  if(!items.length) return T("order_word");
+  const nm = items[0]?.name; const first = (nm && (nm[lang]||nm.fr)) || nm || T("meal_word");
+  return items.length>1 ? `${first} +${items.length-1}` : first;
+}
+
+function trackerHtml(status){
+  if(status==="cancelled") return `<div style="color:var(--danger);font-size:13px;margin-top:8px;">${T("cancelled")}</div>`;
+  const idx = STATUSES.findIndex(s=>s.key===status);
+  const cur = idx<0 ? 0 : idx;
+  return `<div class="tracker">` + STATUSES.map((s,i)=>`
+    <div class="tk-step ${i<cur?'done':i===cur?'current':''}"><div class="tk-dot"></div>${lang==="fr"?s.fr:s.en}</div>
+  `).join("") + `</div>`;
+}
+
+function renderOrders(orders){
+  const box = document.getElementById("orderList");
+  if(!orders.length){ box.innerHTML = `<p class="empty">${T("no_orders")}</p>`; return; }
+  box.innerHTML = orders.map(o=>{
+    const d = new Date(o.delivery_date || o.created_at);
+    const dateStr = `${d.getDate()} ${MONTHS[lang][d.getMonth()]}`;
+    const ratingHtml = o.rating
+      ? `<span class="rated">${"★".repeat(o.rating)}${"☆".repeat(5-o.rating)}</span>`
+      : `<span class="stars" data-order="${o.id}">${[1,2,3,4,5].map(n=>`<button onclick="rate('${o.id}',${n})">☆</button>`).join("")}</span>`;
+    return `<div class="order">
+      <div class="order-top">
+        <div>
+          <span class="order-ref">${o.order_ref || "—"}</span>
+          <div class="order-meta">${mealName(o)} · ${T("delivery")} ${dateStr}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="order-amt">${money(o.employee_amount)}</div>
+          ${o.pickup_code ? `<span class="pickup">${o.pickup_code}</span>` : ""}
+        </div>
+      </div>
+      ${trackerHtml(o.status)}
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--muted)">${T("your_rating")} ${ratingHtml}</div>
+        <button class="btn btn-ghost btn-sm" onclick='addFavorite(${JSON.stringify(JSON.stringify(o.order_items||[]))}, ${JSON.stringify(JSON.stringify(mealName(o)))})'>${T("add_fav")}</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function rate(orderId, n){
+  await _supa.from("b2e_orders").update({ rating:n }).eq("id", orderId);
+  await loadStatsAndOrders();
+}
+
+/* ── Favoris ── */
+async function loadFavorites(){
+  const { data } = await _supa.from("employee_favorites")
+    .select("*").eq("employee_id", employee.id).order("created_at",{ascending:false});
+  const box = document.getElementById("favList");
+  if(!data?.length){ box.innerHTML = `<p class="empty">${T("no_fav")}</p>`; return; }
+  box.innerHTML = data.map(f=>`
+    <div class="fav">
+      <div><div class="fav-main">${f.label || T("fav_word")}</div><div class="fav-sub">${(f.items||[]).length} ${T("items")}</div></div>
+      <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick='reorder(${JSON.stringify(JSON.stringify(f.items||[]))})'>${T("reorder")}</button>
+      <button class="btn btn-ghost btn-sm" onclick="removeFav('${f.id}')">${T("remove")}</button>
+    </div>`).join("");
+}
+
+async function addFavorite(itemsJson, labelJson){
+  const items = JSON.parse(itemsJson), label = JSON.parse(labelJson);
+  if(!items.length) return;
+  await _supa.from("employee_favorites").insert({ employee_id:employee.id, label, items });
+  await loadFavorites();
+}
+async function removeFav(id){ await _supa.from("employee_favorites").delete().eq("id", id); await loadFavorites(); }
+
+function reorder(itemsJson){
+  const items = JSON.parse(itemsJson);
+  // On réhydrate le panier localStorage puis on renvoie vers le menu employé
+  const cart = items.map(it => ({
+    uid: Date.now()+"_"+Math.floor(Math.random()*9999),
+    pid: it.pid || it.id, name: it.name, img: it.img || "",
+    base: it.base || it.lineTotal || 0, qty: it.qty || 1, sides: it.sides||[], drinks: it.drinks||[],
+    lineTotal: it.lineTotal || (it.base||0)*(it.qty||1)
+  }));
+  localStorage.setItem("bp_cart", JSON.stringify(cart));
+  window.location.href = "index.html?mode=b2e";
+}
+
+/* ── Préférences ── */
+function renderChips(){
+  document.getElementById("prefChips").innerHTML = DIET_OPTIONS.map(o=>`
+    <button class="chip ${prefs.includes(o.v)?'on':''}" onclick="togglePref('${o.v}')">${lang==="fr"?o.v:o.en}</button>`).join("");
+  document.getElementById("allergenChips").innerHTML = ALLERGEN_OPTIONS.map(o=>`
+    <button class="chip ${allergens.includes(o.v)?'on':''}" onclick="toggleAllergen('${o.v.replace(/'/g,"\\'")}')">${lang==="fr"?o.v:o.en}</button>`).join("");
+}
+function togglePref(o){ prefs = prefs.includes(o)?prefs.filter(x=>x!==o):[...prefs,o]; renderChips(); }
+function toggleAllergen(o){ allergens = allergens.includes(o)?allergens.filter(x=>x!==o):[...allergens,o]; renderChips(); }
+async function savePrefs(){
+  await _supa.from("employees").update({ dietary_prefs:prefs, allergen_alerts:allergens }).eq("id", employee.id);
+  const m=document.getElementById("prefMsg"); m.classList.add("show"); setTimeout(()=>m.classList.remove("show"),2500);
+}
+
+init();
+</script>
+</body>
+</html>
