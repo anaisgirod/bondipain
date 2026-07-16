@@ -61,6 +61,27 @@
   .admin-tab { padding: 10px 22px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; font-family: 'Rubik'; font-weight: 700; font-size: 14px; color: var(--ink); cursor: pointer; transition: all .15s; }
   .admin-tab:hover { border-color: var(--brand); color: var(--brand-deep); }
   .admin-tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+  /* ── Cuisine / Ops (production du jour) ── */
+  .k-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .k-toolbar input[type=date] { font-family: inherit; padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 10px; }
+  .k-totline { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+  #tab-cuisine .route { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 22px; font-size: 14.5px; }
+  #tab-cuisine .route b { color: var(--brand); }
+  #tab-cuisine .route .steps { margin-top: 8px; font-weight: 600; }
+  #tab-cuisine .group { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 18px; }
+  #tab-cuisine .group-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  #tab-cuisine .group-head h3 { font-size: 17px; font-weight: 800; }
+  #tab-cuisine .group-head .slot { background: var(--brand-soft); color: var(--brand-deep); font-family: 'Rubik'; font-weight: 700; font-size: 12.5px; padding: 4px 12px; border-radius: 999px; }
+  #tab-cuisine .lots { background: var(--cream); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  #tab-cuisine .lots-t { font-size: 12px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); font-weight: 700; margin-bottom: 6px; }
+  #tab-cuisine .lot { display: inline-block; background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 4px 12px; margin: 3px 4px 0 0; font-size: 13.5px; }
+  #tab-cuisine .lot b { color: var(--brand-deep); }
+  #tab-cuisine .ord { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  #tab-cuisine .ord:last-child { border-bottom: none; }
+  #tab-cuisine .ord .emp { font-weight: 700; min-width: 120px; }
+  #tab-cuisine .ord .meal { flex: 1; color: var(--muted); }
+  #tab-cuisine .ord .alg { background: #FBE9E7; color: var(--danger); font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  #tab-cuisine .ord .pk { font-family: 'Rubik'; font-weight: 800; color: var(--green, #2E7D52); font-size: 13px; }
   .dash-body { max-width: 1120px; margin: 0 auto; padding: 32px 24px 60px; display: flex; gap: 30px; align-items: flex-start; }
   .admin-nav { position: sticky; top: 88px; flex: 0 0 210px; display: flex; flex-direction: column; gap: 4px; }
   .admin-nav a { display: block; padding: 10px 14px; border-radius: 10px; font-family: 'Rubik'; font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none; transition: background .15s, color .15s; }
@@ -156,6 +177,7 @@
   <div class="admin-tabs">
     <button id="tabbtn-part" class="admin-tab active" onclick="showAdminTab('part')" data-i18n="tab_particulier">Particulier</button>
     <button id="tabbtn-emp" class="admin-tab" onclick="showAdminTab('emp')" data-i18n="tab_employe">Employé</button>
+    <button id="tabbtn-cuisine" class="admin-tab" onclick="showAdminTab('cuisine')" data-i18n="tab_cuisine">Cuisine</button>
   </div>
 
   <div class="dash-body">
@@ -228,6 +250,19 @@
       <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="b2e_content_sub">Modifiez les messages d'avantage affichés aux employés connectés, en français et en anglais.</p>
       <div id="contentEditorB2E"><p class="empty" data-i18n="loading">Chargement…</p></div>
     </div>
+
+    <div id="tab-cuisine" style="display:none;">
+      <div class="k-toolbar">
+        <h2 style="font-size:22px;font-weight:800;flex:1;" data-i18n="k_title">🍳 Production du jour</h2>
+        <button class="btn btn-ghost" onclick="kSetDay(0)" data-i18n="k_today">Aujourd'hui</button>
+        <button class="btn btn-ghost" onclick="kSetDay(1)" data-i18n="k_tomorrow">Demain</button>
+        <input id="kDayPicker" type="date" onchange="kLoadDay()" />
+        <button class="btn btn-primary" onclick="kPrintLabels()" data-i18n="k_print">🏷️ Imprimer les étiquettes</button>
+      </div>
+      <div class="k-totline" id="kTotLine"></div>
+      <div id="kRouteBox"></div>
+      <div id="kGroups"><p class="empty" data-i18n="loading">Chargement…</p></div>
+    </div>
     </div>
   </div>
 </div>
@@ -253,8 +288,11 @@ const L = {
     nl_test:"Envoyer un test", nl_all:"Envoyer à tous",
     content_title:"📝 Contenu du site (page d'accueil)", content_sub:"Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.",
     content_save:"💾 Enregistrer le contenu",
-    tab_particulier:"Particulier", tab_employe:"Employé",
+    tab_particulier:"Particulier", tab_employe:"Employé", tab_cuisine:"Cuisine",
     b2e_content_title:"👔 Espace employé (avantage entreprise)", b2e_content_sub:"Modifiez les messages d'avantage affichés aux employés connectés, en français et en anglais.",
+    k_title:"🍳 Production du jour", k_today:"Aujourd'hui", k_tomorrow:"Demain", k_print:"🏷️ Imprimer les étiquettes",
+    k_meals:"repas", k_points:"point(s) de livraison", k_route:"Plan de tournée", k_none:"Aucune commande pour cette date.",
+    k_lots:"Lots cuisine", k_print_none:"Aucune commande à imprimer.", k_kitchen:"Cuisine",
     popup_title_h:"💬 Pop-up d'accueil", popup_sub:"Message affiché dans une fenêtre à l'arrivée sur le site (une fois par visite).",
     popup_enable:"Activer le pop-up d'accueil", popup_ftitle:"Titre", popup_fbody:"Message",
     veg:"Veg", nonveg:"Non-Veg", available:"Disponible", unavailable:"Indisponible",
@@ -272,8 +310,11 @@ const L = {
     nl_test:"Send a test", nl_all:"Send to all",
     content_title:"📝 Site content (home page)", content_sub:"Edit the home page texts, in French and English. Changes appear on the site instantly.",
     content_save:"💾 Save content",
-    tab_particulier:"Consumer", tab_employe:"Employee",
+    tab_particulier:"Consumer", tab_employe:"Employee", tab_cuisine:"Kitchen",
     b2e_content_title:"👔 Employee space (company benefit)", b2e_content_sub:"Edit the benefit messages shown to logged-in employees, in French and English.",
+    k_title:"🍳 Daily production", k_today:"Today", k_tomorrow:"Tomorrow", k_print:"🏷️ Print labels",
+    k_meals:"meals", k_points:"delivery point(s)", k_route:"Delivery route", k_none:"No orders for this date.",
+    k_lots:"Kitchen batches", k_print_none:"No orders to print.", k_kitchen:"Kitchen",
     popup_title_h:"💬 Welcome pop-up", popup_sub:"Message shown in a window when visitors arrive on the site (once per visit).",
     popup_enable:"Enable the welcome pop-up", popup_ftitle:"Title", popup_fbody:"Message",
     veg:"Veg", nonveg:"Non-Veg", available:"Available", unavailable:"Unavailable",
@@ -611,6 +652,8 @@ async function initAdmin() {
   await loadMenu();
   await loadContent();
   await loadPopup();
+  // Ouverture directe sur l'onglet Cuisine si on arrive depuis cuisine.html (#cuisine)
+  if (location.hash === "#cuisine") showAdminTab("cuisine");
 }
 
 /* ── GESTIONNAIRE DE MENU « Nos plats » (catégories + produits, piloté par la base) ── */
@@ -964,13 +1007,92 @@ async function saveContent(containerId) {
 }
 
 function showAdminTab(which) {
-  const part = which === "part";
-  document.getElementById("tab-particulier").style.display = part ? "" : "none";
-  document.getElementById("tab-employe").style.display = part ? "none" : "";
+  const map = { part: "tab-particulier", emp: "tab-employe", cuisine: "tab-cuisine" };
+  Object.entries(map).forEach(([k, id]) => { const el = document.getElementById(id); if (el) el.style.display = (k === which) ? "" : "none"; });
+  document.getElementById("tabbtn-part").classList.toggle("active", which === "part");
+  document.getElementById("tabbtn-emp").classList.toggle("active", which === "emp");
+  document.getElementById("tabbtn-cuisine").classList.toggle("active", which === "cuisine");
   const nav = document.querySelector(".admin-nav");
-  if (nav) nav.style.display = part ? "" : "none";
-  document.getElementById("tabbtn-part").classList.toggle("active", part);
-  document.getElementById("tabbtn-emp").classList.toggle("active", !part);
+  if (nav) nav.style.display = (which === "part") ? "" : "none";
+  if (which === "cuisine") {
+    if (!document.getElementById("kDayPicker").value) document.getElementById("kDayPicker").value = kTodayStr(0);
+    kLoadDay();
+  }
+}
+
+/* ── CUISINE / OPS (production du jour) — porté depuis cuisine.html ── */
+let kCurrentData = null;
+function kTodayStr(offset){ const d = new Date(); d.setDate(d.getDate() + (offset || 0)); return d.toISOString().slice(0, 10); }
+function kSetDay(offset){ document.getElementById("kDayPicker").value = kTodayStr(offset); kLoadDay(); }
+async function kLoadDay(){
+  const date = document.getElementById("kDayPicker").value || kTodayStr(0);
+  document.getElementById("kGroups").innerHTML = `<p class="empty">${T("loading")}</p>`;
+  document.getElementById("kRouteBox").innerHTML = "";
+  const { data:{ session } } = await _supa.auth.getSession();
+  if (!session) { document.getElementById("kGroups").innerHTML = `<p class="empty">${T("err_prefix")||"Erreur : "}session</p>`; return; }
+  try {
+    const res = await fetch("/api/kitchen-batch?date=" + date, { headers:{ Authorization: "Bearer " + session.access_token } });
+    const payload = await res.json();
+    if (!res.ok) throw new Error(payload.error || "Erreur");
+    kCurrentData = payload;
+    kRender(payload);
+  } catch(e){
+    document.getElementById("kGroups").innerHTML = `<p class="empty">Erreur : ${e.message}</p>`;
+  }
+}
+function kRender(data){
+  document.getElementById("kTotLine").textContent = `${data.totalOrders} ${T("k_meals")} · ${data.groups.length} ${T("k_points")}`;
+  document.getElementById("kRouteBox").innerHTML = (data.route && data.route.length)
+    ? `<div class="route"><b>${T("k_route")}</b><div class="steps">${T("k_kitchen")} → ${data.route.join(" → ")}</div></div>` : "";
+  const box = document.getElementById("kGroups");
+  if (!data.groups.length){ box.innerHTML = `<p class="empty">${T("k_none")}</p>`; return; }
+  box.innerHTML = data.groups.map(g => `
+    <div class="group">
+      <div class="group-head">
+        <h3>${g.office} · ${g.company}</h3>
+        <span class="slot">${g.slot} · ${g.total} ${T("k_meals")}</span>
+      </div>
+      <div class="lots">
+        <div class="lots-t">${T("k_lots")}</div>
+        ${Object.entries(g.mealCounts).map(([n,c]) => `<span class="lot"><b>${c}</b> ${n}</span>`).join("")}
+      </div>
+      ${g.orders.map(o => `
+        <div class="ord">
+          <span class="emp">${o.employee}</span>
+          <span class="meal">${o.meal}</span>
+          ${(o.allergens||[]).length ? `<span class="alg">⚠ ${o.allergens.join(", ")}</span>` : ""}
+          <span class="pk">${o.pickup_code||""}</span>
+        </div>`).join("")}
+    </div>`).join("");
+}
+function kPrintLabels(){
+  if (!kCurrentData || !kCurrentData.groups.length){ alert(T("k_print_none")); return; }
+  const labels = [];
+  kCurrentData.groups.forEach(g => g.orders.forEach(o => labels.push({ ...o, office:g.office, slot:g.slot })));
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Étiquettes cuisine — ${kCurrentData.date}</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:0;padding:10px;}
+    .grid{display:flex;flex-wrap:wrap;gap:8px;}
+    .lab{border:1.5px solid #333;border-radius:8px;padding:10px 12px;width:calc(50% - 8px);box-sizing:border-box;}
+    .lab .emp{font-size:16px;font-weight:800;} .lab .co{font-size:12px;color:#666;margin-bottom:4px;}
+    .lab .meal{font-size:14px;margin:4px 0;} .lab .alg{color:#C0392B;font-weight:700;font-size:12px;}
+    .lab .foot{display:flex;justify-content:space-between;margin-top:6px;font-size:12px;}
+    .lab .pk{font-weight:800;color:#2E7D52;}
+    @media print{ .noprint{display:none;} .lab{page-break-inside:avoid;} }
+  </style></head><body>
+    <button class="noprint" onclick="window.print()" style="margin:6px 0 14px;padding:9px 18px;background:#F2A24C;color:#fff;border:none;border-radius:999px;font-weight:700;cursor:pointer">Imprimer</button>
+    <div class="grid">
+    ${labels.map(l => `<div class="lab">
+      <div class="emp">${l.employee}</div>
+      <div class="co">${l.company} · ${l.office} · ${l.slot}</div>
+      <div class="meal">${l.meal}</div>
+      ${(l.allergens||[]).length ? `<div class="alg">⚠ Allergènes : ${l.allergens.join(", ")}</div>` : ""}
+      <div class="foot"><span>${l.order_ref||""}</span><span class="pk">${l.pickup_code||""}</span></div>
+    </div>`).join("")}
+    </div>
+  </body></html>`);
+  w.document.close();
 }
 
 /* Auto-login (session persistante) */
