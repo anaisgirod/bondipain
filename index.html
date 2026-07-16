@@ -2594,6 +2594,13 @@
     // Pré-remplissage depuis le profil sauvegardé (le client ne saisit qu'une seule fois)
     const _p = getProfile();
     const set = (id, v) => { const el = $(id); if (el && !el.value && v) el.value = v; };
+    // Priorité 1 : compte client connecté (infos éditées dans « Mon compte »)
+    if (b2cUser) {
+      set("#i_name", b2cUser.full_name || b2cUser.name); set("#i_company", b2cUser.company);
+      set("#i_email", b2cUser.email); set("#i_phone", b2cUser.phone);
+      set("#i_building", b2cUser.building); set("#i_locality", b2cUser.locality);
+    }
+    // Priorité 2 : profil local (après une commande précédente sur cet appareil)
     if (_p) {
       set("#i_name", _p.name); set("#i_company", _p.company);
       set("#i_email", _p.email); set("#i_phone", _p.phone);
@@ -3201,10 +3208,14 @@
     if (localStorage.getItem("bp_b2e_active") === "1") return; // employé : géré par initB2ESession
     const { data: { session } } = await _supa.auth.getSession();
     if (!session) return;
-    let name = null;
-    const { data } = await _supa.from("customers").select("full_name").eq("id", session.user.id).maybeSingle();
-    name = data?.full_name || null;
-    if (name) { b2cUser = { name }; updateAccountLinks(); }
+    const { data } = await _supa.from("customers")
+      .select("full_name, company, phone, building, town, locality, email")
+      .eq("id", session.user.id).maybeSingle();
+    if (data) {
+      b2cUser = { name: data.full_name || session.user.email, email: data.email || session.user.email, ...data };
+      updateAccountLinks();
+      if ($("#checkoutModal").classList.contains("open")) renderCheckout();
+    }
   }
 
   /* ============================================================

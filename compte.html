@@ -164,7 +164,17 @@
 
   <div class="section">
     <h4 data-i18n="my_info">Mes informations</h4>
-    <div class="row"><span class="label" data-i18n="phone">Téléphone</span><span class="val" id="acctPhone">—</span></div>
+    <p style="font-size:13px;color:var(--muted);margin:-4px 0 14px;" data-i18n="info_hint">Ces informations pré-rempliront votre commande automatiquement.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="field"><label data-i18n="full_name">Nom complet</label><input id="acctFName" type="text" autocomplete="name" /></div>
+      <div class="field"><label data-i18n="acct_company">Entreprise (optionnel)</label><input id="acctCompany" type="text" autocomplete="organization" /></div>
+      <div class="field"><label data-i18n="phone">Téléphone</label><input id="acctPhoneInput" type="tel" autocomplete="tel" /></div>
+      <div class="field"><label data-i18n="acct_building">Nom du bâtiment / immeuble</label><input id="acctBuilding" type="text" /></div>
+      <div class="field"><label data-i18n="acct_town">Ville</label><input id="acctTown" type="text" value="Ebène" readonly style="background:#f3efe9;cursor:not-allowed;" /></div>
+      <div class="field"><label data-i18n="acct_locality">Localité (optionnel)</label><input id="acctLocality" type="text" /></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveAccountInfo()" data-i18n="info_save" style="margin-top:6px;">Enregistrer mes informations</button>
+    <div id="acctInfoMsg" style="font-size:13.5px;margin-top:10px;"></div>
   </div>
 
   <div class="section">
@@ -193,6 +203,9 @@ const L = {
     err_bad:"Email ou mot de passe incorrect.", no_orders:"Aucune commande pour le moment.",
     reset_prompt:"Entrez votre email pour réinitialiser votre mot de passe :",
     reset_sent:"Si un compte existe pour {e}, un email de réinitialisation vient d'être envoyé.",
+    acct_company:"Entreprise (optionnel)", acct_building:"Nom du bâtiment / immeuble", acct_town:"Ville", acct_locality:"Localité (optionnel)",
+    info_save:"Enregistrer mes informations", info_saved:"Informations enregistrées ✓", info_saving:"Enregistrement…",
+    info_hint:"Ces informations pré-rempliront votre commande automatiquement.",
   },
   en: {
     home:"← Home", seg_b2c:"Individual", seg_emp:"Employee area",
@@ -205,6 +218,9 @@ const L = {
     err_bad:"Incorrect email or password.", no_orders:"No orders yet.",
     reset_prompt:"Enter your email to reset your password:",
     reset_sent:"If an account exists for {e}, a reset email has just been sent.",
+    acct_company:"Company (optional)", acct_building:"Building name", acct_town:"Town", acct_locality:"Locality (optional)",
+    info_save:"Save my information", info_saved:"Information saved ✓", info_saving:"Saving…",
+    info_hint:"This information will auto-fill your order.",
   },
 };
 let lang = localStorage.getItem("bp_lang") || "fr";
@@ -251,7 +267,12 @@ async function doB2CSignup(evt) {
   const err   = document.getElementById("b2cErr");
   btn.disabled = true; btn.textContent = T("creating");
 
-  const { data, error } = await _supa.auth.signUp({ email, password: pwd });
+  // On stocke nom + téléphone dans les métadonnées du compte : ils survivent à la confirmation
+  // d'email (où l'insert direct dans customers serait bloqué par RLS faute de session).
+  const { data, error } = await _supa.auth.signUp({
+    email, password: pwd,
+    options: { data: { full_name: name, phone } },
+  });
   if (error) {
     err.textContent = error.message.includes("already") ? T("err_exists") : error.message;
     err.classList.add("show");
@@ -259,8 +280,9 @@ async function doB2CSignup(evt) {
     return false;
   }
 
+  // Si une session existe déjà (confirmation email désactivée), on écrit la fiche tout de suite.
   const userId = data.user?.id;
-  if (userId) {
+  if (userId && data.session) {
     await _supa.from("customers").upsert({ id: userId, full_name: name, phone, email });
   }
 
@@ -312,18 +334,57 @@ async function enterAccount() {
   if (!user) return;
 
   const { data: rows } = await _supa.from("customers").select("*").eq("id", user.id).limit(1);
-  const customer = rows?.[0] || { full_name: user.email, email: user.email, phone: "—" };
+  let customer = rows?.[0] || null;
+
+  // Rattrapage : à la 1re connexion après confirmation email, la fiche peut être absente ou
+  // sans nom/téléphone (insert bloqué par RLS pendant l'inscription). On la (re)crée depuis
+  // les métadonnées du compte.
+  const meta = user.user_metadata || {};
+  if (!customer) {
+    customer = { id: user.id, email: user.email, full_name: meta.full_name || null, phone: meta.phone || null };
+    await _supa.from("customers").upsert(customer);
+  } else if (!customer.full_name && meta.full_name) {
+    const patch = { full_name: meta.full_name, phone: customer.phone || meta.phone || null };
+    await _supa.from("customers").update(patch).eq("id", user.id);
+    Object.assign(customer, patch);
+  }
 
   const initials = (customer.full_name || user.email || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
   document.getElementById("acctInitials").textContent = initials;
   document.getElementById("acctName").textContent = customer.full_name || user.email;
   document.getElementById("acctEmail").textContent = user.email;
-  document.getElementById("acctPhone").textContent = customer.phone || "—";
+
+  // Champs éditables du profil
+  document.getElementById("acctFName").value    = customer.full_name || "";
+  document.getElementById("acctCompany").value  = customer.company || "";
+  document.getElementById("acctPhoneInput").value = customer.phone || "";
+  document.getElementById("acctBuilding").value = customer.building || "";
+  document.getElementById("acctTown").value     = customer.town || "Ebène";
+  document.getElementById("acctLocality").value = customer.locality || "";
 
   document.getElementById("portalScreen").classList.add("hidden");
   document.getElementById("acctScreen").classList.remove("hidden");
 
   await loadOrders(user.id);
+}
+
+async function saveAccountInfo() {
+  const msg = document.getElementById("acctInfoMsg");
+  const { data: { user } } = await _supa.auth.getUser();
+  if (!user) return;
+  const v = (id) => document.getElementById(id).value.trim();
+  const payload = {
+    id: user.id, email: user.email,
+    full_name: v("acctFName"), company: v("acctCompany"), phone: v("acctPhoneInput"),
+    building: v("acctBuilding"), town: v("acctTown") || "Ebène", locality: v("acctLocality"),
+  };
+  msg.style.color = "var(--muted)"; msg.textContent = T("info_saving");
+  const { error } = await _supa.from("customers").upsert(payload);
+  if (error) { msg.style.color = "#C0392B"; msg.textContent = "Erreur : " + error.message; return; }
+  // MAJ de l'en-tête
+  document.getElementById("acctName").textContent = payload.full_name || user.email;
+  document.getElementById("acctInitials").textContent = (payload.full_name || user.email || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+  msg.style.color = "#2E7D52"; msg.textContent = T("info_saved");
 }
 
 async function loadOrders(userId) {
