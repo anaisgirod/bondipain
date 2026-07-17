@@ -306,7 +306,9 @@
 const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
 const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
 const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-const ADMIN_EMAIL = "hello@bondipain.com";
+// Compte admin : info@bondipain.com. hello@ accepté le temps de la bascule du compte Supabase.
+const ADMIN_EMAILS = ["info@bondipain.com", "hello@bondipain.com"];
+const isAdminEmail = (e) => ADMIN_EMAILS.includes((e || "").toLowerCase());
 
 /* ── i18n FR/EN ── */
 const L = {
@@ -663,7 +665,7 @@ async function doLogin() {
     btn.disabled = false; btn.textContent = "Se connecter";
     return;
   }
-  if (data.session.user.email !== ADMIN_EMAIL) {
+  if (!isAdminEmail(data.session.user.email)) {
     err.textContent = "Ce compte n'a pas accès au panneau admin.";
     err.classList.add("show");
     await _supa.auth.signOut();
@@ -729,7 +731,7 @@ const MENU_MIGRATION_SQL = `create table if not exists menu_categories (
 alter table menu_categories enable row level security;
 create policy "Lecture publique des catégories" on menu_categories for select using (true);
 create policy "Admin gère les catégories" on menu_categories for all
-  using (auth.email() = 'hello@bondipain.com') with check (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com') with check (auth.email() = 'info@bondipain.com');
 alter table products add column if not exists name_fr text;
 alter table products add column if not exists name_en text;
 alter table products add column if not exists image_url text;
@@ -1156,7 +1158,7 @@ function kPrintLabels(){
 
 /* Auto-login (session persistante) */
 _supa.auth.getSession().then(({ data: { session } }) => {
-  if (session && session.user.email === ADMIN_EMAIL) initAdmin();
+  if (session && isAdminEmail(session.user.email)) initAdmin();
 });
 </script>
 <script src="./pwd-eye.js"></script>

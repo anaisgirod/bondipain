@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     await sendEmail({ to, subject, html: wrap(en ? 'Order confirmed 🎉' : 'Commande confirmée 🎉', inner) });
 
     // Notification à Bondipain (livreur) — tous les détails, best-effort (n'affecte pas la réponse au client)
-    const notify = process.env.ORDERS_NOTIFY_EMAIL || 'hello@bondipain.com';
+    const notify = process.env.ORDERS_NOTIFY_EMAIL || 'info@bondipain.com';
     try {
       const adminInner = `
         <div style="background:#FDF1E5;border-radius:12px;padding:14px 16px;margin-bottom:18px;">

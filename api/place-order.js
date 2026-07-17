@@ -28,7 +28,7 @@ async function sendB2EConfirmation(order, employee, companyName) {
 
 // Notification à Bondipain (livreur) pour une commande entreprise — best-effort
 async function sendB2EDriverNotification(supabaseAdmin, order, employee, companyName, contact = {}) {
-  const notify = process.env.ORDERS_NOTIFY_EMAIL || 'hello@bondipain.com';
+  const notify = process.env.ORDERS_NOTIFY_EMAIL || 'info@bondipain.com';
   let office = null;
   if (order.office_id) {
     const { data } = await supabaseAdmin.from('company_offices').select('name, address, delivery_slot').eq('id', order.office_id).maybeSingle();

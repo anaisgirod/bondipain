@@ -21,7 +21,7 @@ Prod : **https://bondipain.vercel.app** · Projet Vercel : `gramica/bondipain` �
 | `mon-espace-b2e.html` | Dashboard employé : budget, favoris, historique + suivi de commande + notation, préférences alimentaires |
 | `employeur.html` | Portail RH (B2B) : **Rapport** (stats + facture PDF), Bureaux, Employés (invit./retrait), Règles de contribution, Facturation (CSV) |
 | `entreprises.html` | Page d'atterrissage commerciale B2B (« Un avantage déjeuner simple pour vos employés ») |
-| `admin.html` | Admin Bondipain (`hello@bondipain.com`) : **Menu du jour** (édition hebdo : nom, prix, ingrédients, allergènes, dispo) + catalogue pains (prix/noms/photos) |
+| `admin.html` | Admin Bondipain (`info@bondipain.com`) : **Menu du jour** (édition hebdo : nom, prix, ingrédients, allergènes, dispo) + catalogue pains (prix/noms/photos) |
 | `cuisine.html` | Opérations cuisine (admin) : commandes groupées par bureau/créneau, lots, étiquettes imprimables, plan de tournée |
 | `compte.html` | Comptes clients B2C + entrée login entreprise |
 | `dashboard.html` | Ancien tableau de bord employeur (commandes B2B historiques) |
@@ -72,7 +72,7 @@ vercel --prod        # déploiement production
 ## Comptes de test (données de démo — à supprimer avant prod réelle)
 - **Employé** : `jason@acme.re` / `TestEmp2026!` (Acme Corp, bureau Moka, règle Rs 150/repas, plafond Rs 3000/mois)
 - **RH / employeur** : `rh@acme.re` / `TestRH2026!`
-- **Admin Bondipain** : `hello@bondipain.com` (mot de passe détenu par Bondipain)
+- **Admin Bondipain** : `info@bondipain.com` (mot de passe détenu par Bondipain)
 
 ## Assets logo
 `logo-full.png` (lockup orange, en-tête), `logo-full-white.png` (footer sombre), `logo-icon.png` (favicon). Source : dossier `Logo_Bondipain 3/`.

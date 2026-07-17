@@ -159,7 +159,7 @@ create policy "Le client crée ses propres commandes"
 
 -- ============================================================
 -- BONDIPAIN — Panneau admin (modification des prix par Bondipain)
--- Compte admin : hello@bondipain.com (créer ce compte dans
+-- Compte admin : info@bondipain.com (créer ce compte dans
 -- Supabase > Authentication > Users s'il n'existe pas déjà)
 -- ============================================================
 
@@ -182,16 +182,16 @@ create policy "Lecture publique des produits"
 -- Seul le compte admin Bondipain peut modifier les prix / disponibilité
 create policy "Admin modifie les produits"
   on products for update
-  using (auth.email() = 'hello@bondipain.com')
-  with check (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com')
+  with check (auth.email() = 'info@bondipain.com');
 
 create policy "Admin ajoute des produits"
   on products for insert
-  with check (auth.email() = 'hello@bondipain.com');
+  with check (auth.email() = 'info@bondipain.com');
 
 create policy "Admin supprime des produits"
   on products for delete
-  using (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com');
 
 -- 10. SEED — reprise des prix actuellement codés en dur dans index.html
 insert into products (id, price) values
@@ -266,21 +266,21 @@ create policy "Lecture publique photos produits"
 
 create policy "Admin upload photos produits"
   on storage.objects for insert
-  with check (bucket_id = 'products' and auth.email() = 'hello@bondipain.com');
+  with check (bucket_id = 'products' and auth.email() = 'info@bondipain.com');
 
 create policy "Admin met à jour photos produits"
   on storage.objects for update
-  using (bucket_id = 'products' and auth.email() = 'hello@bondipain.com')
-  with check (bucket_id = 'products' and auth.email() = 'hello@bondipain.com');
+  using (bucket_id = 'products' and auth.email() = 'info@bondipain.com')
+  with check (bucket_id = 'products' and auth.email() = 'info@bondipain.com');
 
 create policy "Admin supprime photos produits"
   on storage.objects for delete
-  using (bucket_id = 'products' and auth.email() = 'hello@bondipain.com');
+  using (bucket_id = 'products' and auth.email() = 'info@bondipain.com');
 
 -- ============================================================
 -- AUTHENTIFICATION ADMIN
 -- Dans Supabase > Authentication > Users : créer un compte avec
--- l'email hello@bondipain.com (mot de passe au choix de Bondipain).
+-- l'email info@bondipain.com (mot de passe au choix de Bondipain).
 -- Ce compte se connecte sur admin.html pour modifier les prix —
 -- les changements sont visibles instantanément sur index.html.
 -- ============================================================
@@ -533,8 +533,8 @@ create policy "Lecture publique menu du jour"
 
 create policy "Admin gère le menu du jour"
   on daily_menu for all
-  using (auth.email() = 'hello@bondipain.com')
-  with check (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com')
+  with check (auth.email() = 'info@bondipain.com');
 
 -- 27. SEED — le menu de la semaine EN COURS (prix par défaut Rs 220, à ajuster dans l'admin)
 insert into daily_menu (week, day, type, name_fr, name_en, price)
@@ -576,8 +576,8 @@ create policy "Lecture publique condiments"
 
 create policy "Admin gère les condiments"
   on condiments for all
-  using (auth.email() = 'hello@bondipain.com')
-  with check (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com')
+  with check (auth.email() = 'info@bondipain.com');
 
 -- 29. SEED — condiments initiaux
 insert into condiments (id, name_fr, name_en, price, sort) values
@@ -611,8 +611,8 @@ create policy "Lecture publique du contenu"
   on site_content for select using (true);
 create policy "Admin modifie le contenu"
   on site_content for all
-  using (auth.email() = 'hello@bondipain.com')
-  with check (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com')
+  with check (auth.email() = 'info@bondipain.com');
 
 alter table companies add column if not exists show_prices boolean default true;
 
@@ -630,7 +630,7 @@ create table if not exists menu_categories (
 alter table menu_categories enable row level security;
 create policy "Lecture publique des catégories" on menu_categories for select using (true);
 create policy "Admin gère les catégories" on menu_categories for all
-  using (auth.email() = 'hello@bondipain.com') with check (auth.email() = 'hello@bondipain.com');
+  using (auth.email() = 'info@bondipain.com') with check (auth.email() = 'info@bondipain.com');
 
 -- Produits enrichis (catégorie, description bilingue, tri)
 alter table products add column if not exists category_id text;

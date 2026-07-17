@@ -1,7 +1,8 @@
 const { getSupabaseAdmin } = require('./_supabaseAdmin');
 const { sendEmail, wrap } = require('./_email');
 
-const ADMIN_EMAIL = 'hello@bondipain.com';
+// Compte admin : info@bondipain.com. hello@ accepté le temps de la bascule du compte Supabase.
+const ADMIN_EMAILS = ['info@bondipain.com', 'hello@bondipain.com'];
 
 async function getAdmin(req, supabaseAdmin) {
   const authHeader = req.headers.authorization || '';
@@ -9,7 +10,7 @@ async function getAdmin(req, supabaseAdmin) {
   if (!token) return null;
   const { data, error } = await supabaseAdmin.auth.getUser(token);
   if (error || !data?.user) return null;
-  return data.user.email === ADMIN_EMAIL ? data.user : null;
+  return ADMIN_EMAILS.includes((data.user.email || '').toLowerCase()) ? data.user : null;
 }
 
 // Envoi d'une newsletter à tous les abonnés actifs — réservé à l'admin Bondipain.
