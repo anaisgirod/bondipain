@@ -1092,9 +1092,15 @@ async function kLoadDay(){
   const { data:{ session } } = await _supa.auth.getSession();
   if (!session) { document.getElementById("kGroups").innerHTML = `<p class="empty">${T("err_prefix")||"Erreur : "}session</p>`; return; }
   try {
-    const res = await fetch("/api/kitchen-batch?date=" + date, { headers:{ Authorization: "Bearer " + session.access_token } });
-    const payload = await res.json();
-    if (!res.ok) throw new Error(payload.error || "Erreur");
+    const res = await fetch("/api/kitchen-batch?date=" + date, {
+      headers: { Authorization: "Bearer " + session.access_token },
+      cache: "no-store",
+    });
+    const raw = await res.text();
+    let payload;
+    try { payload = JSON.parse(raw); }
+    catch { throw new Error(`HTTP ${res.status} — ${(raw || "").trim().slice(0, 140)}`); }
+    if (!res.ok) throw new Error(payload.error || ("HTTP " + res.status));
     kCurrentData = payload;
     kRender(payload);
   } catch(e){

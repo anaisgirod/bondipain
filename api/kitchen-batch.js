@@ -18,9 +18,8 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
-
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const admin = await getAdmin(req, supabaseAdmin);
     if (!admin) {
       res.status(403).json({ error: 'Accès réservé à Bondipain.' });
