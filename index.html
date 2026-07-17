@@ -1444,8 +1444,9 @@
       const dishesHtml = items.length ? items.map((it, idx) => {
         const disabled = closed || it.available === false;
         const label = (it.type === "veg" ? "🌿 " : "🍽️ ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
-        const priceHtml = b2eIsFree()
-          ? `<span class="dd-price" style="color:var(--green-ok)">${lang==="fr"?"Offert":"Free"}</span>`
+        // Employé avec repas offert ou entièrement pris en charge : on n'affiche aucun prix
+        const priceHtml = (b2eIsFree() || b2eHidePrices())
+          ? ""
           : `<span class="dd-price">${money(it.price)}</span>`;
         return `<button class="day-dish" ${disabled ? "disabled" : `onclick="closeAll();openDailyDish('${d.key}',${idx},${weekShift})"`}>
           <img class="dd-photo" src="${dailyRowPhoto(it)}" alt="" loading="lazy" />
