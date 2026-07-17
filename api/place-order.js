@@ -146,9 +146,11 @@ module.exports = async (req, res) => {
       return;
     }
 
-    // MODE « repas offert » : l'entreprise prend en charge 1 article/jour (le prix unitaire le plus élevé), les extras au tarif normal
+    // MODE « repas offert » : l'entreprise prend en charge 1 MENU DE LA SEMAINE/jour (plat du jour « daily-… », prix unitaire le plus élevé).
+    // Les plats du catalogue (hors menu de la semaine) restent au tarif normal, même seuls sur un jour.
     if (benefitMode === 'free_daily') {
-      const unitPrices = items.map((it) => {
+      const isDaily = (it) => { const k = it && (it.pid || it.id); return typeof k === 'string' && k.startsWith('daily-'); };
+      const unitPrices = items.filter(isDaily).map((it) => {
         const qty = Number(it.qty || 1) || 1;
         return Number(it.lineTotal || 0) / qty;
       });

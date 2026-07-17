@@ -2307,10 +2307,14 @@
   function b2ePerItemContrib() { return b2eSession.active && !b2eIsFree() && !b2eHidePrices(); }
   // Valeur de l'article offert = prix unitaire le plus élevé du panier (1 unité prise en charge)
   // 1 repas offert PAR JOUR : on prend le plat le plus cher de chaque jour, puis on additionne.
+  // Le repas offert ne s'applique QU'AU menu de la semaine (plat du jour, pid « daily-… »),
+  // pas aux plats du catalogue. Un plat du jour offert par jour de livraison.
+  function isDailyMenuLine(l) { return typeof l.pid === "string" && l.pid.startsWith("daily-"); }
+
   function b2eFreeItemValue() {
     if (!cart.length) return 0;
     const byDay = {};
-    cart.forEach(l => {
+    cart.filter(isDailyMenuLine).forEach(l => {
       const k = l.day || 0;
       const unit = (l.qty ? Number(l.lineTotal) / l.qty : Number(l.lineTotal)) || 0;
       byDay[k] = Math.max(byDay[k] || 0, unit);
@@ -2318,13 +2322,13 @@
     return Object.values(byDay).reduce((s, v) => s + v, 0);
   }
 
-  // En mode « repas offert », le plat pris en charge chaque jour est le plus cher :
+  // En mode « repas offert », le plat pris en charge chaque jour est le menu de la semaine le plus cher :
   // on renvoie l'uid de la ligne couverte par jour (pour masquer son prix côté panier/checkout).
   function b2eCoveredUids() {
     const set = new Set();
     if (!b2eIsFree() || !cart.length) return set;
     const best = {};
-    cart.forEach(l => {
+    cart.filter(isDailyMenuLine).forEach(l => {
       const k = l.day || 0;
       const unit = (l.qty ? Number(l.lineTotal) / l.qty : Number(l.lineTotal)) || 0;
       if (!best[k] || unit > best[k].unit) best[k] = { uid: l.uid, unit };
