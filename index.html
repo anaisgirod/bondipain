@@ -1388,7 +1388,7 @@
   const WEEK_OPTIONS = [0, 1, 2]; // jusqu'à 2 semaines à l'avance
   function mondayLabel(weekIndex) {
     const d = weekMenuDate(1, weekIndex); // lundi de la semaine
-    return `${lang==="fr"?"Semaine du":"Week of"} ${d.getDate()} ${t("months")[d.getMonth()]}`;
+    return `${lang==="fr"?"Semaine du":"Week of"} ${d.getDate()} ${t("months")[d.getMonth()]} ${d.getFullYear()}`;
   }
   function setWeekView(i) { weekView = parseInt(i, 10); renderWeeklyMenu(); }
   function renderWeekSelector() {
@@ -1440,7 +1440,7 @@
       const theDate = weekMenuDate(d.wd, weekShift);
       const isToday = theDate.toDateString() === todayStr;
       const closed = !isDateOrderable(theDate);
-      const dateStr = `${theDate.getDate()} ${t("months")[theDate.getMonth()]}`;
+      const dateStr = `${theDate.getDate()} ${t("months")[theDate.getMonth()]} ${theDate.getFullYear()}`;
       const dishesHtml = items.length ? items.map((it, idx) => {
         const disabled = closed || it.available === false;
         const label = (it.type === "veg" ? "🌿 " : "🍽️ ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
@@ -2117,7 +2117,7 @@
     const hid = document.getElementById(elId + "_fixed");
     return hid ? +hid.value : null;
   }
-  function dayLabelShort(ts) { const d = new Date(+ts); return `${t("days")[d.getDay()]} ${d.getDate()} ${t("months")[d.getMonth()]}`; }
+  function dayLabelShort(ts) { const d = new Date(+ts); return `${t("days")[d.getDay()]} ${d.getDate()} ${t("months")[d.getMonth()]} ${d.getFullYear()}`; }
   // Récapitulatif du panier groupé par jour de livraison → [{ts, label, lines:[]}]
   function cartByDay() {
     const groups = {};
