@@ -2143,19 +2143,26 @@
     }
     // Chaque ligne porte son jour de livraison → panier groupé par jour
     ensureLineDays();
-    const lineHtml = (item) => `
+    const covered = b2eCoveredUids();
+    const lineHtml = (item) => {
+      // Contenu du prix : « pris en charge » si entièrement couvert ; vide si repas offert du jour ; sinon le prix
+      const priceInner = b2eHidePrices()
+        ? `<span class="b2e-free-tag">${t("b2e_covered_tag")}</span>`
+        : (covered.has(item.uid) ? "" : money(item.lineTotal));
+      return `
       <div class="cart-line">
         <img src="${item.img}" alt="" />
         <div class="ci-main">
           <div class="ci-title">${item.qty}× ${item.name[lang]}</div>
           ${extrasLabel(item) ? `<div class="ci-extras">${extrasLabel(item)}</div>` : ""}
           <div class="ci-bottom">
-            <span class="ci-price">${b2eHidePrices() ? `<span class="b2e-free-tag">${t("b2e_covered_tag")}</span>` : money(item.lineTotal)}</span>
+            <span class="ci-price">${priceInner}</span>
             <button class="ci-edit" onclick="editLine('${item.uid}')">${t("cart_edit")}</button>
             <button class="ci-remove" onclick="removeLine('${item.uid}')">${t("cart_remove")}</button>
           </div>
         </div>
       </div>`;
+    };
     body.innerHTML = cartByDay().map(g => `
       <div class="cart-day-group">
         <div class="cart-day-head">📅 ${g.label}${g.ts ? "" : ` <span style="color:var(--danger);font-weight:700;">(${lang==="fr"?"délai dépassé":"deadline passed"})</span>`}</div>
@@ -2168,12 +2175,11 @@
       ${b2eHidePrices() ? `
       <div class="totals grand"><span>${t("b2e_covered_line")}</span><span class="b2e-line">✓</span></div>` :
       b2eIsFree() ? (function(){
-        const free = b2eFreeItemValue();
-        const pay = Math.max(0, cartSubtotal() - free);
+        // Repas offert : on n'affiche ni sous-total ni ligne « pris en charge » (le prix du plat offert reste masqué),
+        // seulement ce que l'employé paie pour d'éventuels plats en plus.
+        const pay = Math.max(0, cartSubtotal() - b2eFreeItemValue());
         return `
-      <div class="totals"><span>${t("cart_subtotal")}</span><span>${money(cartSubtotal())}</span></div>
-      <div class="totals b2e-line"><span>${t("b2e_free_line")}</span><span>−${money(free)}</span></div>
-      <div class="totals grand"><span>${pay > 0 ? t("b2e_banner_you_pay") : t("cart_total")}</span><span>${money(pay)}</span></div>`;
+      <div class="totals grand"><span>${t("b2e_banner_you_pay")}</span><span>${money(pay)}</span></div>`;
       })() : `
       <div class="totals"><span>${t("cart_subtotal")}</span><span>${money(cartSubtotal())}</span></div>
       <div class="totals"><span>${t("cart_delivery")}</span><span>${t("cart_delivery_free")}</span></div>
@@ -2310,6 +2316,21 @@
       byDay[k] = Math.max(byDay[k] || 0, unit);
     });
     return Object.values(byDay).reduce((s, v) => s + v, 0);
+  }
+
+  // En mode « repas offert », le plat pris en charge chaque jour est le plus cher :
+  // on renvoie l'uid de la ligne couverte par jour (pour masquer son prix côté panier/checkout).
+  function b2eCoveredUids() {
+    const set = new Set();
+    if (!b2eIsFree() || !cart.length) return set;
+    const best = {};
+    cart.forEach(l => {
+      const k = l.day || 0;
+      const unit = (l.qty ? Number(l.lineTotal) / l.qty : Number(l.lineTotal)) || 0;
+      if (!best[k] || unit > best[k].unit) best[k] = { uid: l.uid, unit };
+    });
+    Object.values(best).forEach(v => set.add(v.uid));
+    return set;
   }
 
   function b2eMonthlyCap() {
@@ -2573,6 +2594,11 @@
         <div class="confirm-recap" style="margin-top:8px;">
           ${cart.map(it => `<div class="r" style="color:var(--muted);font-size:14px;"><span>${it.qty}× ${it.name[lang]}</span></div>`).join("")}
           <div class="r b2e-line" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t("b2e_covered_line")}</span><b>✓</b></div>
+        </div>
+        ` : b2eIsFree() ? `
+        <div class="confirm-recap" style="margin-top:8px;">
+          ${(function(){ const cov = b2eCoveredUids(); return cart.map(it => `<div class="r" style="color:var(--muted);font-size:14px;"><span>${it.qty}× ${it.name[lang]}${extrasLabel(it) ? ` <span style="font-size:12px;">(${extrasLabel(it)})</span>` : ""}</span><b>${cov.has(it.uid) ? "" : money(it.lineTotal)}</b></div>`).join(""); })()}
+          <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;"><span>${t("confirm_employee_pays")}</span><b>${money(empAmt)}</b></div>
         </div>
         ` : `
         <div class="confirm-recap" style="margin-top:8px;">
