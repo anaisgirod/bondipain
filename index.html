@@ -3138,7 +3138,10 @@
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
     if (error || !data) return;
+    let uiFont = "", uiScale = "";
     for (const row of data) {
+      if (row.key === "ui_font")       { uiFont = row.fr || "";  continue; }
+      if (row.key === "ui_font_scale") { uiScale = row.fr || ""; continue; }
       // Infographie « 4 étapes » : clés stepN_title / stepN_sub → surcharge du tableau STEPS
       const stepM = row.key.match(/^step([1-4])_(title|sub)$/);
       if (stepM) {
@@ -3161,6 +3164,34 @@
       if (row.fr) I18N.fr[row.key] = row.fr;
       if (row.en) I18N.en[row.key] = row.en;
     }
+    applyUiTheme(uiFont, uiScale);
+  }
+
+  // Applique la police + la taille choisies dans l'admin, à tout le site.
+  // Par défaut (vide/100) : aucun changement, on garde le design Barlow/Rubik.
+  function applyUiTheme(font, scale) {
+    const GOOGLE = {
+      "Montserrat": "Montserrat:wght@400;500;600;700;800",
+      "Poppins":    "Poppins:wght@400;500;600;700;800",
+      "Roboto":     "Roboto:wght@400;500;700;900",
+      "Open Sans":  "Open+Sans:wght@400;600;700;800",
+      "Lato":       "Lato:wght@400;700;900",
+    };
+    let styleEl = document.getElementById("ui-font-override");
+    if (font && font.trim()) {
+      for (const name in GOOGLE) {
+        if (font.includes(name) && !document.getElementById("gf-" + name)) {
+          const l = document.createElement("link");
+          l.id = "gf-" + name; l.rel = "stylesheet";
+          l.href = "https://fonts.googleapis.com/css2?family=" + GOOGLE[name] + "&display=swap";
+          document.head.appendChild(l);
+        }
+      }
+      if (!styleEl) { styleEl = document.createElement("style"); styleEl.id = "ui-font-override"; document.head.appendChild(styleEl); }
+      styleEl.textContent = `body, body *:not(svg):not(svg *){font-family:${font} !important;}`;
+    } else if (styleEl) { styleEl.remove(); }
+    const s = Number(scale) || 100;
+    document.documentElement.style.zoom = (s && s !== 100) ? (s / 100) : "";
   }
 
   /* ── POP-UP D'ACCUEIL (éditable dans l'admin) ── */
