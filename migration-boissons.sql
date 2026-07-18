@@ -10,8 +10,12 @@ create table if not exists drinks (
   price      numeric default 0,
   available  boolean default true,
   sort       int default 0,
+  image_url  text,
   updated_at timestamptz default now()
 );
+
+-- Si la table existait déjà sans la colonne photo :
+alter table drinks add column if not exists image_url text;
 
 alter table drinks enable row level security;
 

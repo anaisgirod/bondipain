@@ -671,6 +671,10 @@ function renderDrinks() {
   if (!drinksData.length) { box.innerHTML = `<p class="empty">Aucune boisson. Ajoutez-en une ci-dessous.</p>`; return; }
   box.innerHTML = `<div class="cat-section">` + drinksData.map(c => `
     <div class="prod-row" data-did="${c.id}">
+      <label class="photo-wrap" title="Photo de la boisson">
+        <span class="photo-inner">${c.image_url ? `<img src="${c.image_url}" alt="" />` : `<span class="ph-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m4 17 5-5 4 4 3-3 4 4"/></svg></span>`}</span>
+        <input type="file" accept="image/*" onchange="onDrinkPhoto('${c.id}', this.files[0])" />
+      </label>
       <div class="prod-fields">
         <div class="name-inputs">
           <input class="name-input" data-f="name_fr" placeholder="Nom (FR)" value="${(c.name_fr||"").replace(/"/g,'&quot;')}" oninput="drinkDirty('${c.id}')" />
@@ -711,6 +715,25 @@ async function addDrink() {
   const { error } = await _supa.from("drinks").upsert({ id, name_fr: name, name_en: name, price: 0, available: true, sort });
   if (error) { alert("Erreur : " + error.message); return; }
   await loadDrinks();
+}
+async function onDrinkPhoto(id, file) {
+  if (!file) return;
+  const wrap = document.querySelector(`.prod-row[data-did="${id}"] .photo-wrap`);
+  const loading = document.createElement("div");
+  loading.className = "ph-loading"; loading.textContent = "…";
+  wrap.appendChild(loading);
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `drink-${id}-${Date.now()}.${ext}`;
+  const { error: upErr } = await _supa.storage.from("products").upload(path, file, { upsert: true });
+  if (upErr) { alert("Erreur d'upload : " + upErr.message); loading.remove(); return; }
+  const { data: pub } = _supa.storage.from("products").getPublicUrl(path);
+  const imageUrl = pub.publicUrl;
+  const { error: saveErr } = await _supa.from("drinks").update({ image_url: imageUrl, updated_at: new Date().toISOString() }).eq("id", id);
+  loading.remove();
+  if (saveErr) { alert("Erreur d'enregistrement : " + saveErr.message); return; }
+  const i = drinksData.findIndex(c => c.id === id); if (i >= 0) drinksData[i] = { ...drinksData[i], image_url: imageUrl };
+  wrap.querySelector(".photo-inner").innerHTML = `<img src="${imageUrl}" alt="" />`;
+  flashDrinkSaved();
 }
 function flashDrinkSaved() { const b = document.getElementById("drinkSaveBanner"); b.classList.add("show"); clearTimeout(flashDrinkSaved._t); flashDrinkSaved._t = setTimeout(() => b.classList.remove("show"), 1800); }
 

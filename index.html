@@ -1235,7 +1235,7 @@
     if (!_supa) return;
     const { data, error } = await _supa.from("drinks").select("*").eq("available", true).order("sort");
     if (!error && data && data.length) {
-      DRINKS = data.map(d => ({ id: d.id, name: { fr: d.name_fr, en: d.name_en || d.name_fr }, price: Number(d.price) || 0 }));
+      DRINKS = data.map(d => ({ id: d.id, name: { fr: d.name_fr, en: d.name_en || d.name_fr }, price: Number(d.price) || 0, img: d.image_url || null }));
     }
   }
 
@@ -1576,7 +1576,9 @@
             return `<div class="fslot-opt ${sel[slot.key]===it.id?'sel':''}" onclick="setFormulaSlot('${slot.key}','${it.id}')">
               ${slot.pool === "dishes"
                 ? `<img class="fslot-thumb" src="${photo}" alt="" loading="lazy" />`
-                : `<span class="fslot-thumb fslot-emoji">${optEmoji(it.id, it.name)}</span>`}
+                : (it.img
+                    ? `<img class="fslot-thumb" src="${it.img}" alt="" loading="lazy" />`
+                    : `<span class="fslot-thumb fslot-emoji">${optEmoji(it.id, it.name)}</span>`)}
               <span class="fslot-name">${it.name[lang]}</span><b>${money(it.price)}</b>
             </div>`;
           }).join("")}
