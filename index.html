@@ -1173,7 +1173,8 @@
     },
   ];
 
-  const DRINKS = [
+  // Boissons — valeurs par défaut, surchargées depuis la base (gérées dans l'admin)
+  let DRINKS = [
     { id: "coca", name: { fr: "Coca-Cola",    en: "Coca-Cola"   }, price: 40 },
     { id: "soda", name: { fr: "Soda",         en: "Soda"        }, price: 35 },
     { id: "eau",  name: { fr: "Eau",          en: "Water"       }, price: 25 },
@@ -1228,6 +1229,13 @@
     const { data, error } = await _supa.from("condiments").select("*").eq("available", true).order("sort");
     if (!error && data && data.length) {
       CONDIMENTS = data.map(c => ({ id: c.id, name: { fr: c.name_fr, en: c.name_en || c.name_fr }, price: Number(c.price) || 0 }));
+    }
+  }
+  async function loadDrinks() {
+    if (!_supa) return;
+    const { data, error } = await _supa.from("drinks").select("*").eq("available", true).order("sort");
+    if (!error && data && data.length) {
+      DRINKS = data.map(d => ({ id: d.id, name: { fr: d.name_fr, en: d.name_en || d.name_fr }, price: Number(d.price) || 0 }));
     }
   }
 
@@ -3257,6 +3265,7 @@
   })();
   loadDailyMenu();
   loadCondiments();
+  loadDrinks().then(() => { if ($("#formulaModal").classList.contains("open")) renderFormulaBody(); });
   initProfile();
   initB2ESession();
   initB2CIdentity();

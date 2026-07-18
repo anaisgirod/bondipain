@@ -184,6 +184,7 @@
     <nav class="admin-nav">
       <a href="#sec-daily" data-i18n="daily_title">🍽️ Menu du jour</a>
       <a href="#sec-conds" data-i18n="conds_title">🧂 Condiments</a>
+      <a href="#sec-drinks" data-i18n="drinks_title">🥤 Boissons</a>
       <a href="#sec-catalog" data-i18n="catalog_title">Catalogue</a>
       <a href="#sec-nl" data-i18n="nl_title">📣 Newsletter</a>
       <a href="#sec-content" data-i18n="content_title">📝 Contenu</a>
@@ -206,6 +207,12 @@
     <div id="condiments"><p class="empty" data-i18n="loading">Chargement…</p></div>
     <button class="btn btn-ghost" style="margin-bottom:8px" onclick="addCondiment()" data-i18n="add_cond">+ Ajouter un condiment</button>
     <div class="save-banner" id="condSaveBanner" style="position:static;margin-top:8px" data-i18n="saved">✓ Enregistré</div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-drinks" data-i18n="drinks_title">🥤 Boissons</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="drinks_sub">Les boissons proposées au client (Coca, Soda, Eau, Jus…). Ajoutez, modifiez le nom/prix, activez/désactivez ou supprimez.</p>
+    <div id="drinks"><p class="empty" data-i18n="loading">Chargement…</p></div>
+    <button class="btn btn-ghost" style="margin-bottom:8px" onclick="addDrink()" data-i18n="add_drink">+ Ajouter une boisson</button>
+    <div class="save-banner" id="drinkSaveBanner" style="position:static;margin-top:8px" data-i18n="saved">✓ Enregistré</div>
 
     <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-catalog" data-i18n="catalog_title">🍞 Nos plats (catalogue)</h2>
     <p style="color:var(--muted);font-size:14px;margin-bottom:20px" data-i18n="catalog_sub">Gérez vos catégories et vos plats : prix, nom et description (FR/EN), photo, disponibilité. Ajoutez ou retirez des plats et créez de nouvelles catégories (ex. Burgers).</p>
@@ -319,6 +326,7 @@ const L = {
     prices_title:"Gestion des prix", prices_sub:"Modifiez un prix ou désactivez un plat en rupture — les changements sont visibles immédiatement sur le site.",
     daily_title:"🍽️ Menu du jour", daily_sub:"Le menu qui change chaque semaine (Lun→Ven, un plat Veg + un Non-Veg par jour). Modifiez le nom, le prix, les ingrédients, les allergènes et la disponibilité.",
     conds_title:"🧂 Condiments", conds_sub:"Les condiments proposés au client (Ketchup, Mayonnaise…). Ajoutez, modifiez le nom/prix, activez/désactivez ou supprimez.", add_cond:"+ Ajouter un condiment",
+    drinks_title:"🥤 Boissons", drinks_sub:"Les boissons proposées au client (Coca, Soda, Eau, Jus…). Ajoutez, modifiez le nom/prix, activez/désactivez ou supprimez.", add_drink:"+ Ajouter une boisson",
     catalog_title:"Gestion des pains (catalogue)", catalog_sub:"Prix, noms, photos et disponibilité des pains garnis — visibles immédiatement sur le site.",
     nl_title:"📣 Newsletter", nl_sub:"Rédigez et envoyez une newsletter à tous les abonnés. Testez d'abord (envoi à vous-même) avant l'envoi réel.",
     nl_subject:"Sujet", nl_subject_ph:"Ex : Nouveau menu de la semaine !", nl_message:"Message", nl_message_ph:"Votre message… (les retours à la ligne sont conservés)",
@@ -342,6 +350,7 @@ const L = {
     prices_title:"Price management", prices_sub:"Edit a price or disable an out-of-stock dish — changes appear on the site instantly.",
     daily_title:"🍽️ Daily menu", daily_sub:"The menu that changes every week (Mon→Fri, one Veg + one Non-Veg dish per day). Edit the name, price, ingredients, allergens and availability.",
     conds_title:"🧂 Condiments", conds_sub:"The condiments offered to customers (Ketchup, Mayonnaise…). Add, edit the name/price, enable/disable or delete.", add_cond:"+ Add a condiment",
+    drinks_title:"🥤 Drinks", drinks_sub:"The drinks offered to customers (Coke, Soda, Water, Juice…). Add, edit the name/price, enable/disable or delete.", add_drink:"+ Add a drink",
     catalog_title:"Bread management (catalogue)", catalog_sub:"Price, names, photos and availability of the stuffed breads — visible instantly on the site.",
     nl_title:"📣 Newsletter", nl_sub:"Write and send a newsletter to all subscribers. Test first (send to yourself) before the real send.",
     nl_subject:"Subject", nl_subject_ph:"e.g. New menu this week!", nl_message:"Message", nl_message_ph:"Your message… (line breaks are kept)",
@@ -648,6 +657,63 @@ async function addCondiment() {
 }
 function flashCondSaved() { const b = document.getElementById("condSaveBanner"); b.classList.add("show"); clearTimeout(flashCondSaved._t); flashCondSaved._t = setTimeout(() => b.classList.remove("show"), 1800); }
 
+/* ── BOISSONS (même mécanisme que les condiments, table 'drinks') ── */
+let drinksData = [];
+async function loadDrinks() {
+  const { data, error } = await _supa.from("drinks").select("*").order("sort");
+  const box = document.getElementById("drinks");
+  if (error) { box.innerHTML = `<p class="empty">Erreur : ${error.message}</p>`; return; }
+  drinksData = data || [];
+  renderDrinks();
+}
+function renderDrinks() {
+  const box = document.getElementById("drinks");
+  if (!drinksData.length) { box.innerHTML = `<p class="empty">Aucune boisson. Ajoutez-en une ci-dessous.</p>`; return; }
+  box.innerHTML = `<div class="cat-section">` + drinksData.map(c => `
+    <div class="prod-row" data-did="${c.id}">
+      <div class="prod-fields">
+        <div class="name-inputs">
+          <input class="name-input" data-f="name_fr" placeholder="Nom (FR)" value="${(c.name_fr||"").replace(/"/g,'&quot;')}" oninput="drinkDirty('${c.id}')" />
+          <input class="name-input" data-f="name_en" placeholder="Name (EN)" value="${(c.name_en||"").replace(/"/g,'&quot;')}" oninput="drinkDirty('${c.id}')" />
+        </div>
+        <div class="row-controls">
+          <label class="toggle" title="Disponible"><input type="checkbox" data-f="available" ${c.available!==false?"checked":""} onchange="drinkDirty('${c.id}')" /><span class="track"></span><span class="thumb"></span></label>
+          <div class="price-input-wrap"><input class="price-input" data-f="price" type="number" min="0" step="5" value="${c.price!=null?c.price:0}" oninput="drinkDirty('${c.id}')" /><span>Rs</span></div>
+          <button class="save-row-btn" id="dksave-${c.id}" onclick="saveDrink('${c.id}')">Enregistrer</button>
+          <button onclick="removeDrink('${c.id}')" style="color:var(--danger);font-weight:700;font-size:12.5px;padding:6px 10px;">Supprimer</button>
+        </div>
+      </div>
+    </div>`).join("") + `</div>`;
+}
+function drinkDirty(id) { document.getElementById(`dksave-${id}`)?.classList.add("dirty"); }
+async function saveDrink(id) {
+  const row = document.querySelector(`.prod-row[data-did="${id}"]`);
+  const v = (f) => row.querySelector(`[data-f="${f}"]`);
+  const name_fr = v("name_fr").value.trim();
+  if (!name_fr) { alert("Le nom (FR) est obligatoire."); return; }
+  const payload = { id, name_fr, name_en: v("name_en").value.trim(), price: parseInt(v("price").value, 10) || 0, available: v("available").checked, updated_at: new Date().toISOString() };
+  const btn = document.getElementById(`dksave-${id}`); btn.textContent = "…";
+  const { error } = await _supa.from("drinks").upsert(payload); btn.textContent = "Enregistrer";
+  if (error) { alert("Erreur : " + error.message); return; }
+  const i = drinksData.findIndex(c => c.id === id); if (i >= 0) drinksData[i] = { ...drinksData[i], ...payload };
+  btn.classList.remove("dirty"); flashDrinkSaved();
+}
+async function removeDrink(id) {
+  if (!confirm("Supprimer cette boisson ?")) return;
+  const { error } = await _supa.from("drinks").delete().eq("id", id);
+  if (error) { alert("Erreur : " + error.message); return; }
+  drinksData = drinksData.filter(c => c.id !== id); renderDrinks(); flashDrinkSaved();
+}
+async function addDrink() {
+  const name = prompt("Nom de la boisson (FR) :"); if (!name) return;
+  const id = name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || ("drink-" + Date.now());
+  const sort = drinksData.reduce((m, c) => Math.max(m, c.sort || 0), 0) + 1;
+  const { error } = await _supa.from("drinks").upsert({ id, name_fr: name, name_en: name, price: 0, available: true, sort });
+  if (error) { alert("Erreur : " + error.message); return; }
+  await loadDrinks();
+}
+function flashDrinkSaved() { const b = document.getElementById("drinkSaveBanner"); b.classList.add("show"); clearTimeout(flashDrinkSaved._t); flashDrinkSaved._t = setTimeout(() => b.classList.remove("show"), 1800); }
+
 async function doLogin() {
   const email = document.getElementById("i_login_email").value.trim();
   const pwd   = document.getElementById("i_login_pwd").value;
@@ -688,6 +754,7 @@ async function initAdmin() {
   document.getElementById("adminScreen").classList.remove("hidden");
   await loadDaily();
   await loadConds();
+  await loadDrinks();
   await loadMenu();
   await loadContent();
   loadAppearance();
