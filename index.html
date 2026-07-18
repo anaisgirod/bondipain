@@ -830,6 +830,10 @@
       menu_eyebrow: "Notre carte",
       menu_title: "Nos plats",
       menu_sub: "Nos pains garnis, préparés maison. Commandez avant 15h la veille, livraison entre 11h et 14h.",
+      menu_from: "À partir de",
+      menu_dishes_word: "plats",
+      menu_cutoff_note: "commande avant 15h la veille",
+      menu_free_delivery: "Livraison gratuite",
       choose: "Voir la carte",
       pm_choose: "Choisissez vos plats",
       pm_choose_h: "Cochez un ou plusieurs pains, et ajustez la quantité de chacun",
@@ -968,6 +972,10 @@
       menu_eyebrow: "Our menu",
       menu_title: "Our dishes",
       menu_sub: "Our homemade stuffed breads. Order before 3pm the day before, delivery between 11am and 2pm.",
+      menu_from: "From",
+      menu_dishes_word: "dishes",
+      menu_cutoff_note: "order before 3pm the day before",
+      menu_free_delivery: "Free delivery",
       choose: "View menu",
       pm_choose: "Choose your dishes",
       pm_choose_h: "Tick one or more breads, and set the quantity of each",
@@ -1695,15 +1703,15 @@
       } else if (b2eHidePrices()) {
         priceBlock = `<span class="price"><span class="b2e-free-tag">${t("b2e_covered_tag")}</span></span>`;
       } else if (b2eIsFree()) {
-        priceBlock = `<span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>`;
+        priceBlock = `<span class="price">${t("menu_from")} ${money(c.from)}</span>`;
       } else {
-        priceBlock = `<span class="price">${lang==="fr"?"À partir de":"From"} ${money(c.from)}</span>`;
+        priceBlock = `<span class="price">${t("menu_from")} ${money(c.from)}</span>`;
       }
       const action = c.weekly ? "openWeekMenu()" : `openCategory('${c.id}')`;
       const cta = c.weekly ? (lang==="fr"?"Voir le menu du jour":"See daily menu") : t("choose");
       const avail = c.weekly
-        ? `${lang==="fr"?"Lun→Ven · commande avant 15h la veille":"Mon→Fri · order before 3pm the day before"}`
-        : `${c.items.length} ${lang==="fr"?"plats · commande avant 15h la veille":"dishes · order before 3pm the day before"}`;
+        ? `${lang==="fr"?"Lun→Ven":"Mon→Fri"} · ${t("menu_cutoff_note")}`
+        : `${c.items.length} ${t("menu_dishes_word")} · ${t("menu_cutoff_note")}`;
       return `
       <div class="card">
         <div class="ph" onclick="${action}" style="cursor:pointer">
@@ -1717,7 +1725,7 @@
             ${priceBlock}
             <button class="btn btn-primary" onclick="${action}">${cta}</button>
           </div>
-          <div class="avail"><span class="dot"></span>${avail}<span style="color:var(--green-ok);font-weight:600;margin-left:8px">${lang==="fr"?"· Livraison gratuite":"· Free delivery"}</span></div>
+          <div class="avail"><span class="dot"></span>${avail}<span style="color:var(--green-ok);font-weight:600;margin-left:8px">· ${t("menu_free_delivery")}</span></div>
         </div>
       </div>`;
     }).join("");
@@ -3140,7 +3148,7 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
