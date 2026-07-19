@@ -2449,12 +2449,7 @@
         ${b2eSession.office ? `<span>${b2eSession.office.name}${b2eSession.office.delivery_slot ? " — " + b2eSession.office.delivery_slot : ""}</span>` : ""}
         <button class="b2e-logout" onclick="b2eLogout()">${t("b2e_logout")}</button>
       </div>
-      <div class="b2e-filterbar">
-        <div class="b2e-chips">
-          ${chip("all", t("b2e_filter_all"))}
-          ${chip("veg", t("b2e_filter_veg"))}
-          ${chip("nonveg", t("b2e_filter_nonveg"))}
-        </div>
+      <div class="b2e-filterbar" style="justify-content:flex-end;">
         <span class="b2e-cutoff">⏱ ${t("b2e_cutoff")}</span>
       </div>`;
   }
