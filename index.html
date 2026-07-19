@@ -799,6 +799,7 @@
       hero_pick_1: "", hero_pick_2: "", hero_pick_3: "",
       dish_details: "Détails",
       b2e_banner_you_pay: "Vous payez",
+      b2e_banner_icon: "🎁",
       b2e_free_tag: "1 offert / jour", b2e_free_banner: "1 repas offert par jour · articles en plus au tarif normal",
       b2e_covered_tag: "Offert", b2e_covered_banner: "Vos repas sont entièrement pris en charge par votre entreprise", b2e_covered_line: "Pris en charge par votre entreprise",
       b2e_covered_nopay: "Rien à payer : vos repas sont pris en charge par votre entreprise. Vous recevrez un email de confirmation.",
@@ -943,6 +944,7 @@
       hero_pick_1: "", hero_pick_2: "", hero_pick_3: "",
       dish_details: "Details",
       b2e_banner_you_pay: "You pay",
+      b2e_banner_icon: "🎁",
       b2e_free_tag: "1 free / day", b2e_free_banner: "1 free meal per day · extra items at normal price",
       b2e_covered_tag: "Covered", b2e_covered_banner: "Your meals are fully covered by your company", b2e_covered_line: "Covered by your company",
       b2e_covered_nopay: "Nothing to pay: your meals are covered by your company. You'll receive a confirmation email.",
@@ -2445,7 +2447,7 @@
     el.innerHTML = `
       <div class="b2e-banner">
         <span>${lang === "fr" ? "Vous commandez avec l'avantage" : "You are ordering with the"} <b>${b2eSession.company?.name || ""}</b></span>
-        ${b2eHidePrices() ? `<span class="b2e-free-note">🎁 ${t("b2e_covered_banner")}</span>` : b2eIsFree() ? `<span class="b2e-free-note">🎁 ${t("b2e_free_banner")}</span>` : (cap != null ? `<span>${money(b2eSession.budgetUsed)} ${t("b2e_banner_budget")} ${money(cap)}</span>` : "")}
+        ${b2eHidePrices() ? `<span class="b2e-free-note">${t("b2e_banner_icon")} ${t("b2e_covered_banner")}</span>` : b2eIsFree() ? `<span class="b2e-free-note">${t("b2e_banner_icon")} ${t("b2e_free_banner")}</span>` : (cap != null ? `<span>${money(b2eSession.budgetUsed)} ${t("b2e_banner_budget")} ${money(cap)}</span>` : "")}
         ${b2eSession.office ? `<span>${b2eSession.office.name}${b2eSession.office.delivery_slot ? " — " + b2eSession.office.delivery_slot : ""}</span>` : ""}
         <button class="b2e-logout" onclick="b2eLogout()">${t("b2e_logout")}</button>
       </div>
@@ -3175,7 +3177,7 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3","nav_home","nav_weekly","nav_menu","nav_about","nav_entreprises","nav_contact"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","b2e_banner_icon","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3","nav_home","nav_weekly","nav_menu","nav_about","nav_entreprises","nav_contact"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
