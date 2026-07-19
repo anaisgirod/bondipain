@@ -625,7 +625,7 @@
 
 
   <!-- STEPS -->
-  <section class="block" style="padding-top:0;">
+  <section class="block" id="steps" style="padding-top:0;">
     <div class="container">
       <div class="section-head">
         <div class="eyebrow" data-i18n="steps_eyebrow"></div>
@@ -3155,10 +3155,15 @@
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
     if (error || !data) return;
-    let uiFont = "", uiScale = "";
+    // Police & taille par section : "all" = clés historiques ui_font / ui_font_scale,
+    // les autres sections = ui_font__<clé> / ui_scale__<clé>.
+    const uiMap = {};
+    const uiSet = (k, f, v) => { (uiMap[k] = uiMap[k] || {})[f] = v; };
     for (const row of data) {
-      if (row.key === "ui_font")       { uiFont = row.fr || "";  continue; }
-      if (row.key === "ui_font_scale") { uiScale = row.fr || ""; continue; }
+      if (row.key === "ui_font")       { uiSet("all", "font", row.fr || "");  continue; }
+      if (row.key === "ui_font_scale") { uiSet("all", "scale", row.fr || ""); continue; }
+      let m = row.key.match(/^ui_font__(.+)$/);  if (m) { uiSet(m[1], "font", row.fr || ""); continue; }
+      m = row.key.match(/^ui_scale__(.+)$/);      if (m) { uiSet(m[1], "scale", row.fr || ""); continue; }
       // Infographie « 4 étapes » : clés stepN_title / stepN_sub → surcharge du tableau STEPS
       const stepM = row.key.match(/^step([1-4])_(title|sub)$/);
       if (stepM) {
@@ -3181,12 +3186,24 @@
       if (row.fr) I18N.fr[row.key] = row.fr;
       if (row.en) I18N.en[row.key] = row.en;
     }
-    applyUiTheme(uiFont, uiScale);
+    applyUiTheme(uiMap);
   }
 
-  // Applique la police + la taille choisies dans l'admin, à tout le site.
+  // Sélecteurs CSS par section (clés partagées avec l'admin)
+  const UI_SECTIONS = {
+    all:     "body",
+    header:  "#header",
+    hero:    ".hero",
+    weekly:  "#menudujour",
+    dishes:  "#menu",
+    steps:   "#steps",
+    about:   "#about",
+    contact: "#contact",
+  };
+  // Applique la police + la taille PAR SECTION (réglages de l'admin).
   // Par défaut (vide/100) : aucun changement, on garde le design Barlow/Rubik.
-  function applyUiTheme(font, scale) {
+  function applyUiTheme(map) {
+    map = map || {};
     const GOOGLE = {
       "Montserrat": "Montserrat:wght@400;500;600;700;800",
       "Poppins":    "Poppins:wght@400;500;600;700;800",
@@ -3194,21 +3211,32 @@
       "Open Sans":  "Open+Sans:wght@400;600;700;800",
       "Lato":       "Lato:wght@400;700;900",
     };
-    let styleEl = document.getElementById("ui-font-override");
-    if (font && font.trim()) {
-      for (const name in GOOGLE) {
-        if (font.includes(name) && !document.getElementById("gf-" + name)) {
-          const l = document.createElement("link");
-          l.id = "gf-" + name; l.rel = "stylesheet";
-          l.href = "https://fonts.googleapis.com/css2?family=" + GOOGLE[name] + "&display=swap";
-          document.head.appendChild(l);
-        }
+    // Charger les Google Fonts nécessaires (toutes sections confondues)
+    const chosen = Object.values(map).map(v => v && v.font).filter(Boolean).join(" ");
+    for (const name in GOOGLE) {
+      if (chosen.includes(name) && !document.getElementById("gf-" + name)) {
+        const l = document.createElement("link");
+        l.id = "gf-" + name; l.rel = "stylesheet";
+        l.href = "https://fonts.googleapis.com/css2?family=" + GOOGLE[name] + "&display=swap";
+        document.head.appendChild(l);
       }
+    }
+    let css = "";
+    for (const key in UI_SECTIONS) {
+      const sel = UI_SECTIONS[key];
+      const cfg = map[key] || {};
+      if (cfg.font && cfg.font.trim()) {
+        css += `${sel}, ${sel} *:not(svg):not(svg *){font-family:${cfg.font} !important;}`;
+      }
+      const s = Number(cfg.scale) || 100;
+      if (s && s !== 100) css += `${sel}{zoom:${s / 100};}`;
+    }
+    let styleEl = document.getElementById("ui-font-override");
+    if (css) {
       if (!styleEl) { styleEl = document.createElement("style"); styleEl.id = "ui-font-override"; document.head.appendChild(styleEl); }
-      styleEl.textContent = `body, body *:not(svg):not(svg *){font-family:${font} !important;}`;
+      styleEl.textContent = css;
     } else if (styleEl) { styleEl.remove(); }
-    const s = Number(scale) || 100;
-    document.documentElement.style.zoom = (s && s !== 100) ? (s / 100) : "";
+    document.documentElement.style.zoom = ""; // plus de zoom global : géré par section via CSS
   }
 
   /* ── POP-UP D'ACCUEIL (éditable dans l'admin) ── */

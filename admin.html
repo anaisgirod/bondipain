@@ -237,38 +237,8 @@
     <div id="contentEditor"><p class="empty">Chargement…</p></div>
 
     <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-appearance" data-i18n="appearance_title">🔤 Police & taille du texte</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="appearance_sub">Changez la police et la taille du texte pour tout le site. « Par défaut » garde le style d'origine.</p>
-    <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;max-width:640px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div>
-          <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:6px" data-i18n="appearance_font">Police</label>
-          <select id="uiFont" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;background:#fff;">
-            <option value="">Par défaut (Barlow / Rubik)</option>
-            <option value="Arial, Helvetica, sans-serif">Arial</option>
-            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-            <option value="Verdana, Geneva, sans-serif">Verdana</option>
-            <option value="Georgia, 'Times New Roman', serif">Georgia</option>
-            <option value="'Times New Roman', Times, serif">Times New Roman</option>
-            <option value="'Montserrat', sans-serif">Montserrat</option>
-            <option value="'Poppins', sans-serif">Poppins</option>
-            <option value="'Roboto', sans-serif">Roboto</option>
-            <option value="'Open Sans', sans-serif">Open Sans</option>
-            <option value="'Lato', sans-serif">Lato</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:6px" data-i18n="appearance_size">Taille du texte</label>
-          <select id="uiFontScale" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;background:#fff;">
-            <option value="90">Petite (90%)</option>
-            <option value="100">Normale (100%)</option>
-            <option value="110">Grande (110%)</option>
-            <option value="120">Très grande (120%)</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn" onclick="saveAppearance()" style="margin-top:16px;background:var(--brand);color:#fff;padding:11px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;" data-i18n="content_save">💾 Enregistrer</button>
-      <div id="appearanceMsg" style="font-size:13.5px;margin-top:12px;"></div>
-    </div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="appearance_sub">Changez la police et la taille par section du site. « Par défaut » garde le style d'origine. « Tout le site » s'applique partout ; une section précise a priorité sur « Tout le site ».</p>
+    <div id="appearanceEditor" style="max-width:720px;"><p class="empty" data-i18n="loading">Chargement…</p></div>
 
     <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-popup" data-i18n="popup_title_h">💬 Pop-up d'accueil</h2>
     <p style="color:var(--muted);font-size:14px;margin-bottom:14px" data-i18n="popup_sub">Message affiché dans une fenêtre à l'arrivée sur le site (une fois par visite).</p>
@@ -333,7 +303,7 @@ const L = {
     nl_test:"Envoyer un test", nl_all:"Envoyer à tous",
     content_title:"📝 Contenu du site (page d'accueil)", content_sub:"Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.",
     content_save:"💾 Enregistrer le contenu",
-    appearance_title:"🔤 Police & taille du texte", appearance_sub:"Changez la police et la taille du texte pour tout le site. « Par défaut » garde le style d'origine.", appearance_font:"Police", appearance_size:"Taille du texte",
+    appearance_title:"🔤 Police & taille du texte", appearance_font:"Police", appearance_size:"Taille du texte",
     tab_particulier:"Particulier", tab_employe:"Employé", tab_cuisine:"Cuisine",
     b2e_content_title:"👔 Espace employé (avantage entreprise)", b2e_content_sub:"Modifiez les messages d'avantage affichés aux employés connectés, en français et en anglais.",
     k_title:"🍳 Production du jour", k_today:"Aujourd'hui", k_tomorrow:"Demain", k_print:"🏷️ Imprimer les étiquettes",
@@ -357,7 +327,7 @@ const L = {
     nl_test:"Send a test", nl_all:"Send to all",
     content_title:"📝 Site content (home page)", content_sub:"Edit the home page texts, in French and English. Changes appear on the site instantly.",
     content_save:"💾 Save content",
-    appearance_title:"🔤 Font & text size", appearance_sub:"Change the font and text size for the whole site. “Default” keeps the original style.", appearance_font:"Font", appearance_size:"Text size",
+    appearance_title:"🔤 Font & text size", appearance_font:"Font", appearance_size:"Text size",
     tab_particulier:"Consumer", tab_employe:"Employee", tab_cuisine:"Kitchen",
     b2e_content_title:"👔 Employee space (company benefit)", b2e_content_sub:"Edit the benefit messages shown to logged-in employees, in French and English.",
     k_title:"🍳 Daily production", k_today:"Today", k_tomorrow:"Tomorrow", k_print:"🏷️ Print labels",
@@ -1143,20 +1113,70 @@ async function saveContent(containerId) {
   msg.style.color = "var(--green, #2E7D52)"; msg.textContent = "Contenu enregistré ✓ — visible sur le site.";
 }
 
-/* ── APPARENCE (police + taille, appliquées à tout le site) ── */
+/* ── APPARENCE (police + taille PAR SECTION) ── */
+// clé "all" = clés historiques ui_font / ui_font_scale ; autres = ui_font__<clé> / ui_scale__<clé>
+const APPEARANCE_SECTIONS = [
+  { key:"all",     fr:"Tout le site",          en:"Whole site" },
+  { key:"header",  fr:"Bandeau & menu (haut)", en:"Top bar & nav" },
+  { key:"hero",    fr:"Hero (accueil)",        en:"Hero (home)" },
+  { key:"weekly",  fr:"Menu de la semaine",    en:"Weekly menu" },
+  { key:"dishes",  fr:"Nos plats",             en:"Our dishes" },
+  { key:"steps",   fr:"Comment ça marche",     en:"How it works" },
+  { key:"about",   fr:"À propos",              en:"About" },
+  { key:"contact", fr:"Contact",               en:"Contact" },
+];
+const APPEARANCE_FONTS = [
+  ["", "Par défaut (Barlow / Rubik)"],
+  ["Arial, Helvetica, sans-serif", "Arial"],
+  ["'Trebuchet MS', sans-serif", "Trebuchet MS"],
+  ["Verdana, Geneva, sans-serif", "Verdana"],
+  ["Georgia, 'Times New Roman', serif", "Georgia"],
+  ["'Times New Roman', Times, serif", "Times New Roman"],
+  ["'Montserrat', sans-serif", "Montserrat"],
+  ["'Poppins', sans-serif", "Poppins"],
+  ["'Roboto', sans-serif", "Roboto"],
+  ["'Open Sans', sans-serif", "Open Sans"],
+  ["'Lato', sans-serif", "Lato"],
+];
+const APPEARANCE_SIZES = [["90","Petite (90%)"],["100","Normale (100%)"],["110","Grande (110%)"],["120","Très grande (120%)"]];
+function appearanceKeys(sec) {
+  return sec === "all" ? { font:"ui_font", scale:"ui_font_scale" } : { font:"ui_font__" + sec, scale:"ui_scale__" + sec };
+}
 function loadAppearance() {
-  const f = document.getElementById("uiFont"), s = document.getElementById("uiFontScale");
-  if (f) f.value = (contentData["ui_font"] && contentData["ui_font"].fr) || "";
-  if (s) s.value = (contentData["ui_font_scale"] && contentData["ui_font_scale"].fr) || "100";
+  const box = document.getElementById("appearanceEditor");
+  if (!box) return;
+  const opt = (arr, cur) => arr.map(([v, l]) => `<option value="${v}" ${String(cur)===String(v)?"selected":""}>${l}</option>`).join("");
+  box.innerHTML = APPEARANCE_SECTIONS.map(s => {
+    const k = appearanceKeys(s.key);
+    const font = (contentData[k.font] && contentData[k.font].fr) || "";
+    const scale = (contentData[k.scale] && contentData[k.scale].fr) || "100";
+    return `<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;">
+      <div style="font-family:'Rubik';font-weight:800;font-size:15px;margin-bottom:12px;">${lang==="en"?s.en:s.fr}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div>
+          <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:6px">${T("appearance_font")}</label>
+          <select data-sec="${s.key}" data-f="font" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:#fff;">${opt(APPEARANCE_FONTS, font)}</select>
+        </div>
+        <div>
+          <label style="font-family:'Rubik';font-weight:600;font-size:13px;display:block;margin-bottom:6px">${T("appearance_size")}</label>
+          <select data-sec="${s.key}" data-f="scale" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:#fff;">${opt(APPEARANCE_SIZES, scale)}</select>
+        </div>
+      </div>
+    </div>`;
+  }).join("") +
+  `<button class="btn" onclick="saveAppearance()" style="background:var(--brand);color:#fff;padding:11px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${T("content_save")}</button>
+   <div id="appearanceMsg" style="font-size:13.5px;margin-top:12px;"></div>`;
 }
 async function saveAppearance() {
   const msg = document.getElementById("appearanceMsg");
-  const font = document.getElementById("uiFont").value;
-  const scale = document.getElementById("uiFontScale").value || "100";
-  const payload = [
-    { key:"ui_font",       fr:font,  en:font,  updated_at:new Date().toISOString() },
-    { key:"ui_font_scale", fr:scale, en:scale, updated_at:new Date().toISOString() },
-  ];
+  const payload = [];
+  APPEARANCE_SECTIONS.forEach(s => {
+    const k = appearanceKeys(s.key);
+    const font = document.querySelector(`[data-sec="${s.key}"][data-f="font"]`)?.value || "";
+    const scale = document.querySelector(`[data-sec="${s.key}"][data-f="scale"]`)?.value || "100";
+    payload.push({ key:k.font, fr:font, en:font, updated_at:new Date().toISOString() });
+    payload.push({ key:k.scale, fr:scale, en:scale, updated_at:new Date().toISOString() });
+  });
   msg.style.color = "var(--muted)"; msg.textContent = "Enregistrement…";
   const { error } = await _supa.from("site_content").upsert(payload);
   if (error) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; return; }
