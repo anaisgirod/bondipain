@@ -808,6 +808,7 @@
       hero_cta: "Commander", hero_cta2: "En savoir plus",
       hero_cta_b2e: "Commander avec mon avantage entreprise",
       hero_preview_label: "Au menu aujourd'hui",
+      hero_pick_1: "", hero_pick_2: "", hero_pick_3: "",
       dish_details: "Détails",
       b2e_banner_you_pay: "Vous payez",
       b2e_free_tag: "1 offert / jour", b2e_free_banner: "1 repas offert par jour · articles en plus au tarif normal",
@@ -951,6 +952,7 @@
       hero_cta: "Order now", hero_cta2: "Learn more",
       hero_cta_b2e: "Order with my company benefit",
       hero_preview_label: "On today's menu",
+      hero_pick_1: "", hero_pick_2: "", hero_pick_3: "",
       dish_details: "Details",
       b2e_banner_you_pay: "You pay",
       b2e_free_tag: "1 free / day", b2e_free_banner: "1 free meal per day · extra items at normal price",
@@ -1660,14 +1662,24 @@
   function renderHeroPreview() {
     const el = $("#heroPreview");
     if (!el) return;
-    // Aperçu : un plat représentatif de 3 catégories du jour, cliquable vers sa fiche
+    // Aperçu : un plat représentatif de 3 catégories du jour, cliquable vers sa fiche.
+    // L'admin peut personnaliser chaque libellé (hero_pick_1/2/3) ; laissé vide = choix automatique.
     const picks = ["menujour", "veg", "nonveg"]
       .map(id => CATEGORIES.find(c => c.id === id))
       .filter(c => c && c.items.length)
       .map(c => ({ catId: c.id, item: c.items[0] }));
+    const chips = [];
+    for (let i = 0; i < 3; i++) {
+      const custom = (I18N[lang]["hero_pick_" + (i + 1)] || "").trim();
+      if (custom) {
+        chips.push(`<button class="hp-chip" onclick="closeAll();document.getElementById('menu')?.scrollIntoView({behavior:'smooth'})">${custom}</button>`);
+      } else if (picks[i]) {
+        chips.push(`<button class="hp-chip" onclick="openDish('${picks[i].catId}','${picks[i].item.id}')">${picks[i].item.name[lang]}</button>`);
+      }
+    }
     el.innerHTML = `
       <div class="hp-label">${t("hero_preview_label")}</div>
-      <div class="hp-chips">${picks.map(p => `<button class="hp-chip" onclick="openDish('${p.catId}','${p.item.id}')">${p.item.name[lang]}</button>`).join("")}</div>`;
+      <div class="hp-chips">${chips.join("")}</div>`;
   }
 
   // Contribution employeur estimée sur un prix "à partir de" (aperçu par carte).
@@ -3150,7 +3162,7 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
