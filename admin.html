@@ -188,6 +188,7 @@
       <a href="#sec-catalog" data-i18n="catalog_title">Catalogue</a>
       <a href="#sec-nl" data-i18n="nl_title">📣 Newsletter</a>
       <a href="#sec-content" data-i18n="content_title">📝 Contenu</a>
+      <a href="#sec-nav" data-i18n="nav_title">🧭 Barre de menu</a>
       <a href="#sec-appearance" data-i18n="appearance_title">🔤 Police & taille</a>
       <a href="#sec-popup" data-i18n="popup_title_h">💬 Pop-up</a>
     </nav>
@@ -235,6 +236,10 @@
     <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-content" data-i18n="content_title">📝 Contenu du site (page d'accueil)</h2>
     <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="content_sub">Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.</p>
     <div id="contentEditor"><p class="empty">Chargement…</p></div>
+
+    <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-nav" data-i18n="nav_title">🧭 Barre de menu</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="nav_sub">Renommez les liens, changez leur ordre (↑ ↓) et masquez ceux que vous ne voulez pas afficher.</p>
+    <div id="navEditor" style="max-width:720px;"><p class="empty" data-i18n="loading">Chargement…</p></div>
 
     <h2 style="font-size:22px;font-weight:800;margin:32px 0 6px" id="sec-appearance" data-i18n="appearance_title">🔤 Police & taille du texte</h2>
     <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="appearance_sub">Changez la police et la taille par section du site. « Par défaut » garde le style d'origine. « Tout le site » s'applique partout ; une section précise a priorité sur « Tout le site ».</p>
@@ -303,6 +308,7 @@ const L = {
     nl_test:"Envoyer un test", nl_all:"Envoyer à tous",
     content_title:"📝 Contenu du site (page d'accueil)", content_sub:"Modifiez les textes de la page d'accueil, en français et en anglais. Les changements sont visibles immédiatement sur le site.",
     content_save:"💾 Enregistrer le contenu",
+    nav_title:"🧭 Barre de menu", nav_sub:"Renommez les liens, changez leur ordre (↑ ↓) et masquez ceux que vous ne voulez pas afficher.", nav_visible:"Visible",
     appearance_title:"🔤 Police & taille du texte", appearance_font:"Police", appearance_size:"Taille du texte",
     tab_particulier:"Particulier", tab_employe:"Employé", tab_cuisine:"Cuisine",
     b2e_content_title:"👔 Espace employé (avantage entreprise)", b2e_content_sub:"Modifiez les messages d'avantage affichés aux employés connectés, en français et en anglais.",
@@ -327,6 +333,7 @@ const L = {
     nl_test:"Send a test", nl_all:"Send to all",
     content_title:"📝 Site content (home page)", content_sub:"Edit the home page texts, in French and English. Changes appear on the site instantly.",
     content_save:"💾 Save content",
+    nav_title:"🧭 Menu bar", nav_sub:"Rename links, change their order (↑ ↓) and hide the ones you don't want to show.", nav_visible:"Visible",
     appearance_title:"🔤 Font & text size", appearance_font:"Font", appearance_size:"Text size",
     tab_particulier:"Consumer", tab_employe:"Employee", tab_cuisine:"Kitchen",
     b2e_content_title:"👔 Employee space (company benefit)", b2e_content_sub:"Edit the benefit messages shown to logged-in employees, in French and English.",
@@ -750,6 +757,7 @@ async function initAdmin() {
   await loadDrinks();
   await loadMenu();
   await loadContent();
+  loadNav();
   loadAppearance();
   await loadPopup();
   // Ouverture directe sur l'onglet Cuisine si on arrive depuis cuisine.html (#cuisine)
@@ -1117,6 +1125,76 @@ async function saveContent(containerId) {
   if (error) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; return; }
   payload.forEach(r => { contentData[r.key] = r; });
   msg.style.color = "var(--green, #2E7D52)"; msg.textContent = "Contenu enregistré ✓ — visible sur le site.";
+}
+
+/* ── BARRE DE MENU (libellés + ordre + visibilité) ── */
+const NAV_ADMIN_ITEMS = [
+  { key:"home",      i18n:"nav_home",        fr:"Accueil",             en:"Home" },
+  { key:"weekly",    i18n:"nav_weekly",      fr:"Menu de la semaine",  en:"Weekly menu" },
+  { key:"menu",      i18n:"nav_menu",        fr:"Menu",                en:"Menu" },
+  { key:"about",     i18n:"nav_about",       fr:"À propos",            en:"About" },
+  { key:"companies", i18n:"nav_entreprises", fr:"Entreprises",         en:"Companies" },
+  { key:"contact",   i18n:"nav_contact",     fr:"Contact",             en:"Contact" },
+];
+let navAdminOrder = [], navAdminHidden = new Set();
+function loadNav() {
+  const byKey = Object.fromEntries(NAV_ADMIN_ITEMS.map(n => [n.key, n]));
+  const saved = (contentData["nav_order"] && contentData["nav_order"].fr || "").split(",").map(s => s.trim()).filter(Boolean).filter(k => byKey[k]);
+  navAdminOrder = saved.length ? saved : NAV_ADMIN_ITEMS.map(n => n.key);
+  NAV_ADMIN_ITEMS.forEach(n => { if (!navAdminOrder.includes(n.key)) navAdminOrder.push(n.key); });
+  navAdminHidden = new Set((contentData["nav_hidden"] && contentData["nav_hidden"].fr || "").split(",").map(s => s.trim()).filter(Boolean));
+  renderNavEditor();
+}
+function renderNavEditor() {
+  const box = document.getElementById("navEditor");
+  if (!box) return;
+  const byKey = Object.fromEntries(NAV_ADMIN_ITEMS.map(n => [n.key, n]));
+  box.innerHTML = navAdminOrder.map((k, i) => {
+    const it = byKey[k]; if (!it) return "";
+    const cur = contentData[it.i18n] || {};
+    const frV = cur.fr != null ? cur.fr : it.fr;
+    const enV = cur.en != null ? cur.en : it.en;
+    return `<div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <button onclick="moveNav('${k}',-1)" ${i===0?"disabled":""} style="cursor:pointer;border:1px solid var(--line);border-radius:6px;background:#fff;width:26px;height:22px;">↑</button>
+        <button onclick="moveNav('${k}',1)" ${i===navAdminOrder.length-1?"disabled":""} style="cursor:pointer;border:1px solid var(--line);border-radius:6px;background:#fff;width:26px;height:22px;">↓</button>
+      </div>
+      <div style="flex:1;min-width:220px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:2px;">🇫🇷 FR</div><input data-nk="${it.i18n}" data-nl="fr" value="${(frV||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;" /></div>
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:2px;">🇬🇧 EN</div><input data-nk="${it.i18n}" data-nl="en" value="${(enV||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;" /></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+        <input type="checkbox" data-navvis="${k}" ${navAdminHidden.has(k)?"":"checked"} style="width:16px;height:16px;" /> ${T("nav_visible")}
+      </label>
+    </div>`;
+  }).join("") +
+  `<button class="btn" onclick="saveNav()" style="background:var(--brand);color:#fff;padding:11px 24px;border-radius:999px;font-family:'Rubik';font-weight:700;border:none;cursor:pointer;">${T("content_save")}</button>
+   <div id="navMsg" style="font-size:13.5px;margin-top:12px;"></div>`;
+}
+function moveNav(key, dir) {
+  const i = navAdminOrder.indexOf(key), j = i + dir;
+  if (i < 0 || j < 0 || j >= navAdminOrder.length) return;
+  [navAdminOrder[i], navAdminOrder[j]] = [navAdminOrder[j], navAdminOrder[i]];
+  renderNavEditor();
+}
+async function saveNav() {
+  const msg = document.getElementById("navMsg");
+  const hidden = [...document.querySelectorAll("#navEditor [data-navvis]")].filter(c => !c.checked).map(c => c.dataset.navvis);
+  const payload = [
+    { key:"nav_order",  fr:navAdminOrder.join(","), en:navAdminOrder.join(","), updated_at:new Date().toISOString() },
+    { key:"nav_hidden", fr:hidden.join(","),        en:hidden.join(","),        updated_at:new Date().toISOString() },
+  ];
+  document.querySelectorAll("#navEditor [data-nk]").forEach(el => {
+    const k = el.dataset.nk, l = el.dataset.nl;
+    let row = payload.find(p => p.key === k);
+    if (!row) { row = { key:k, fr:"", en:"", updated_at:new Date().toISOString() }; payload.push(row); }
+    row[l] = el.value;
+  });
+  msg.style.color = "var(--muted)"; msg.textContent = "Enregistrement…";
+  const { error } = await _supa.from("site_content").upsert(payload);
+  if (error) { msg.style.color = "var(--danger)"; msg.textContent = "Erreur : " + error.message; return; }
+  payload.forEach(r => { contentData[r.key] = r; });
+  msg.style.color = "var(--green, #2E7D52)"; msg.textContent = "Barre de menu enregistrée ✓ — visible sur le site.";
 }
 
 /* ── APPARENCE (police + taille PAR SECTION) ── */

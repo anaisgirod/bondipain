@@ -518,14 +518,7 @@
       <a href="#top" class="brand">
         <img class="logo-img" src="./logo-full.png" alt="Bondipain" />
       </a>
-      <nav class="nav-links">
-        <a href="#top" data-i18n="nav_home"></a>
-        <a href="#menudujour" data-i18n="nav_weekly"></a>
-        <a href="#menu" data-i18n="nav_menu"></a>
-        <a href="#about" data-i18n="nav_about"></a>
-        <a href="entreprises.html" data-i18n="nav_entreprises"></a>
-        <a href="#contact" data-i18n="nav_contact"></a>
-      </nav>
+      <nav class="nav-links" id="navLinks"></nav>
       <div class="nav-right">
         <a class="nav-item" href="compte.html" id="accountLink" aria-label="Mon compte" title="Mon compte">
           <span class="icon-btn">
@@ -559,12 +552,7 @@
       <img src="./logo-full.png" alt="Bondipain" style="height:34px;width:auto;" />
       <button class="modal-close" onclick="toggleMobileNav(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
-    <a href="#top" onclick="toggleMobileNav(false)" data-i18n="nav_home"></a>
-    <a href="#menudujour" onclick="toggleMobileNav(false)" data-i18n="nav_weekly"></a>
-    <a href="#menu" onclick="toggleMobileNav(false)" data-i18n="nav_menu"></a>
-    <a href="#about" onclick="toggleMobileNav(false)" data-i18n="nav_about"></a>
-    <a href="entreprises.html" data-i18n="nav_entreprises"></a>
-    <a href="#contact" onclick="toggleMobileNav(false)" data-i18n="nav_contact"></a>
+    <div id="mobileNavLinks"></div>
     <a href="#" id="mobileProfileBtn" onclick="toggleMobileNav(false);openProfile()" style="display:none" data-i18n="prof_title"></a>
     <a href="compte.html" id="mobileAccountLink">Mon compte</a>
   </div>
@@ -1368,6 +1356,7 @@
 
   function renderAll() {
     applyI18n();
+    renderNav();
     renderWeeklyMenu();
     renderBestSellers();
     renderMenu();
@@ -1657,6 +1646,35 @@
     saveCart();
     closeAll();
     openCart();
+  }
+
+  // ── Barre de menu (pilotée par l'admin : libellés, ordre, visibilité) ──
+  const NAV_ITEMS = [
+    { key:"home",      href:"#top",             i18n:"nav_home" },
+    { key:"weekly",    href:"#menudujour",      i18n:"nav_weekly" },
+    { key:"menu",      href:"#menu",            i18n:"nav_menu" },
+    { key:"about",     href:"#about",           i18n:"nav_about" },
+    { key:"companies", href:"entreprises.html", i18n:"nav_entreprises" },
+    { key:"contact",   href:"#contact",         i18n:"nav_contact" },
+  ];
+  let navOrder = null;      // ex: ["home","weekly",...] ; null = ordre par défaut
+  let navHidden = new Set(); // clés masquées
+  function orderedNavItems() {
+    const byKey = Object.fromEntries(NAV_ITEMS.map(n => [n.key, n]));
+    const order = (navOrder && navOrder.length) ? navOrder : NAV_ITEMS.map(n => n.key);
+    const seen = new Set();
+    const list = order.map(k => byKey[k]).filter(n => n && !seen.has(n.key) && seen.add(n.key));
+    // ajoute les items non listés (nouveaux) à la fin
+    NAV_ITEMS.forEach(n => { if (!seen.has(n.key)) list.push(n); });
+    return list.filter(n => !navHidden.has(n.key));
+  }
+  function renderNav() {
+    const items = orderedNavItems();
+    const desktop = $("#navLinks");
+    if (desktop) desktop.innerHTML = items.map(n => `<a href="${n.href}">${t(n.i18n)}</a>`).join("");
+    const mobile = $("#mobileNavLinks");
+    if (mobile) mobile.innerHTML = items.map(n =>
+      `<a href="${n.href}"${n.href.startsWith("#") ? ` onclick="toggleMobileNav(false)"` : ""}>${t(n.i18n)}</a>`).join("");
   }
 
   function renderHeroPreview() {
@@ -3162,7 +3180,7 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3","nav_home","nav_weekly","nav_menu","nav_about","nav_entreprises","nav_contact"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
@@ -3176,6 +3194,8 @@
       if (row.key === "ui_font_scale") { uiSet("all", "scale", row.fr || ""); continue; }
       let m = row.key.match(/^ui_font__(.+)$/);  if (m) { uiSet(m[1], "font", row.fr || ""); continue; }
       m = row.key.match(/^ui_scale__(.+)$/);      if (m) { uiSet(m[1], "scale", row.fr || ""); continue; }
+      if (row.key === "nav_order")  { navOrder = (row.fr || "").split(",").map(s => s.trim()).filter(Boolean); if (!navOrder.length) navOrder = null; continue; }
+      if (row.key === "nav_hidden") { navHidden = new Set((row.fr || "").split(",").map(s => s.trim()).filter(Boolean)); continue; }
       // Infographie « 4 étapes » : clés stepN_title / stepN_sub → surcharge du tableau STEPS
       const stepM = row.key.match(/^step([1-4])_(title|sub)$/);
       if (stepM) {
