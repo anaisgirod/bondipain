@@ -831,6 +831,7 @@
       menu_title: "Nos plats",
       menu_sub: "Nos pains garnis, préparés maison. Commandez avant 15h la veille, livraison entre 11h et 14h.",
       menu_from: "À partir de",
+      daily_desc: "Plat du jour, préparé maison.",
       menu_dishes_word: "plats",
       menu_cutoff_note: "commande avant 15h la veille",
       menu_free_delivery: "Livraison gratuite",
@@ -973,6 +974,7 @@
       menu_title: "Our dishes",
       menu_sub: "Our homemade stuffed breads. Order before 3pm the day before, delivery between 11am and 2pm.",
       menu_from: "From",
+      daily_desc: "Dish of the day, homemade.",
       menu_dishes_word: "dishes",
       menu_cutoff_note: "order before 3pm the day before",
       menu_free_delivery: "Free delivery",
@@ -1849,7 +1851,7 @@
   function renderDishBody() {
     const { item, cat, qty, daily } = dish;
     const photo = daily ? dailyPhoto(item) : dishPhoto(item, cat);
-    const desc = daily ? (item.ingredients || (lang === "fr" ? "Plat du jour, préparé maison." : "Dish of the day, homemade.")) : dishDesc(item, cat);
+    const desc = daily ? (item.ingredients || t("daily_desc")) : dishDesc(item, cat);
     const allergensHtml = daily && item.allergens ? `<div style="margin-top:8px;font-size:13px;color:var(--danger);font-weight:600;">⚠ ${lang==="fr"?"Allergènes":"Allergens"} : ${item.allergens}</div>` : "";
     const contrib = b2ePerItemContrib() ? b2eContributionFor(item.price) : 0;
     const youPay = item.price - contrib;
@@ -3148,7 +3150,7 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
