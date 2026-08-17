@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /cuisine.html
+Disallow: /reset-password.html
+
+Sitemap: https://www.bondipain.com/sitemap.xml

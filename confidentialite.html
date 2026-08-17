@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9QR4QJW');</script>
+<!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Politique de confidentialité | Bondipain</title>
+  <meta name="description" content="Politique de confidentialité de Bondipain Signature Ltd." />
+  <link rel="canonical" href="https://www.bondipain.com/confidentialite.html" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/png" href="./logo-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Rubik:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="./legal-content.js"></script>
+  <style>
+    :root{ --brand:#FF8C00; --brand-deep:#DA4928; --brand-soft:#F6E1C4; --cream:#F7F5F0; --cream-2:#FDF1E5; --ink:#2A2622; --muted:#837A70; --line:#EFE3D5; --radius:16px; }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{ font-family:'Barlow',system-ui,sans-serif; color:var(--ink); background:var(--cream); line-height:1.65; }
+    .wrap{ max-width:860px; margin:0 auto; padding:0 20px; }
+    header{ background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+    header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:66px; }
+    header img{ height:34px; width:auto; }
+    .toggle button{ font-family:'Rubik'; font-weight:700; font-size:13px; border:1.5px solid var(--line); background:#fff; color:var(--muted); padding:6px 12px; border-radius:999px; cursor:pointer; }
+    .toggle button.active{ background:var(--brand); color:#fff; border-color:var(--brand); }
+    .back{ display:inline-flex; align-items:center; gap:6px; font-family:'Rubik'; font-weight:700; font-size:13px; color:var(--brand-deep); text-decoration:none; }
+    .hero{ padding:38px 0 8px; }
+    .hero h1{ font-family:'Rubik'; font-weight:900; font-size:32px; }
+    nav.docnav{ display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 6px; }
+    nav.docnav a{ font-family:'Rubik'; font-weight:700; font-size:13px; color:var(--brand-deep); background:var(--cream-2); border:1px solid var(--brand-soft); padding:7px 14px; border-radius:999px; text-decoration:none; }
+    nav.docnav a:hover{ background:var(--brand-soft); }
+    nav.docnav a.active{ background:var(--brand); color:#fff; border-color:var(--brand); }
+    section.doc{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:26px 28px; margin:22px 0; scroll-margin-top:80px; }
+    section.doc h2{ font-family:'Rubik'; font-weight:800; font-size:23px; color:var(--brand-deep); margin-bottom:4px; }
+    section.doc .eff{ color:var(--muted); font-size:13.5px; margin-bottom:16px; }
+    section.doc h3{ font-family:'Rubik'; font-weight:700; font-size:16px; margin:20px 0 6px; }
+    section.doc p{ margin:8px 0; font-size:15px; }
+    section.doc ul{ margin:8px 0 8px 20px; font-size:15px; }
+    footer{ background:#1B1814; color:#8c8175; text-align:center; font-size:13px; padding:26px 0; margin-top:20px; }
+    footer a{ color:#cbbfb2; text-decoration:none; }
+    footer a:hover{ color:var(--brand); }
+  </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9QR4QJW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <header>
+    <div class="wrap">
+      <a href="index.html"><img src="./logo-full.png" alt="Bondipain" /></a>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <a class="back" href="index.html"><span id="backLbl">← Retour au site</span></a>
+        <div class="toggle" id="langToggle"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero"><h1 id="pageTitle">Politique de confidentialité</h1></div>
+    <nav class="docnav" id="docNav"></nav>
+    <div id="content"></div>
+  </div>
+
+  <footer><div class="wrap"><span id="footLine"></span> · <a href="index.html" id="footHome">Retour au site Bondipain</a></div></footer>
+
+  <script>
+  const PAGE_DOC = "confidentialite";
+  const FILES = { mentions:"mentions-legales.html", cgv:"conditions-generales.html", confidentialite:"confidentialite.html", cookies:"cookies.html" };
+  const L = {
+    fr: { back:"← Retour au site", footHome:"Retour au site Bondipain",
+      footLine:"© 2026 Bondipain Signature Ltd — Tous droits réservés.",
+      nav:{ mentions:"Mentions légales", cgv:"Conditions générales", confidentialite:"Confidentialité", cookies:"Cookies" } },
+    en: { back:"← Back to site", footHome:"Back to the Bondipain site",
+      footLine:"© 2026 Bondipain Signature Ltd — All rights reserved.",
+      nav:{ mentions:"Legal notice", cgv:"Terms & conditions", confidentialite:"Privacy", cookies:"Cookies" } }
+  };
+  const DEF = (window.LEGAL_DEFAULTS && window.LEGAL_DEFAULTS.legal) || { fr:{}, en:{} };
+  const ORDER = ["mentions","cgv","confidentialite","cookies"];
+  let lang = localStorage.getItem("bp_lang") || "fr";
+  const OVERRIDES = {}; // { key: { fr, en } } depuis l'admin (site_content)
+  const TITLE_OV = {}; // titre édité depuis l'admin (clé legal_<doc>_title)
+  function render(){
+    const t = L[lang];
+    document.documentElement.lang = lang;
+    const d0 = (DEF[lang] && DEF[lang][PAGE_DOC]) || { title:t.nav[PAGE_DOC] };
+    const titleOv = TITLE_OV[lang];
+    const pageT = (titleOv && titleOv.trim()) ? titleOv : (d0.title || t.nav[PAGE_DOC]);
+    document.getElementById("pageTitle").textContent = pageT;
+    document.getElementById("backLbl").textContent = t.back;
+    document.getElementById("footLine").textContent = t.footLine;
+    document.getElementById("footHome").textContent = t.footHome;
+    document.title = pageT + " | Bondipain";
+    document.getElementById("langToggle").innerHTML = ["fr","en"].map(l =>
+      `<button class="${l===lang?'active':''}" onclick="setLang('${l}')">${l.toUpperCase()}</button>`).join("");
+    document.getElementById("docNav").innerHTML = ORDER.map(k =>
+      `<a class="${k===PAGE_DOC?'active':''}" href="${FILES[k]}">${t.nav[k]}</a>`).join("");
+    const d = (DEF[lang] && DEF[lang][PAGE_DOC]) || { title:PAGE_DOC, eff:"", body:"" };
+    const ov = OVERRIDES[PAGE_DOC] && OVERRIDES[PAGE_DOC][lang];
+    const body = (ov && ov.trim()) ? ov : d.body;
+    const effHtml = (!(ov && ov.trim()) && d.eff) ? `<div class="eff">${d.eff}</div>` : "";
+    document.getElementById("content").innerHTML = `<section class="doc" id="${PAGE_DOC}"><h2>${pageT}</h2>${effHtml}${body}</section>`;
+  }
+  function setLang(l){ lang = l; localStorage.setItem("bp_lang", l); render(); }
+  render();
+  // Surcharges éditées depuis l'admin (site_content, clé « legal_<doc> »)
+  (async function loadOverrides(){
+    try {
+      if (!window.supabase) return;
+      const sb = window.supabase.createClient("https://cqtplubyjgkhbnlujsoe.supabase.co", "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb");
+      const { data, error } = await sb.from("site_content").select("key, fr, en").in("key", ["legal_" + PAGE_DOC, "legal_" + PAGE_DOC + "_title"]);
+      if (error || !data) return;
+      for (const row of data) {
+        if (row.key === "legal_" + PAGE_DOC + "_title") { TITLE_OV.fr = row.fr; TITLE_OV.en = row.en; }
+        else if (row.key === "legal_" + PAGE_DOC) OVERRIDES[PAGE_DOC] = { fr: row.fr, en: row.en };
+      }
+      render();
+    } catch(e) { /* garde le contenu par défaut */ }
+  })();
+  </script>
+</body>
+</html>

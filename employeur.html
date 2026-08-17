@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9QR4QJW');</script>
+<!-- End Google Tag Manager -->
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bondipain — Portail employeur</title>
@@ -13,10 +21,10 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --brand:       #F2A24C;
-      --brand-deep:  #C9711B;
-      --brand-soft:  #FBE5CC;
-      --cream:       #FFF8F1;
+      --brand:       #FF8C00;
+      --brand-deep:  #DA4928;
+      --brand-soft:  #F6E1C4;
+      --cream:       #F7F5F0;
       --ink:         #2A2622;
       --muted:       #837A70;
       --line:        #EFE3D5;
@@ -99,9 +107,23 @@
     .office-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
     .office-row:last-child { border-bottom: none; }
     @media (max-width: 640px){ .rep-stats { grid-template-columns: 1fr; } }
+    /* Verrouillage : réglages gérés par Bondipain (lecture seule côté entreprise) */
+    #officeForm, #ruleForm { display: none !important; }
+    #panel-offices .row-edit, #panel-offices .row-remove { display: none !important; }
+    /* On verrouille uniquement les boutons « Enregistrer » des réglages (gérés par Bondipain)… */
+    #panel-export button { display: none !important; }
+    /* …mais les boutons d'export/téléchargement restent visibles et utilisables. */
+    #panel-export #exportActions button { display: inline-flex !important; }
+    #panel-export select, #panel-export #show_prices { pointer-events: none; opacity: .65; background: var(--cream, #F7F5F0); }
+    .locked-note { background: #FFF4E0; border: 1px solid #FEC12C; color: #8A5A00; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin: 8px 0 4px; line-height: 1.5; }
   </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9QR4QJW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 
 <!-- ===== LOGIN ===== -->
 <div class="login-wrap" id="loginScreen">
@@ -113,7 +135,7 @@
     <div class="field"><label data-i18n="email">Email professionnel</label><input id="i_login_email" type="email" placeholder="contact@entreprise.com" autocomplete="email" /></div>
     <div class="field"><label data-i18n="password">Mot de passe</label><input id="i_login_pwd" type="password" autocomplete="current-password" /></div>
     <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()" data-i18n="signin">Se connecter</button>
-    <div style="text-align:center;margin-top:16px;"><a href="index.html" style="color:var(--brand-deep);font-weight:700;font-size:13.5px;" data-i18n="nav_home_btn">← Accueil</a></div>
+    <div style="text-align:center;margin-top:18px;"><a href="index.html" class="btn btn-ghost" style="display:inline-flex;padding:12px 28px;font-size:15px;font-weight:700;border:1.5px solid var(--line);border-radius:999px;color:var(--brand-deep);" data-i18n="nav_home_btn">← Accueil</a></div>
   </div>
 </div>
 
@@ -162,6 +184,8 @@
       <div class="section">
         <h4 data-i18n="offices_title">Bureaux / points de livraison</h4>
         <div class="row-list" id="officesList"><p class="empty" data-i18n="loading">Chargement…</p></div>
+        <div class="locked-note" data-i18n="locked_by_bondipain">🔒 L'ajout et le retrait de bureaux sont gérés par Bondipain. Contactez-nous pour toute modification.</div>
+        <div id="officeForm">
         <div class="two-col">
           <div class="field"><label data-i18n="office_name">Nom du bureau</label><input id="of_name" placeholder="Ebène HQ" /></div>
           <div class="field"><label data-i18n="delivery_slot">Créneau de livraison</label><input id="of_slot" placeholder="11h30 - 13h30" /></div>
@@ -170,6 +194,7 @@
         <button class="btn btn-primary" id="officeSaveBtn" onclick="addOffice()" data-i18n="add_office">+ Ajouter le bureau</button>
         <button class="btn btn-ghost" id="officeCancelBtn" onclick="cancelOfficeEdit()" data-i18n="cancel_edit" style="display:none;margin-left:8px;">Annuler</button>
         <div class="msg" id="officeMsg"></div>
+        </div>
       </div>
     </div>
 
@@ -179,16 +204,16 @@
         <h4 data-i18n="tab_employees">Employés</h4>
         <div class="row-list" id="employeesList"><p class="empty" data-i18n="loading">Chargement…</p></div>
         <div class="two-col">
+          <div class="field"><label data-i18n="first_name">Prénom</label><input id="emp_first" placeholder="Jason" /></div>
+          <div class="field"><label data-i18n="last_name">Nom</label><input id="emp_last" placeholder="Nirmal" /></div>
+        </div>
+        <div class="two-col">
           <div class="field"><label data-i18n="email">Email professionnel</label><input id="emp_email" type="email" placeholder="jason@acmecorp.com" /></div>
-          <div class="field"><label data-i18n="full_name">Nom complet</label><input id="emp_name" placeholder="Jason N." /></div>
-        </div>
-        <div class="two-col">
           <div class="field"><label data-i18n="emp_phone">Téléphone (optionnel)</label><input id="emp_phone" type="tel" placeholder="+230 5xxx xxxx" /></div>
-          <div class="field"><label data-i18n="office">Bureau</label><select id="emp_office"></select></div>
         </div>
         <div class="two-col">
+          <div class="field"><label data-i18n="office">Bureau</label><select id="emp_office"></select></div>
           <div class="field"><label data-i18n="department">Département (optionnel)</label><input id="emp_dept" placeholder="Marketing" /></div>
-          <div></div>
         </div>
         <button class="btn btn-primary" id="inviteBtn" onclick="inviteEmployee()" data-i18n="invite_emp">+ Inviter l'employé</button>
         <div class="msg" id="employeeMsg"></div>
@@ -213,7 +238,9 @@
         <h4 data-i18n="rules_title">Règles de contribution</h4>
         <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" data-i18n="rules_hint">En cas de règles multiples éligibles pour une commande, celle avec la priorité la plus haute s'applique.</p>
         <div class="row-list" id="rulesList"><p class="empty" data-i18n="loading">Chargement…</p></div>
+        <div class="locked-note" data-i18n="locked_rules">🔒 Les règles de contribution sont définies avec Bondipain. Contactez-nous pour les modifier.</div>
 
+        <div id="ruleForm">
         <div class="two-col">
           <div class="field"><label data-i18n="rule_name">Nom de la règle</label><input id="ru_name" data-ph="rule_name_ph" placeholder="Déjeuner standard" /></div>
           <div class="field"><label data-i18n="priority">Priorité</label><input id="ru_priority" type="number" value="0" /></div>
@@ -245,6 +272,7 @@
         </div>
         <button class="btn btn-primary" onclick="addRule()" data-i18n="create_rule">+ Créer la règle</button>
         <div class="msg" id="ruleMsg"></div>
+        </div>
       </div>
     </div>
 
@@ -269,6 +297,7 @@
           <input type="checkbox" id="show_prices" style="width:18px;height:18px;" /> <span data-i18n="show_prices_lbl">Afficher les prix aux employés</span>
         </label>
         <div class="msg" id="benefitMsg"></div>
+        <div class="locked-note" data-i18n="locked_billing">🔒 Ces réglages sont définis avec Bondipain. Contactez-nous pour toute modification.</div>
       </div>
       <div class="section">
         <h4 data-i18n="billing_mode_t">Mode de facturation</h4>
@@ -287,6 +316,7 @@
           </div>
         </div>
         <div class="msg" id="billingMsg"></div>
+        <div class="locked-note" data-i18n="locked_billing">🔒 Ces réglages sont définis avec Bondipain. Contactez-nous pour toute modification.</div>
       </div>
       <div class="section">
         <h4 data-i18n="export_orders">Export des commandes</h4>
@@ -294,17 +324,26 @@
           <div class="field"><label data-i18n="from">Du</label><input id="ex_from" type="date" /></div>
           <div class="field"><label data-i18n="to">Au</label><input id="ex_to" type="date" /></div>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn btn-primary" onclick="exportCsv()" data-i18n="download_csv">Télécharger le CSV</button>
-          <button class="btn btn-ghost" onclick="printInvoice()" data-i18n="invoice_pdf">Facture (PDF)</button>
+        <div id="exportActions" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="exportCsvEmployee()" data-i18n="download_csv_emp">Récap par employé (Excel)</button>
+          <button class="btn btn-ghost" onclick="exportCsv()" data-i18n="download_csv">Détail des commandes (Excel)</button>
+          <button class="btn btn-ghost" onclick="printInvoiceRange()" data-i18n="invoice_pdf">Facture de la période (PDF)</button>
           <button class="btn btn-ghost" onclick="emailInvoice()" data-i18n="invoice_email">Envoyer par email</button>
         </div>
-        <p style="color:var(--muted);font-size:12.5px;margin-top:8px;" data-i18n="invoice_note">La facture reprend le mois affiché dans l'onglet « Rapport ». Utilisez « Enregistrer au format PDF » dans la fenêtre d'impression.</p>
+        <p style="color:var(--muted);font-size:12.5px;margin-top:8px;" data-i18n="invoice_note">Choisissez une période (Du / Au) puis exportez. Le fichier Excel liste chaque employé, son département et les menus commandés. La facture PDF reprend la même période.</p>
         <div class="msg" id="exportMsg"></div>
       </div>
     </div>
   </div>
 </div>
+
+<p style="max-width:900px;margin:20px auto 40px;text-align:center;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;">
+  <a href="faq.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_faq">FAQ</a>
+  <a href="mentions-legales.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_legal_notice">Mentions légales</a>
+  <a href="conditions-generales.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_terms">CGV</a>
+  <a href="confidentialite.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_privacy">Confidentialité</a>
+  <a href="cookies.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_cookies">Cookies</a>
+</p>
 
 <script>
 const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
@@ -321,11 +360,12 @@ const L = {
     err_login:"Email ou mot de passe incorrect.", email:"Email professionnel", password:"Mot de passe", signin:"Se connecter",
     logout:"Déconnexion", tab_report:"Rapport", tab_offices:"Bureaux", tab_employees:"Employés", tab_rules:"Règles", tab_billing:"Facturation",
     monthly_report:"Rapport mensuel", loading:"Chargement…", by_office:"Répartition par bureau",
+    footer_faq:"FAQ", footer_legal_notice:"Mentions légales", footer_terms:"CGV", footer_privacy:"Confidentialité", footer_cookies:"Cookies",
     offices_title:"Bureaux / points de livraison", office_name:"Nom du bureau", delivery_slot:"Créneau de livraison",
     address:"Adresse", address_ph:"Adresse complète", add_office:"+ Ajouter le bureau",
     nav_home_btn:"← Accueil",
-    full_name:"Nom complet", emp_phone:"Téléphone (optionnel)", office:"Bureau", department:"Département (optionnel)", invite_emp:"+ Inviter l'employé",
-    bulk_title:"Import en masse (Excel / CSV)", bulk_hint:"Importez plusieurs employés d'un coup. Colonnes attendues : email, nom, prénom (ou nom complet), téléphone (optionnel), département (optionnel), bureau (optionnel).",
+    full_name:"Nom complet", first_name:"Prénom", last_name:"Nom", emp_phone:"Téléphone (optionnel)", office:"Bureau", department:"Département (optionnel)", invite_emp:"+ Inviter l'employé",
+    bulk_title:"Import en masse (Excel / CSV)", bulk_hint:"Importez plusieurs employés d'un coup. Colonnes : prénom, nom, email, téléphone (optionnel), département (optionnel), bureau (optionnel). Téléchargez le modèle pour l'ordre exact.",
     bulk_template:"⬇ Télécharger le modèle CSV", bulk_file:"Fichier (.xlsx ou .csv)", bulk_btn:"Importer les employés",
     bulk_nofile:"Choisissez d'abord un fichier.", bulk_liberr:"Module d'import non chargé, rechargez la page.", bulk_reading:"Lecture du fichier…",
     bulk_parseerr:"Impossible de lire ce fichier. Vérifiez le format (.xlsx ou .csv).", bulk_empty:"Aucun email valide trouvé dans le fichier.",
@@ -339,12 +379,16 @@ const L = {
     benefit_contribution:"Contribution (l'employé voit les prix et paie sa part)", benefit_free:"Repas offert (1 repas/jour offert, sans prix ; extras au tarif normal)",
     show_prices_lbl:"Afficher les prix aux employés",
     billing_mode_t:"Mode de facturation", billing_hint:"Comment votre entreprise règle la part employeur.", billing:"Facturation",
+    locked_by_bondipain:"🔒 L'ajout et le retrait de bureaux sont gérés par Bondipain. Contactez-nous pour toute modification.",
+    locked_rules:"🔒 Les règles de contribution sont définies avec Bondipain. Contactez-nous pour les modifier.",
+    locked_billing:"🔒 Ces réglages sont définis avec Bondipain. Contactez-nous pour toute modification.",
     bill_invoice:"Facture mensuelle", bill_balance:"L'entreprise paie le solde", bill_full:"L'entreprise paie la totalité", save:"Enregistrer",
-    export_orders:"Export des commandes", from:"Du", to:"Au", download_csv:"Télécharger le CSV", invoice_pdf:"Facture (PDF)",
+    export_orders:"Export des commandes", from:"Du", to:"Au", download_csv:"Détail des commandes (Excel)", download_csv_emp:"Récap par employé (Excel)", invoice_pdf:"Facture de la période (PDF)",
+    err_dates:"Choisissez une date de début (Du) et de fin (Au).", inv_generating:"Génération de la facture…",
     invoice_email:"Envoyer par email", invoice_email_confirm:"Envoyer la facture de {p} à l'email de contact de l'entreprise ?", invoice_email_ok:"Facture envoyée à {e} ✓",
-    invoice_note:"La facture reprend le mois affiché dans l'onglet « Rapport ». Utilisez « Enregistrer au format PDF » dans la fenêtre d'impression.",
+    invoice_note:"Choisissez une période (Du / Au) puis exportez. L'Excel liste chaque employé, son département et les menus commandés. La facture PDF reprend la même période (« Enregistrer au format PDF » dans la fenêtre d'impression).",
     connecting:"Connexion…", not_partner:"Ce compte n'est pas rattaché à une entreprise partenaire.",
-    rep_invited:"Employés invités", rep_active:"Utilisateurs actifs", rep_orders:"Commandes", rep_contribution:"Contribution entreprise",
+    rep_invited:"Employés invités", rep_active:"Utilisateurs actifs", rep_orders:"Commandes", rep_meals:"Plats commandés", rep_contribution:"Contribution entreprise",
     rep_rating:"Note moyenne", rep_adoption:"Taux d'adoption", other_office:"Autre / non défini", orders_count:"commande(s)",
     no_orders_month:"Aucune commande ce mois-ci.", bill_saved:"Mode de facturation enregistré.", err_prefix:"Erreur : ",
     office_added:"Bureau ajouté.", office_name_required:"Le nom du bureau est requis.", no_offices:"Aucun bureau pour le moment.",
@@ -366,11 +410,12 @@ const L = {
     err_login:"Incorrect email or password.", email:"Work email", password:"Password", signin:"Sign in",
     logout:"Log out", tab_report:"Report", tab_offices:"Offices", tab_employees:"Employees", tab_rules:"Rules", tab_billing:"Billing",
     monthly_report:"Monthly report", loading:"Loading…", by_office:"Breakdown by office",
+    footer_faq:"FAQ", footer_legal_notice:"Legal notice", footer_terms:"Terms", footer_privacy:"Privacy", footer_cookies:"Cookies",
     offices_title:"Offices / delivery points", office_name:"Office name", delivery_slot:"Delivery slot",
     address:"Address", address_ph:"Full address", add_office:"+ Add office",
     nav_home_btn:"← Home",
-    full_name:"Full name", emp_phone:"Phone (optional)", office:"Office", department:"Department (optional)", invite_emp:"+ Invite employee",
-    bulk_title:"Bulk import (Excel / CSV)", bulk_hint:"Import several employees at once. Expected columns: email, last name, first name (or full name), phone (optional), department (optional), office (optional).",
+    full_name:"Full name", first_name:"First name", last_name:"Last name", emp_phone:"Phone (optional)", office:"Office", department:"Department (optional)", invite_emp:"+ Invite employee",
+    bulk_title:"Bulk import (Excel / CSV)", bulk_hint:"Import several employees at once. Columns: first name, last name, email, phone (optional), department (optional), office (optional). Download the template for the exact order.",
     bulk_template:"⬇ Download CSV template", bulk_file:"File (.xlsx or .csv)", bulk_btn:"Import employees",
     bulk_nofile:"Please choose a file first.", bulk_liberr:"Import module not loaded, please reload the page.", bulk_reading:"Reading file…",
     bulk_parseerr:"Could not read this file. Check the format (.xlsx or .csv).", bulk_empty:"No valid email found in the file.",
@@ -384,12 +429,16 @@ const L = {
     benefit_contribution:"Contribution (employee sees prices and pays their share)", benefit_free:"Free meal (1 free meal/day, no price; extras at normal price)",
     show_prices_lbl:"Show prices to employees",
     billing_mode_t:"Billing mode", billing_hint:"How your company settles the employer share.", billing:"Billing",
+    locked_by_bondipain:"🔒 Adding and removing offices is managed by Bondipain. Contact us for any change.",
+    locked_rules:"🔒 Contribution rules are set with Bondipain. Contact us to change them.",
+    locked_billing:"🔒 These settings are defined with Bondipain. Contact us for any change.",
     bill_invoice:"Monthly invoice", bill_balance:"Company pays the balance", bill_full:"Company pays the full amount", save:"Save",
-    export_orders:"Export orders", from:"From", to:"To", download_csv:"Download CSV", invoice_pdf:"Invoice (PDF)",
+    export_orders:"Export orders", from:"From", to:"To", download_csv:"Order details (Excel)", download_csv_emp:"Per-employee recap (Excel)", invoice_pdf:"Invoice for period (PDF)",
+    err_dates:"Please choose a start (From) and end (To) date.", inv_generating:"Generating invoice…",
     invoice_email:"Send by email", invoice_email_confirm:"Send the {p} invoice to the company contact email?", invoice_email_ok:"Invoice sent to {e} ✓",
-    invoice_note:"The invoice uses the month shown in the “Report” tab. Use “Save as PDF” in the print dialog.",
+    invoice_note:"Pick a period (From / To) then export. The Excel lists each employee, their department and the menus ordered. The PDF invoice uses the same period (use “Save as PDF” in the print dialog).",
     connecting:"Signing in…", not_partner:"This account is not linked to a partner company.",
-    rep_invited:"Invited employees", rep_active:"Active users", rep_orders:"Orders", rep_contribution:"Employer contribution",
+    rep_invited:"Invited employees", rep_active:"Active users", rep_orders:"Orders", rep_meals:"Meals ordered", rep_contribution:"Employer contribution",
     rep_rating:"Average rating", rep_adoption:"Adoption rate", other_office:"Other / undefined", orders_count:"order(s)",
     no_orders_month:"No orders this month.", bill_saved:"Billing mode saved.", err_prefix:"Error: ",
     office_added:"Office added.", office_name_required:"Office name is required.", no_offices:"No offices yet.",
@@ -416,6 +465,8 @@ function applyLang() {
   document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = T(el.getAttribute("data-ph")); });
   document.querySelectorAll("#langToggle").forEach(lt => { lt.innerHTML = ["fr","en"].map(l => `<button onclick="setLang('${l}')" style="background:${l===lang?'var(--brand)':'#fff'};color:${l===lang?'#fff':'var(--muted)'};border:1.5px solid var(--line);font-family:'Rubik';font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;cursor:pointer;">${l.toUpperCase()}</button>`).join(" "); });
   if (company) { loadOffices(); loadEmployees(); loadRules(); loadReporting(); }
+  // Verrouillage : réglages gérés par Bondipain (l'entreprise ne peut pas les modifier)
+  ["billing_mode", "benefit_mode", "show_prices"].forEach(id => { const e = document.getElementById(id); if (e) e.disabled = true; });
 }
 function setLang(l) { lang = l; applyLang(); }
 document.addEventListener("DOMContentLoaded", applyLang);
@@ -501,12 +552,16 @@ let repYear  = new Date().getFullYear();
 let repData  = null;
 
 async function emailInvoice() {
-  const { from, to } = monthRange(repYear, repMonth);
-  const periodLabel = `${repMonthName()} ${repYear}`;
+  // Utilise la période Du/Au si renseignée, sinon le mois affiché dans le Rapport.
+  const exFrom = document.getElementById("ex_from").value;
+  const exTo = document.getElementById("ex_to").value;
+  let from, to, periodLabel;
+  if (exFrom && exTo) { from = exFrom; to = exTo; periodLabel = `${exFrom} → ${exTo}`; }
+  else { ({ from, to } = monthRange(repYear, repMonth)); periodLabel = `${repMonthName()} ${repYear}`; }
   if (!confirm(T("invoice_email_confirm").replace("{p}", periodLabel))) return;
   const { data: { session } } = await _supa.auth.getSession();
   try {
-    const res = await fetch("/api/send-invoice", {
+    const res = await fetch("/api/export-invoice", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
       body: JSON.stringify({ from, to, periodLabel }),
@@ -538,19 +593,22 @@ async function loadReporting() {
   const invited = (emps || []).filter(e => e.status !== "removed").length;
 
   const { data: orders } = await _supa.from("b2e_orders")
-    .select("employee_id, office_id, order_total, employer_contribution, employee_amount, rating")
+    .select("employee_id, office_id, order_items, order_total, employer_contribution, employee_amount, rating")
     .eq("company_id", company.id).gte("delivery_date", from).lte("delivery_date", to);
   const os = orders || [];
 
+  // Nombre de plats d'une commande = somme des quantités des articles (boissons/condiments imbriqués, non comptés)
+  const mealCount = (o) => (Array.isArray(o.order_items) ? o.order_items : []).reduce((s,it)=>s+(Number(it.qty)||1),0);
   const activeUsers = new Set(os.map(o => o.employee_id)).size;
   const totalContribution = os.reduce((s,o)=>s+Number(o.employer_contribution||0),0);
+  const totalMeals = os.reduce((s,o)=>s+mealCount(o),0);
   const rated = os.filter(o=>o.rating);
   const avgRating = rated.length ? (rated.reduce((s,o)=>s+o.rating,0)/rated.length) : null;
 
   const byOffice = {};
-  os.forEach(o => { const k=o.office_id||"—"; if(!byOffice[k]) byOffice[k]={count:0,contrib:0}; byOffice[k].count++; byOffice[k].contrib+=Number(o.employer_contribution||0); });
+  os.forEach(o => { const k=o.office_id||"—"; if(!byOffice[k]) byOffice[k]={count:0,meals:0,contrib:0}; byOffice[k].count++; byOffice[k].meals+=mealCount(o); byOffice[k].contrib+=Number(o.employer_contribution||0); });
 
-  repData = { from, to, invited, activeUsers, orders: os.length, totalContribution, avgRating, byOffice };
+  repData = { from, to, invited, activeUsers, orders: os.length, totalMeals, totalContribution, avgRating, byOffice };
   renderReporting();
 }
 
@@ -560,6 +618,7 @@ function renderReporting() {
     <div class="rep-stat"><div class="l">${T("rep_invited")}</div><div class="v">${r.invited}</div></div>
     <div class="rep-stat"><div class="l">${T("rep_active")}</div><div class="v">${r.activeUsers}</div></div>
     <div class="rep-stat"><div class="l">${T("rep_orders")}</div><div class="v">${r.orders}</div></div>
+    <div class="rep-stat"><div class="l">${T("rep_meals")}</div><div class="v">${r.totalMeals||0}</div></div>
     <div class="rep-stat green"><div class="l">${T("rep_contribution")}</div><div class="v">Rs ${Math.round(r.totalContribution)}</div></div>
     <div class="rep-stat"><div class="l">${T("rep_rating")}</div><div class="v">${r.avgRating!=null?r.avgRating.toFixed(1):"—"}</div></div>
     <div class="rep-stat"><div class="l">${T("rep_adoption")}</div><div class="v">${r.invited?Math.round(r.activeUsers/r.invited*100):0}%</div></div>`;
@@ -567,22 +626,55 @@ function renderReporting() {
   const officeName = (id) => offices.find(o=>o.id===id)?.name || T("other_office");
   const rows = Object.entries(r.byOffice);
   document.getElementById("repByOffice").innerHTML = rows.length
-    ? rows.map(([id,v])=>`<div class="office-row"><span>${officeName(id)}</span><span><b>${v.count}</b> ${T("orders_count")} · Rs ${Math.round(v.contrib)}</span></div>`).join("")
+    ? rows.map(([id,v])=>`<div class="office-row"><span>${officeName(id)}</span><span><b>${v.count}</b> ${T("orders_count")} · <b>${v.meals||0}</b> ${T("rep_meals").toLowerCase()} · Rs ${Math.round(v.contrib)}</span></div>`).join("")
     : `<p class="empty">${T("no_orders_month")}</p>`;
 }
 
-function printInvoice() {
-  if (!repData) return;
-  const r = repData;
+// Agrège les commandes b2e d'une période (mêmes calculs que le rapport mensuel) pour la facture.
+async function computeReport(from, to) {
+  const { data: emps } = await _supa.from("employees").select("id, status").eq("company_id", company.id);
+  const invited = (emps || []).filter(e => e.status !== "removed").length;
+  const { data: orders } = await _supa.from("b2e_orders")
+    .select("employee_id, office_id, order_items, order_total, employer_contribution, employee_amount, rating, status")
+    .eq("company_id", company.id).neq("status", "cancelled").gte("delivery_date", from).lte("delivery_date", to);
+  const os = orders || [];
+  const mealCount = (o) => (Array.isArray(o.order_items) ? o.order_items : []).reduce((s,it)=>s+(Number(it.qty)||1),0);
+  const activeUsers = new Set(os.map(o => o.employee_id)).size;
+  const totalContribution = os.reduce((s,o)=>s+Number(o.employer_contribution||0),0);
+  const totalMeals = os.reduce((s,o)=>s+mealCount(o),0);
+  const rated = os.filter(o=>o.rating);
+  const avgRating = rated.length ? (rated.reduce((s,o)=>s+o.rating,0)/rated.length) : null;
+  const byOffice = {};
+  os.forEach(o => { const k=o.office_id||"—"; if(!byOffice[k]) byOffice[k]={count:0,meals:0,contrib:0}; byOffice[k].count++; byOffice[k].meals+=mealCount(o); byOffice[k].contrib+=Number(o.employer_contribution||0); });
+  return { from, to, invited, activeUsers, orders: os.length, totalMeals, totalContribution, avgRating, byOffice };
+}
+
+// Facture de la période Du/Au choisie dans l'onglet Facturation.
+async function printInvoiceRange() {
+  const from = document.getElementById("ex_from").value;
+  const to = document.getElementById("ex_to").value;
+  if (!from || !to) { showMsg("exportMsg", T("err_dates"), false); return; }
+  showMsg("exportMsg", T("inv_generating"), true);
+  try {
+    const data = await computeReport(from, to);
+    printInvoice(data, `${from} → ${to}`);
+    showMsg("exportMsg", "", true);
+  } catch (e) { showMsg("exportMsg", T("err_prefix") + e.message, false); }
+}
+
+function printInvoice(data, periodLabel) {
+  const r = data || repData;
+  if (!r) return;
+  const period = periodLabel || `${repMonthName()} ${repYear}`;
   const modeLabel = { invoice:T("bill_invoice"), balance:T("bill_balance"), full:T("bill_full") }[company.billing_mode||"invoice"];
   const officeName = (id) => offices.find(o=>o.id===id)?.name || T("other_office");
   const officeRows = Object.entries(r.byOffice).map(([id,v])=>`<tr><td>${officeName(id)}</td><td style="text-align:center">${v.count}</td><td style="text-align:right">Rs ${Math.round(v.contrib)}</td></tr>`).join("");
   const w = window.open("", "_blank");
-  w.document.write(`<!DOCTYPE html><html lang="${lang}"><head><meta charset="utf-8"><title>${T("inv_title")} ${company.name} — ${repMonthName()} ${repYear}</title>
+  w.document.write(`<!DOCTYPE html><html lang="${lang}"><head><meta charset="utf-8"><title>${T("inv_title")} ${company.name} — ${period}</title>
   <style>
     body{font-family:Arial,Helvetica,sans-serif;color:#2A2622;max-width:720px;margin:32px auto;padding:0 24px;}
-    .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #C9711B;padding-bottom:16px;margin-bottom:24px;}
-    .top h1{font-size:26px;color:#C9711B;margin:0;} .muted{color:#777;font-size:13px;}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #DA4928;padding-bottom:16px;margin-bottom:24px;}
+    .top h1{font-size:26px;color:#DA4928;margin:0;} .muted{color:#777;font-size:13px;}
     h2{font-size:16px;margin:24px 0 8px;} table{width:100%;border-collapse:collapse;font-size:14px;}
     th,td{padding:9px 10px;border-bottom:1px solid #eee;text-align:left;} th{background:#FAF6F1;font-size:12px;text-transform:uppercase;color:#777;}
     .totals{margin-top:20px;border-top:2px solid #2A2622;padding-top:14px;text-align:right;}
@@ -592,12 +684,13 @@ function printInvoice() {
   </style></head><body>
     <div class="top">
       <div><h1>Bondipain</h1><div class="muted">${T("inv_subtitle")}</div></div>
-      <div style="text-align:right"><div><b>${company.name}</b></div><div class="muted">${repMonthName()} ${repYear}</div><div class="muted">${T("inv_mode")} : ${modeLabel}</div></div>
+      <div style="text-align:right"><div><b>${company.name}</b></div><div class="muted">${period}</div><div class="muted">${T("inv_mode")} : ${modeLabel}</div></div>
     </div>
     <div class="grid">
       <div><b>${T("rep_invited")}</b><br>${r.invited}</div>
       <div><b>${T("rep_active")}</b><br>${r.activeUsers}</div>
       <div><b>${T("rep_orders")}</b><br>${r.orders}</div>
+      <div><b>${T("rep_meals")}</b><br>${r.totalMeals||0}</div>
       <div><b>${T("rep_rating")}</b><br>${r.avgRating!=null?r.avgRating.toFixed(1):"—"}</div>
     </div>
     <h2>${T("inv_detail_office")}</h2>
@@ -605,7 +698,7 @@ function printInvoice() {
     <tbody>${officeRows || `<tr><td colspan="3" style="text-align:center;color:#999">${T("inv_no_orders")}</td></tr>`}</tbody></table>
     <div class="totals"><div class="muted">${T("inv_total")}</div><div class="big">Rs ${Math.round(r.totalContribution)}</div></div>
     <p class="muted" style="margin-top:30px">${T("inv_period")} : ${r.from} ${T("inv_to")} ${r.to} · ${T("inv_generated")}</p>
-    <button class="noprint" onclick="window.print()" style="margin-top:20px;padding:10px 20px;background:#F2A24C;color:#fff;border:none;border-radius:999px;font-weight:700;cursor:pointer">${T("inv_print")}</button>
+    <button class="noprint" onclick="window.print()" style="margin-top:20px;padding:10px 20px;background:#FF8C00;color:#fff;border:none;border-radius:999px;font-weight:700;cursor:pointer">${T("inv_print")}</button>
   </body></html>`);
   w.document.close();
 }
@@ -733,7 +826,9 @@ async function removeEmployee(id, label) {
 
 async function inviteEmployee() {
   const email = document.getElementById("emp_email").value.trim();
-  const fullName = document.getElementById("emp_name").value.trim();
+  const firstName = document.getElementById("emp_first").value.trim();
+  const lastName = document.getElementById("emp_last").value.trim();
+  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
   const phone = document.getElementById("emp_phone").value.trim();
   const officeId = document.getElementById("emp_office").value || null;
   const department = document.getElementById("emp_dept").value.trim();
@@ -752,7 +847,8 @@ async function inviteEmployee() {
     if (!res.ok) throw new Error(payload.error || T("err_generic"));
 
     document.getElementById("emp_email").value = "";
-    document.getElementById("emp_name").value = "";
+    document.getElementById("emp_first").value = "";
+    document.getElementById("emp_last").value = "";
     document.getElementById("emp_phone").value = "";
     document.getElementById("emp_dept").value = "";
     showMsg("employeeMsg", T("invite_sent").replace("{e}", email), true);
@@ -766,10 +862,16 @@ async function inviteEmployee() {
 
 /* ── IMPORT EN MASSE (Excel / CSV) ── */
 function downloadTemplate() {
-  const csv = "email,prenom,nom,telephone,departement,bureau\njason@acme.com,Jason,Nirmal,+230 5123 4567,Marketing,\nsarah@acme.com,Sarah,Payen,+230 5987 6543,Finance,\n";
+  // En-têtes dans la langue du portail + colonnes alignées sur le formulaire (prénom / nom séparés).
+  const header = lang === "en"
+    ? "first name,last name,email,phone,department,office"
+    : "prénom,nom,email,téléphone,département,bureau";
+  const csv = header +
+    "\nJason,Nirmal,jason@acme.com,+230 5123 4567,Marketing,\nSarah,Payen,sarah@acme.com,+230 5987 6543,Finance,\n";
   const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = "modele-employes-bondipain.csv";
+  a.href = URL.createObjectURL(blob);
+  a.download = lang === "en" ? "employee-template-bondipain.csv" : "modele-employes-bondipain.csv";
   document.body.appendChild(a); a.click(); a.remove();
 }
 
@@ -882,12 +984,13 @@ async function addRule() {
 }
 
 /* ── EXPORT ── */
-async function exportCsv() {
+async function exportCsv(summary) {
   const from = document.getElementById("ex_from").value;
   const to = document.getElementById("ex_to").value;
   const params = new URLSearchParams();
   if (from) params.set("from", from);
   if (to) params.set("to", to);
+  if (summary) params.set("summary", summary);
 
   try {
     const res = await fetch("/api/export-invoice?" + params.toString(), { headers: await authHeader() });
@@ -896,13 +999,14 @@ async function exportCsv() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `bondipain-${company.name}-facture.csv`;
+    a.download = `bondipain-${company.name}-${summary === "employee" ? "recap-employes" : "facture"}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   } catch (err) {
     showMsg("exportMsg", T("err_prefix") + err.message, false);
   }
 }
+function exportCsvEmployee() { return exportCsv("employee"); }
 
 /* ── AUTO-LOGIN ── */
 (async function init() {

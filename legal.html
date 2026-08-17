@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informations légales | Bondipain</title>
+  <link rel="canonical" href="https://www.bondipain.com/mentions-legales.html" />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="icon" type="image/png" href="./logo-icon.png" />
+  <script>
+    // Ancienne page unique scindée en 4 pages dédiées : on redirige vers la bonne
+    // selon l'ancre historique (#mentions, #cgv, #confidentialite, #cookies).
+    (function(){
+      var map = { mentions:"mentions-legales.html", cgv:"conditions-generales.html",
+                  confidentialite:"confidentialite.html", cookies:"cookies.html" };
+      var key = (location.hash || "").replace("#","");
+      location.replace(map[key] || "mentions-legales.html");
+    })();
+  </script>
+  <meta http-equiv="refresh" content="0; url=mentions-legales.html" />
+</head>
+<body>
+  <p style="font-family:sans-serif;padding:24px;">Cette page a été déplacée. <a href="mentions-legales.html">Voir les mentions légales</a>.</p>
+</body>
+</html>

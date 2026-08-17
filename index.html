@@ -1,9 +1,57 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9QR4QJW');</script>
+<!-- End Google Tag Manager -->
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bondipain | Pain artisanal livré à Moka</title>
+  <title id="seoTitle">Bondipain | Livraison de repas &amp; Food Delivery in Ébène, Mauritius</title>
+  <meta name="description" id="seoDescription" content="Commandez vos repas frais à Ébène avec Bondipain. Order Mauritian dishes, stuffed breads, vegetarian meals and corporate lunches with convenient local delivery." />
+  <meta name="keywords" id="seoKeywords" content="Bondipain, pain garni Maurice, repas livré Moka, déjeuner bureau Maurice, livraison repas Moka, avantage repas entreprise, lunch delivery Mauritius" />
+  <link rel="canonical" href="https://www.bondipain.com/" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Bondipain" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn…) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bondipain" />
+  <meta property="og:title" id="ogTitle" content="Bondipain | Livraison de repas &amp; Food Delivery in Ébène, Mauritius" />
+  <meta property="og:description" id="ogDescription" content="Commandez vos repas frais à Ébène avec Bondipain. Order Mauritian dishes, stuffed breads, vegetarian meals and corporate lunches with convenient local delivery." />
+  <meta property="og:image" id="ogImage" content="https://www.bondipain.com/sandwich-hero.jpg" />
+  <meta property="og:url" content="https://www.bondipain.com/" />
+  <meta property="og:locale" content="fr_MU" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Bondipain | Livraison de repas &amp; Food Delivery in Ébène, Mauritius" />
+  <meta name="twitter:description" content="Commandez vos repas frais à Ébène avec Bondipain. Order Mauritian dishes, stuffed breads, vegetarian meals and corporate lunches with convenient local delivery." />
+  <meta name="twitter:image" content="https://www.bondipain.com/sandwich-hero.jpg" />
+
+  <!-- Données structurées (Google — fiche entreprise locale / restaurant) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Bondipain",
+    "description": "Pains garnis et repas faits maison, livrés frais dans la région de Moka (Maurice).",
+    "servesCuisine": ["Mauricien", "Sandwichs", "Fait maison"],
+    "url": "https://www.bondipain.com/",
+    "telephone": "+230 5492 2393",
+    "email": "info@bondipain.com",
+    "priceRange": "Rs 130 - Rs 300",
+    "image": "https://www.bondipain.com/sandwich-hero.jpg",
+    "address": { "@type": "PostalAddress", "addressLocality": "Moka", "addressRegion": "Moka", "addressCountry": "MU" },
+    "areaServed": "Moka, Maurice",
+    "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "11:00", "closes": "14:00" }]
+  }
+  </script>
+
   <link rel="icon" type="image/png" id="favicon" href="./logo-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,11 +61,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     :root {
-      --brand:        #F2A24C;
-      --brand-strong: #E5892B;
-      --brand-deep:   #C9711B;
-      --brand-soft:   #FBE5CC;
-      --cream:        #FFF8F1;
+      --brand:        #FF8C00;
+      --brand-strong: #F07E1A;
+      --brand-deep:   #DA4928;
+      --brand-soft:   #F6E1C4;
+      --gold:         #FEC12C;
+      --cream:        #F7F5F0;
       --cream-2:      #FDF1E5;
       --ink:          #2A2622;
       --muted:        #837A70;
@@ -79,6 +128,12 @@
     .icon-btn svg { width: 21px; height: 21px; stroke: var(--ink); }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
     .nav-item .icon-lbl { font-family: 'Rubik'; font-weight: 600; font-size: 11px; color: var(--muted); line-height: 1; }
+    .acct-menu-wrap { position: relative; }
+    .acct-dropdown { position: absolute; top: calc(100% + 8px); right: 0; min-width: 170px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-md); padding: 6px; display: none; z-index: 130; }
+    .acct-dropdown.open { display: block; }
+    .acct-dropdown a, .acct-dropdown button { display: block; width: 100%; text-align: left; padding: 10px 12px; border-radius: 8px; font-family: 'Rubik'; font-weight: 600; font-size: 14px; color: var(--ink); background: none; border: none; cursor: pointer; text-decoration: none; }
+    .acct-dropdown a:hover, .acct-dropdown button:hover { background: var(--cream); }
+    .acct-dropdown button#ddLogout { color: var(--danger); }
     .nav-item:hover .icon-lbl { color: var(--brand-deep); }
     .cart-count { position: absolute; top: -5px; right: -5px; background: var(--brand-deep); color: #fff; font-size: 11px; font-weight: 800; font-family: 'Rubik'; min-width: 19px; height: 19px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; }
     .menu-toggle { display: none; }
@@ -174,12 +229,20 @@
     .contact-info svg { width: 24px; height: 24px; stroke: var(--brand); flex-shrink: 0; }
     .contact-info b { font-family: 'Rubik'; }
     .contact-info span { display: block; color: #c9bfb4; font-size: 14px; }
+    .contact-info a.c-link { display: block; color: #c9bfb4; font-size: 14px; text-decoration: none; transition: color .15s; }
+    .contact-info a.c-link:hover { color: var(--brand); text-decoration: underline; }
 
     /* ── FOOTER ── */
     footer.site { background: #1B1814; color: #cbbfb2; padding: 44px 0 28px; font-size: 14px; }
     .foot-grid { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
     .foot-grid .brand .name { color: #fff; }
-    footer.site .legal { width: 100%; border-top: 1px solid rgba(255,255,255,.1); margin-top: 28px; padding-top: 18px; text-align: center; color: #8c8175; font-size: 13px; }
+    footer.site .foot-links { width: 100%; border-top: 1px solid rgba(255,255,255,.1); margin-top: 28px; padding-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; }
+    footer.site .foot-links a { color: #cbbfb2; font-size: 13px; text-decoration: none; transition: color .15s; }
+    footer.site .foot-links a:hover { color: var(--brand); text-decoration: underline; }
+    footer.site .legal { width: 100%; border-top: 1px solid rgba(255,255,255,.1); margin-top: 18px; padding-top: 18px; text-align: center; color: #8c8175; font-size: 13px; }
+    footer.site .madeby { width: 100%; text-align: center; color: #8c8175; font-size: 12.5px; margin-top: 8px; }
+    footer.site .madeby a { color: var(--brand); font-weight: 600; text-decoration: none; }
+    footer.site .madeby a:hover { text-decoration: underline; }
     .news-form { width: 100%; max-width: 460px; }
     .news-form .news-title { font-family: 'Rubik'; font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 10px; }
     .news-form .news-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -219,6 +282,13 @@
     /* product modal pieces */
     .opt-group { margin-bottom: 22px; }
     .opt-group > label.gl { font-family: 'Rubik'; font-weight: 700; font-size: 15px; display: block; margin-bottom: 4px; }
+    .drink-group { border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; overflow: hidden; }
+    .drink-group-head { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px 14px; background: #fff; border: none; cursor: pointer; font-family: 'Rubik'; font-weight: 700; font-size: 14.5px; color: var(--ink); }
+    .drink-group-head:hover { background: var(--cream-2); }
+    .drink-group-head .dg-caret { color: var(--brand-deep); font-size: 12px; transition: transform .15s; }
+    .drink-group.open .drink-group-head .dg-caret { transform: rotate(90deg); }
+    .drink-group-body { display: none; padding: 4px 10px 10px; }
+    .drink-group.open .drink-group-body { display: block; }
     .opt-group .hint { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
     .opt-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; }
     .cond-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin-bottom: 9px; cursor: pointer; }
@@ -337,7 +407,8 @@
     .b2e-cutoff { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--brand-deep); }
 
     /* formules */
-    .formula-card { display: flex; align-items: center; gap: 18px; background: #fff; border: 1.5px solid var(--brand-soft); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 16px 18px; margin: 0 0 28px; }
+    .formula-card { display: flex; align-items: center; gap: 18px; background: linear-gradient(105deg, var(--cream-2) 0%, var(--brand-soft) 100%); border: 1.5px solid var(--brand-soft); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 16px 18px; margin: 0 0 28px; }
+    .formula-card img { background: #fff; }
     .formula-card img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
     .formula-card .fc-body { flex: 1; }
     .formula-card .fc-tag { display: inline-block; background: var(--brand); color: #fff; font-family: 'Rubik'; font-weight: 700; font-size: 11px; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px; }
@@ -356,6 +427,8 @@
     .fslot-opt .fslot-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
     .fslot-opt .fslot-emoji { display: inline-flex; align-items: center; justify-content: center; font-size: 22px; background: var(--brand-soft); }
     .fslot-opt .fslot-name { flex: 1; }
+    .fslot-cat { font-family: 'Rubik'; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-deep); margin: 12px 0 6px; padding-top: 4px; }
+    .fslot-cat:first-child { margin-top: 0; }
     .fslot-opt:hover { border-color: var(--brand); }
     .fslot-opt.sel { border-color: var(--brand); background: var(--brand-soft); }
 
@@ -379,7 +452,8 @@
     .day-col.today .day-head .day-date { color: rgba(255,255,255,.9); }
     .day-col.today .day-head { background: var(--brand); color: #fff; }
     .day-col .day-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
-    .day-dish { text-align: left; font-size: 14.5px; font-weight: 600; padding: 0 0 12px; border: 1.5px solid var(--line); border-radius: 14px; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; align-items: stretch; gap: 7px; width: 100%; overflow: hidden; background: #fff; }
+    .day-dish { text-align: left; font-size: 14.5px; font-weight: 600; color: var(--ink); padding: 0 0 12px; border: 1.5px solid var(--line); border-radius: 14px; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; align-items: stretch; gap: 7px; width: 100%; overflow: hidden; background: #fff; }
+    .day-dish .dd-name { color: var(--ink); }
     .day-dish:hover { border-color: var(--brand); box-shadow: var(--shadow-sm); }
     .day-dish .dd-photo { width: 100%; height: 92px; object-fit: cover; display: block; }
     .day-dish .dd-name { line-height: 1.3; padding: 0 12px; }
@@ -453,7 +527,7 @@
     /* mobile nav sheet */
     .mobile-nav { position: fixed; inset: 0; z-index: 120; background: var(--cream); transform: translateX(100%); transition: transform .3s; display: flex; flex-direction: column; padding: 22px; }
     .mobile-nav.open { transform: translateX(0); }
-    .mobile-nav a { font-family: 'Rubik'; font-weight: 600; font-size: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .mobile-nav a { display: block; font-family: 'Rubik'; font-weight: 600; font-size: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
     .mobile-nav .mn-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
     /* PROFIL */
@@ -497,6 +571,11 @@
   </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9QR4QJW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 
   <!-- TOP UTILITY BAR -->
   <div class="topbar">
@@ -520,12 +599,18 @@
       </a>
       <nav class="nav-links" id="navLinks"></nav>
       <div class="nav-right">
-        <a class="nav-item" href="compte.html" id="accountLink" aria-label="Mon compte" title="Mon compte">
-          <span class="icon-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          </span>
-          <span class="icon-lbl" data-i18n="hdr_profile"></span>
-        </a>
+        <div class="acct-menu-wrap">
+          <a class="nav-item" href="compte.html" id="accountLink" aria-label="Mon compte" title="Mon compte" onclick="return onAccountClick(event)">
+            <span class="icon-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </span>
+            <span class="icon-lbl" data-i18n="hdr_profile"></span>
+          </a>
+          <div class="acct-dropdown" id="acctDropdown">
+            <a href="compte.html" id="ddMyAccount">Mon compte</a>
+            <button type="button" id="ddLogout" onclick="accountLogout()">Se déconnecter</button>
+          </div>
+        </div>
         <button class="nav-item" id="profileBtn" onclick="openProfile()" aria-label="Profile" style="display:none">
           <span class="icon-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -555,6 +640,7 @@
     <div id="mobileNavLinks"></div>
     <a href="#" id="mobileProfileBtn" onclick="toggleMobileNav(false);openProfile()" style="display:none" data-i18n="prof_title"></a>
     <a href="compte.html" id="mobileAccountLink">Mon compte</a>
+    <a href="#" id="mobileLogoutLink" onclick="accountLogout();return false;" style="display:none;color:var(--danger);">Se déconnecter</a>
   </div>
 
   <span id="top"></span>
@@ -626,7 +712,7 @@
   <!-- ABOUT -->
   <section class="block about" id="about">
     <div class="container about-grid">
-      <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" />
+      <img id="aboutImg" src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=900&q=80" alt="Pain artisanal" />
       <div class="about-text">
         <div class="eyebrow" data-i18n="about_eyebrow"></div>
         <h2 data-i18n="about_title"></h2>
@@ -652,11 +738,11 @@
         </div>
         <div class="row">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-          <div><b data-i18n="contact_phone_t"></b><span>+230 5492 2393</span></div>
+          <div><b data-i18n="contact_phone_t"></b><a id="contactPhoneLink" class="c-link" data-i18n="contact_phone_v" href="#"></a></div>
         </div>
         <div class="row">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-          <div><b>Email</b><span>info@bondipain.com</span></div>
+          <div><b data-i18n="contact_email_t"></b><a id="contactEmailLink" class="c-link" data-i18n="contact_email_v" href="#"></a></div>
         </div>
         <div class="row">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
@@ -681,7 +767,15 @@
         </div>
         <div class="news-msg" id="newsMsg"></div>
       </form>
+      <div class="foot-links">
+        <a href="faq.html" data-i18n="footer_faq">FAQ</a>
+        <a href="mentions-legales.html" data-i18n="footer_legal_notice">Mentions légales</a>
+        <a href="conditions-generales.html" data-i18n="footer_terms">Conditions générales</a>
+        <a href="confidentialite.html" data-i18n="footer_privacy">Politique de confidentialité</a>
+        <a href="cookies.html" data-i18n="footer_cookies">Politique cookies</a>
+      </div>
       <div class="legal" data-i18n="footer_legal"></div>
+      <div class="madeby"><span data-i18n="footer_madeby">Fait par</span> <a href="https://gramica-africa.com" target="_blank" rel="noopener">Gramica</a></div>
     </div>
   </footer>
 
@@ -822,6 +916,7 @@
       menu_sub: "Nos pains garnis, préparés maison. Commandez avant 15h la veille, livraison entre 11h et 14h.",
       menu_from: "À partir de",
       daily_desc: "Plat du jour, préparé maison.",
+      daily_veg_icon: "🌿", daily_nonveg_icon: "🍽️",
       menu_dishes_word: "plats",
       menu_cutoff_note: "commande avant 15h la veille",
       menu_free_delivery: "Livraison gratuite",
@@ -839,9 +934,12 @@
       contact_title: "Contactez-nous",
       contact_p: "Notre équipe est disponible pour toute question sur votre commande ou nos produits.",
       contact_zone_t: "Zone de livraison", contact_zone_v: "Uniquement quartier de Moka, Maurice",
-      contact_phone_t: "Téléphone",
+      contact_phone_t: "Téléphone", contact_phone_v: "+230 5492 2393",
+      contact_email_t: "Email", contact_email_v: "info@bondipain.com",
       contact_hours_t: "Créneau de livraison", contact_hours_v: "Tous les jours, entre 11h et 14h",
       footer_tag: "Le pain garni, livré à Moka.",
+      footer_faq: "FAQ", footer_legal_notice: "Mentions légales", footer_terms: "Conditions générales de vente", footer_privacy: "Politique de confidentialité", footer_cookies: "Politique relative aux cookies",
+      footer_madeby: "Fait par",
       news_title: "Recevez nos nouveautés et offres", news_ph: "Votre email", news_btn: "S'inscrire",
       news_ok: "Merci ! Vous êtes inscrit(e).", news_err: "Erreur, réessayez.", news_bad: "Email invalide.",
       footer_legal: "© 2026 Bondipain.com — Tous droits réservés.",
@@ -862,6 +960,7 @@
       checkout_title: "Finaliser ma commande",
       co_notice: "Commandez avant 15h la veille de la livraison · Livraison uniquement à Moka, entre 11h et 14h.",
       co_day_t: "Jour de livraison",
+      co_day_hint: "Chaque plat est livré le jour choisi dans votre panier.",
       co_day_h: "Choisissez un jour disponible (commande avant 15h la veille).",
       co_info_t: "Vos coordonnées",
       co_name: "Nom complet", co_phone: "Téléphone", co_email: "Email (pour le suivi)",
@@ -920,6 +1019,11 @@
       co_b2b_ok: "Code valide · Jusqu'à Rs 150 pris en charge par votre employeur",
       co_b2b_remove: "Retirer",
       co_b2b_err: "Code entreprise non reconnu",
+      co_promo_t: "Code promo (optionnel)",
+      co_promo_apply: "Appliquer",
+      co_promo_ok: "Code valide · Rs %s de remise",
+      co_promo_err: "Code promo non reconnu",
+      co_promo_line: "Code promo",
       co_b2b_limit: "Limite de 20 repas atteinte pour cette date. Contactez votre responsable RH.",
       cart_subsidy: "Subvention employeur",
       confirm_b2b: "Code entreprise",
@@ -967,6 +1071,7 @@
       menu_sub: "Our homemade stuffed breads. Order before 3pm the day before, delivery between 11am and 2pm.",
       menu_from: "From",
       daily_desc: "Dish of the day, homemade.",
+      daily_veg_icon: "🌿", daily_nonveg_icon: "🍽️",
       menu_dishes_word: "dishes",
       menu_cutoff_note: "order before 3pm the day before",
       menu_free_delivery: "Free delivery",
@@ -984,9 +1089,12 @@
       contact_title: "Get in touch",
       contact_p: "Our team is available for any question about your order or our products.",
       contact_zone_t: "Delivery area", contact_zone_v: "Moka area only, Mauritius",
-      contact_phone_t: "Phone",
+      contact_phone_t: "Phone", contact_phone_v: "+230 5492 2393",
+      contact_email_t: "Email", contact_email_v: "info@bondipain.com",
       contact_hours_t: "Delivery window", contact_hours_v: "Every day, between 11am and 2pm",
       footer_tag: "Stuffed bread, delivered in Moka.",
+      footer_faq: "FAQ", footer_legal_notice: "Legal notice", footer_terms: "Terms & conditions", footer_privacy: "Privacy policy", footer_cookies: "Cookie policy",
+      footer_madeby: "Made by",
       news_title: "Get our news and offers", news_ph: "Your email", news_btn: "Subscribe",
       news_ok: "Thanks! You're subscribed.", news_err: "Error, please retry.", news_bad: "Invalid email.",
       footer_legal: "© 2026 Bondipain.com — All rights reserved.",
@@ -1007,6 +1115,7 @@
       checkout_title: "Complete my order",
       co_notice: "Order before 3pm the day before delivery · Delivery in Moka only, between 11am and 2pm.",
       co_day_t: "Delivery day",
+      co_day_hint: "Each dish is delivered on the day selected in your cart.",
       co_day_h: "Pick an available day (24h lead time respected).",
       co_info_t: "Your details",
       co_name: "Full name", co_phone: "Phone", co_email: "Email (for tracking)",
@@ -1065,6 +1174,11 @@
       co_b2b_ok: "Valid code · Up to Rs 150 covered by your employer",
       co_b2b_remove: "Remove",
       co_b2b_err: "Company code not recognised",
+      co_promo_t: "Promo code (optional)",
+      co_promo_apply: "Apply",
+      co_promo_ok: "Valid code · Rs %s off",
+      co_promo_err: "Promo code not recognised",
+      co_promo_line: "Promo code",
       co_b2b_limit: "20-meal daily limit reached for this date. Please contact your HR manager.",
       cart_subsidy: "Employer subsidy",
       confirm_b2b: "Company code",
@@ -1230,14 +1344,21 @@
     if (!_supa) return;
     const { data, error } = await _supa.from("condiments").select("*").eq("available", true).order("sort");
     if (!error && data && data.length) {
-      CONDIMENTS = data.map(c => ({ id: c.id, name: { fr: c.name_fr, en: c.name_en || c.name_fr }, price: Number(c.price) || 0 }));
+      CONDIMENTS = data.map(c => ({ id: c.id, name: { fr: c.name_fr, en: c.name_en || c.name_fr }, price: Number(c.price) || 0, img: c.image_url || null }));
     }
   }
   async function loadDrinks() {
     if (!_supa) return;
     const { data, error } = await _supa.from("drinks").select("*").eq("available", true).order("sort");
     if (!error && data && data.length) {
-      DRINKS = data.map(d => ({ id: d.id, name: { fr: d.name_fr, en: d.name_en || d.name_fr }, price: Number(d.price) || 0, img: d.image_url || null }));
+      DRINKS = data.map(d => ({ id: d.id, name: { fr: d.name_fr, en: d.name_en || d.name_fr }, price: Number(d.price) || 0, img: d.image_url || null, group: (d.group_label || "").trim() }));
+    }
+    // Boisson par défaut du combo : présélectionner une vraie boisson (l'eau en priorité)
+    // pour ne jamais laisser « — · Rs 0 » et garantir un combo « plat + boisson ».
+    const drinkSlot = FORMULAS[0] && FORMULAS[0].slots.find(s => s.pool === "drinks");
+    if (drinkSlot && DRINKS.length) {
+      const water = DRINKS.find(d => /eau|water/i.test((d.name.fr || "") + " " + (d.name.en || "") + " " + d.id));
+      drinkSlot.default = (water || DRINKS[0]).id;
     }
   }
 
@@ -1299,6 +1420,8 @@
   let currentCat = null;
   let cfg = null;
   let checkout = { day: null, pay: "juice" };
+  // Modes de paiement activés côté admin (Juice toujours actif ; Espèces / Carte optionnels)
+  let PAYMENT_OPTS = { cash: false, card: false };
   let b2b = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
   let b2eSession = { active: false, employee: null, company: null, office: null, rules: [], budgetUsed: 0 };
   let menuDiet = "all"; // filtre régime côté menu employé : all | veg | nonveg
@@ -1339,6 +1462,11 @@
     document.querySelectorAll("[data-ph]").forEach(el => {
       el.setAttribute("placeholder", t(el.getAttribute("data-ph")));
     });
+    // Rendre le téléphone et l'email cliquables (tel: / mailto:) d'après le texte affiché
+    const _tel = document.getElementById("contactPhoneLink");
+    if (_tel) { const v = _tel.textContent.trim(); _tel.href = v ? "tel:" + v.replace(/[^\d+]/g, "") : "#"; }
+    const _mail = document.getElementById("contactEmailLink");
+    if (_mail) { const v = _mail.textContent.trim(); _mail.href = v ? "mailto:" + v : "#"; }
     document.querySelectorAll(".lang-switch button").forEach(b =>
       b.classList.toggle("active", b.dataset.lang === lang));
   }
@@ -1397,7 +1525,9 @@
   }
 
   let weekView = null; // index de semaine affiché (0 = cette semaine, 1 = +1, 2 = +2)
-  const WEEK_OPTIONS = [0, 1, 2]; // jusqu'à 2 semaines à l'avance
+  // Nombre de semaines visibles par les clients — piloté par l'admin (site_content « weeks_visible »).
+  // Par défaut : 1 (semaine en cours uniquement). L'admin passe à 2 le vendredi pour publier la semaine suivante.
+  let WEEK_OPTIONS = [0];
   function mondayLabel(weekIndex) {
     const d = weekMenuDate(1, weekIndex); // lundi de la semaine
     return `${lang==="fr"?"Semaine du":"Week of"} ${d.getDate()} ${t("months")[d.getMonth()]} ${d.getFullYear()}`;
@@ -1414,7 +1544,8 @@
     const el = $("#weekGrid");
     if (!el) return;
     // semaine par défaut : la 1re qui a encore un jour commandable
-    if (weekView === null) weekView = defaultWeekShift();
+    // (et on borne à ce que l'admin a rendu visible, au cas où une sélection resterait sur une semaine masquée)
+    if (weekView === null || !WEEK_OPTIONS.includes(weekView)) weekView = defaultWeekShift();
     if (!dailyLoaded) {
       el.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px;">${lang==="fr"?"Chargement du menu…":"Loading menu…"}</div>`;
       loadDailyMenu().then(() => { renderWeekSelector(); el.innerHTML = weekGridHtml(weekView); });
@@ -1455,7 +1586,7 @@
       const dateStr = `${theDate.getDate()} ${t("months")[theDate.getMonth()]} ${theDate.getFullYear()}`;
       const dishesHtml = items.length ? items.map((it, idx) => {
         const disabled = closed || it.available === false;
-        const label = (it.type === "veg" ? "🌿 " : "🍽️ ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
+        const label = (it.type === "veg" ? t("daily_veg_icon") + " " : t("daily_nonveg_icon") + " ") + (lang === "fr" ? it.name_fr : (it.name_en || it.name_fr));
         // Employé avec repas offert ou entièrement pris en charge : on n'affiche aucun prix
         const priceHtml = (b2eIsFree() || b2eHidePrices())
           ? ""
@@ -1532,7 +1663,7 @@
   function renderFormulas() {
     const el = $("#formulasBand");
     if (!el) return;
-    el.innerHTML = FORMULAS.map(f => {
+    el.innerHTML = FORMULAS.filter(f => f.enabled !== false).map(f => {
       const sel = {}; f.slots.forEach(s => sel[s.key] = s.default);
       const total = formulaTotal(f, sel);
       return `
@@ -1552,7 +1683,7 @@
   let formula = null; // { def, sel:{}, openSlot:null }
   function openFormula(id) {
     const def = FORMULAS.find(f => f.id === id);
-    if (!def) return;
+    if (!def || def.enabled === false) return;
     const sel = {}; def.slots.forEach(s => sel[s.key] = s.default);
     const condiments = {}; CONDIMENTS.forEach(c => condiments[c.id] = false);
     formula = { def, sel, openSlot: null, condiments };
@@ -1571,20 +1702,25 @@
     const slotsHtml = def.slots.map(slot => {
       const cur = findMenuItem(sel[slot.key]);
       const pool = formulaPool(slot.pool);
+      const optHtml = (it, c) => {
+        const photo = it.img || (c ? dishPhoto(it, c) : "");
+        return `<div class="fslot-opt ${sel[slot.key]===it.id?'sel':''}" onclick="setFormulaSlot('${slot.key}','${it.id}')">
+          ${slot.pool === "dishes"
+            ? `<img class="fslot-thumb" src="${photo}" alt="" loading="lazy" />`
+            : (it.img
+                ? `<img class="fslot-thumb" src="${it.img}" alt="" loading="lazy" />`
+                : `<span class="fslot-thumb fslot-emoji">${optEmoji(it.id, it.name)}</span>`)}
+          <span class="fslot-name">${it.name[lang]}</span><b>${money(it.price)}</b>
+        </div>`;
+      };
       const listHtml = openSlot === slot.key ? `
         <div class="fslot-list">
-          ${pool.map(it => {
-            const c = CATEGORIES.find(cc => cc.items.some(i => i.id === it.id));
-            const photo = it.img || (c ? dishPhoto(it, c) : "");
-            return `<div class="fslot-opt ${sel[slot.key]===it.id?'sel':''}" onclick="setFormulaSlot('${slot.key}','${it.id}')">
-              ${slot.pool === "dishes"
-                ? `<img class="fslot-thumb" src="${photo}" alt="" loading="lazy" />`
-                : (it.img
-                    ? `<img class="fslot-thumb" src="${it.img}" alt="" loading="lazy" />`
-                    : `<span class="fslot-thumb fslot-emoji">${optEmoji(it.id, it.name)}</span>`)}
-              <span class="fslot-name">${it.name[lang]}</span><b>${money(it.price)}</b>
-            </div>`;
-          }).join("")}
+          ${slot.pool === "dishes"
+            ? CATEGORIES.filter(c => !c.weekly && !c.fridayOnly && c.items && c.items.length).map(c =>
+                `<div class="fslot-cat">${c.name[lang]}</div>` + c.items.map(it => optHtml(it, c)).join("")
+              ).join("")
+            : pool.map(it => optHtml(it, CATEGORIES.find(cc => cc.items.some(i => i.id === it.id)))).join("")
+          }
         </div>` : "";
       return `
         <div class="fslot">
@@ -1614,7 +1750,7 @@
         ${CONDIMENTS.map(cd => `
           <label class="cond-row">
             <input type="checkbox" ${formula.condiments[cd.id]?"checked":""} onchange="toggleFormulaCondiment('${cd.id}')" />
-            <span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>
+            ${cd.img ? `<img class="opt-ic" style="object-fit:cover;" src="${cd.img}" alt="" loading="lazy" />` : `<span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>`}
             <span class="label">${cd.name[lang]}</span>
             ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
           </label>`).join("")}
@@ -1691,9 +1827,20 @@
     const chips = [];
     for (let i = 0; i < 3; i++) {
       const custom = (I18N[lang]["hero_pick_" + (i + 1)] || "").trim();
+      let done = false;
       if (custom) {
-        chips.push(`<button class="hp-chip" onclick="closeAll();document.getElementById('menu')?.scrollIntoView({behavior:'smooth'})">${custom}</button>`);
-      } else if (picks[i]) {
+        const m = custom.match(/^([^:]+)::(.+)$/);
+        if (m) {
+          // Référence à un plat réel choisi dans l'admin (catId::itemId)
+          const cat = CATEGORIES.find(c => c.id === m[1]);
+          const it = cat && cat.items.find(x => x.id === m[2]);
+          if (it) { chips.push(`<button class="hp-chip" onclick="openDish('${cat.id}','${it.id}')">${it.name[lang]}</button>`); done = true; }
+        } else {
+          // Ancien format : texte libre → défilement vers le menu
+          chips.push(`<button class="hp-chip" onclick="closeAll();document.getElementById('menu')?.scrollIntoView({behavior:'smooth'})">${custom}</button>`); done = true;
+        }
+      }
+      if (!done && picks[i]) {
         chips.push(`<button class="hp-chip" onclick="openDish('${picks[i].catId}','${picks[i].item.id}')">${picks[i].item.name[lang]}</button>`);
       }
     }
@@ -1705,11 +1852,17 @@
   // Contribution employeur estimée sur un prix "à partir de" (aperçu par carte).
   // Le calcul qui fait foi reste côté serveur au paiement.
   function b2eContributionFor(price) {
-    if (!b2eSession.active || !b2eSession.rules.length) return 0;
+    if (!b2eSession.active) return 0;
+    // « L'entreprise paie la totalité » : prise en charge à 100% (l'employé ne paie rien)
+    if (b2eSession.billingMode === "full") return Math.round(price);
+    if (!b2eSession.rules.length) return 0;
     const rule = b2eSession.rules[0];
     const raw = rule.mode === "percent" ? price * (rule.percent || 0) / 100 : Math.min(rule.amount || 0, price);
     const cap = b2eMonthlyCap();
-    const capped = cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
+    let capped = cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
+    // Plafond en menus atteint ce mois-ci → plus aucune prise en charge (l'employé paie le plein tarif).
+    const remain = b2eMealsRemaining();
+    if (remain != null && remain <= 0) capped = 0;
     return Math.round(capped);
   }
 
@@ -1771,14 +1924,14 @@
     // Illustrations "dessin animé" — SVG colorés, remplis, faits maison
     const icons = [
       /* 1. Choisir une catégorie — ardoise de menu */
-      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#FBE5CC"/>
+      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#F6E1C4"/>
         <rect x="34" y="26" width="44" height="60" rx="6" fill="#8C5A2B"/>
         <rect x="39" y="31" width="34" height="50" rx="3" fill="#33302C"/>
-        <rect x="44" y="39" width="24" height="4" rx="2" fill="#F2A24C"/>
+        <rect x="44" y="39" width="24" height="4" rx="2" fill="#FF8C00"/>
         <rect x="44" y="49" width="24" height="3" rx="1.5" fill="#E8DED2"/>
         <rect x="44" y="57" width="18" height="3" rx="1.5" fill="#E8DED2"/>
         <rect x="44" y="65" width="21" height="3" rx="1.5" fill="#E8DED2"/>
-        <circle cx="56" cy="24" r="4" fill="#C9711B"/></svg>`,
+        <circle cx="56" cy="24" r="4" fill="#DA4928"/></svg>`,
       /* 2. Sélectionner son plat — assiette garnie */
       `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#E8F5E9"/>
         <ellipse cx="56" cy="70" rx="34" ry="9" fill="#000" opacity=".07"/>
@@ -1786,12 +1939,12 @@
         <circle cx="56" cy="56" r="30" fill="none" stroke="#D9CBB8" stroke-width="2"/>
         <circle cx="56" cy="56" r="20" fill="#FDF1E5"/>
         <circle cx="49" cy="52" r="8" fill="#E86B4C"/>
-        <circle cx="63" cy="53" r="7" fill="#F2A24C"/>
+        <circle cx="63" cy="53" r="7" fill="#FF8C00"/>
         <circle cx="56" cy="63" r="6.5" fill="#2E7D52"/>
         <path d="M84 40v34" stroke="#B98A4B" stroke-width="3.5" stroke-linecap="round"/>
         <path d="M28 40c-3 0-3 10 0 10v24" stroke="#B98A4B" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg>`,
       /* 3. Commander sous 24h — téléphone + horloge */
-      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#FBE5CC"/>
+      `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#F6E1C4"/>
         <rect x="38" y="24" width="36" height="64" rx="8" fill="#33302C"/>
         <rect x="42" y="30" width="28" height="46" rx="3" fill="#FDF1E5"/>
         <circle cx="56" cy="82" r="3" fill="#837A70"/>
@@ -1803,8 +1956,8 @@
       `<svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="56" fill="#E8F5E9"/>
         <circle cx="38" cy="74" r="11" fill="#33302C"/><circle cx="38" cy="74" r="4" fill="#B7ADA0"/>
         <circle cx="80" cy="74" r="11" fill="#33302C"/><circle cx="80" cy="74" r="4" fill="#B7ADA0"/>
-        <path d="M38 74h30l6-16h8" stroke="#C9711B" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <rect x="24" y="40" width="20" height="16" rx="3" fill="#F2A24C"/>
+        <path d="M38 74h30l6-16h8" stroke="#DA4928" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="24" y="40" width="20" height="16" rx="3" fill="#FF8C00"/>
         <path d="M44 50l14-2 6 8H44z" fill="#E86B4C"/>
         <path d="M48 38l-3 12" stroke="#33302C" stroke-width="3.5" stroke-linecap="round"/>
         <circle cx="47" cy="34" r="6" fill="#8C5A2B"/></svg>`
@@ -1881,18 +2034,25 @@
     openModal("#dishModal");
   }
   function renderDishBody() {
+    dish.drinks = dish.drinks || {};
+    dish.condiments = dish.condiments || {};
     const { item, cat, qty, daily } = dish;
     const photo = daily ? dailyPhoto(item) : dishPhoto(item, cat);
-    const desc = daily ? (item.ingredients || t("daily_desc")) : dishDesc(item, cat);
-    const allergensHtml = daily && item.allergens ? `<div style="margin-top:8px;font-size:13px;color:var(--danger);font-weight:600;">⚠ ${lang==="fr"?"Allergènes":"Allergens"} : ${item.allergens}</div>` : "";
+    const desc = daily ? ((lang === "en" ? (item.allergens || item.ingredients) : (item.ingredients || item.allergens)) || t("daily_desc")) : dishDesc(item, cat);
+    const allergensHtml = "";
     const contrib = b2ePerItemContrib() ? b2eContributionFor(item.price) : 0;
     const youPay = item.price - contrib;
+    // Menu du jour pour un employé (repas offert ou entièrement pris en charge) : aucun prix affiché,
+    // comme sur la grille de la semaine. Seules les boissons/suppléments restent tarifés.
+    const hideDailyPrice = daily && (b2eIsFree() || b2eHidePrices());
     const priceHtml = b2ePerItemContrib()
       ? `<div style="margin:14px 0;">
            <span style="text-decoration:line-through;color:var(--muted);font-weight:600;">${money(item.price)}</span>
            <span class="b2e-line" style="font-weight:700;margin-left:8px;">−${money(contrib)}</span>
            <div style="font-family:'Rubik';font-weight:800;font-size:22px;margin-top:2px;">${t("b2e_banner_you_pay")} ${money(youPay)}</div>
          </div>`
+      : hideDailyPrice
+      ? ""
       : b2eHidePrices()
       ? `<div style="margin:14px 0;"><span class="b2e-free-tag" style="font-size:15px;">${t("b2e_covered_tag")}</span></div>`
       : b2eIsFree()
@@ -1901,7 +2061,7 @@
     $("#dishBody").innerHTML = `
       <img src="${photo}" alt="${item.name[lang]}" style="width:100%;height:220px;object-fit:cover;border-radius:12px;" />
       <h3 style="font-family:'Rubik';font-weight:800;font-size:20px;margin-top:16px;">${item.name[lang]}</h3>
-      <p style="color:var(--muted);margin-top:6px;">${desc}</p>
+      <p style="color:var(--muted);margin-top:6px;white-space:pre-line;">${desc}</p>
       ${allergensHtml}
       ${priceHtml}
       <div class="opt-group">
@@ -1912,12 +2072,71 @@
           <button onclick="stepDishQty(1)">+</button>
         </div>
       </div>
+      ${DRINKS.length ? `
+      <div class="opt-group">
+        <label class="gl">${t("pm_drinks_t")}</label>
+        <div class="hint">${t("pm_drinks_h")}</div>
+        ${drinksGroupedHtml(id => dish.drinks[id] || 0, "dishStepDrink", "qd_drink_")}
+      </div>` : ""}
+      ${CONDIMENTS.length ? `
+      <div class="opt-group">
+        <label class="gl">${t("pm_condiments_t")}</label>
+        <div class="hint">${t("pm_condiments_h")}</div>
+        ${CONDIMENTS.map(cd => `
+          <label class="cond-row">
+            <input type="checkbox" ${dish.condiments[cd.id]?"checked":""} onchange="dishToggleCond('${cd.id}')" />
+            ${cd.img ? `<img class="opt-ic" style="object-fit:cover;" src="${cd.img}" alt="" loading="lazy" />` : `<span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>`}
+            <span class="label">${cd.name[lang]}</span>
+            ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
+          </label>`).join("")}
+      </div>` : ""}
       <div class="opt-group">
         <label class="gl">${t("co_day_t")}</label>
         <div style="margin-top:6px;">${daySelectHtml(item.id, "dishDay", dish.day, "updateDishButton()")}</div>
       </div>`;
     updateDishButton();
   }
+  function dishExtrasTotal() {
+    let e = 0;
+    DRINKS.forEach(d => e += (dish.drinks[d.id] || 0) * d.price);
+    CONDIMENTS.forEach(c => { if (dish.condiments[c.id]) e += c.price; });
+    return e;
+  }
+  function dishStepDrink(id, d) {
+    dish.drinks[id] = Math.max(0, Math.min(9, (dish.drinks[id] || 0) + d));
+    const el = $(`#qd_drink_${id}`); if (el) el.textContent = dish.drinks[id];
+    updateDishButton();
+  }
+  function dishToggleCond(id) { dish.condiments[id] = !dish.condiments[id]; updateDishButton(); }
+
+  // Rendu des boissons regroupées par « groupe » (repliable). Réutilisé par les fiches produit et plat.
+  function drinkRowHtml(d, stepFn, prefix, qty) {
+    return `<div class="opt-row">
+      <div style="display:flex;align-items:center;gap:10px;">${d.img ? `<img class="opt-ic" style="object-fit:cover;" src="${d.img}" alt="" loading="lazy" />` : `<span class="opt-ic">${optEmoji(d.id, d.name)}</span>`}<div><span class="label">${d.name[lang]}</span> <span class="op">+${money(d.price)}</span></div></div>
+      <div class="stepper">
+        <button onclick="${stepFn}('${d.id}',-1)">−</button>
+        <span class="q" id="${prefix}${d.id}">${qty}</span>
+        <button onclick="${stepFn}('${d.id}',1)">+</button>
+      </div>
+    </div>`;
+  }
+  function drinksGroupedHtml(qtyOf, stepFn, prefix) {
+    const groups = {}, order = [];
+    DRINKS.forEach(d => { const g = d.group || ""; if (!(g in groups)) { groups[g] = []; order.push(g); } groups[g].push(d); });
+    const realGroups = order.filter(g => g);
+    // Aucun groupe défini → liste simple (comportement d'avant)
+    if (!realGroups.length) return DRINKS.map(d => drinkRowHtml(d, stepFn, prefix, qtyOf(d.id))).join("");
+    return order.map(g => {
+      const items = groups[g].map(d => drinkRowHtml(d, stepFn, prefix, qtyOf(d.id))).join("");
+      if (!g) return items; // boissons sans groupe : affichées directement
+      const anySel = groups[g].some(d => qtyOf(d.id) > 0);
+      return `<div class="drink-group${anySel?' open':''}">
+        <button type="button" class="drink-group-head" onclick="this.parentNode.classList.toggle('open')"><span>${g}</span><span class="dg-caret">▶</span></button>
+        <div class="drink-group-body">${items}</div>
+      </div>`;
+    }).join("");
+  }
+  function pmStepDrink(id, d) { stepOpt('drinks', id, d); }
   // Ferme uniquement la fiche détaillée ; si elle a été ouverte au-dessus de la
   // liste (carte de commande), on y revient au lieu de tout fermer.
   function closeDish() {
@@ -1934,17 +2153,20 @@
     const btn = $("#dishAdd");
     const day = readDaySelect("dishDay");
     btn.disabled = !day;
-    btn.textContent = !day ? t("choose_day") : (b2eHidePrices() ? t("pm_add") : `${t("pm_add")} · ${money(dish.item.price * dish.qty)}`);
+    const hideDailyPrice = dish.daily && (b2eIsFree() || b2eHidePrices());
+    btn.textContent = !day ? t("choose_day") : ((b2eHidePrices() || hideDailyPrice) ? t("pm_add") : `${t("pm_add")} · ${money(dish.item.price * dish.qty + dishExtrasTotal())}`);
   }
   function addDishToCart() {
     const { item, cat, qty, daily } = dish;
     const day = readDaySelect("dishDay");
     if (!day) { alert(lang === "fr" ? "Choisissez d'abord un jour de livraison." : "Please choose a delivery day first."); return; }
+    const drinks = DRINKS.filter(d => (dish.drinks[d.id] || 0) > 0).map(d => ({ id: d.id, name: d.name, qty: dish.drinks[d.id], price: d.price }));
+    const condiments = CONDIMENTS.filter(c => dish.condiments[c.id]).map(c => ({ id: c.id, name: c.name, price: c.price }));
     cart.push({
       uid: Date.now() + "_" + Math.floor(Math.random()*9999),
       pid: item.id, name: item.name, img: daily ? dailyPhoto(item) : dishPhoto(item, cat),
-      base: item.price, qty, sides: [], drinks: [], day,
-      lineTotal: item.price * qty
+      base: item.price, qty, sides: [], drinks, condiments, day,
+      lineTotal: item.price * qty + dishExtrasTotal()
     });
     saveCart();
     closeAll();
@@ -1955,7 +2177,7 @@
     const c = currentCat;
     const drinkRow = (item) => `
       <div class="opt-row">
-        <div style="display:flex;align-items:center;gap:10px;"><span class="opt-ic">${optEmoji(item.id, item.name)}</span><div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div></div>
+        <div style="display:flex;align-items:center;gap:10px;">${item.img ? `<img class="opt-ic" style="object-fit:cover;" src="${item.img}" alt="" loading="lazy" />` : `<span class="opt-ic">${optEmoji(item.id, item.name)}</span>`}<div><span class="label">${item.name[lang]}</span> <span class="op">+${money(item.price)}</span></div></div>
         <div class="stepper">
           <button onclick="stepOpt('drinks','${item.id}',-1)">−</button>
           <span class="q" id="q_drinks_${item.id}">${cfg.drinks[item.id]}</span>
@@ -1993,7 +2215,7 @@
       <div class="opt-group">
         <label class="gl">${t("pm_drinks_t")}</label>
         <div class="hint">${t("pm_drinks_h")}</div>
-        ${DRINKS.map(d => drinkRow(d)).join("")}
+        ${drinksGroupedHtml(id => cfg.drinks[id] || 0, "pmStepDrink", "q_drinks_")}
       </div>
       ${CONDIMENTS.length ? `
       <div class="opt-group">
@@ -2002,7 +2224,7 @@
         ${CONDIMENTS.map(cd => `
           <label class="cond-row">
             <input type="checkbox" ${cfg.condiments[cd.id]?"checked":""} onchange="toggleCondiment('${cd.id}')" />
-            <span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>
+            ${cd.img ? `<img class="opt-ic" style="object-fit:cover;" src="${cd.img}" alt="" loading="lazy" />` : `<span class="opt-ic">${optEmoji(cd.id, cd.name)}</span>`}
             <span class="label">${cd.name[lang]}</span>
             ${cd.price>0?`<span class="op">+${money(cd.price)}</span>`:`<span class="op" style="color:var(--green-ok)">${lang==="fr"?"offert":"free"}</span>`}
           </label>`).join("")}
@@ -2203,7 +2425,9 @@
       // Contenu du prix : « pris en charge » si entièrement couvert ; vide si repas offert du jour ; sinon le prix
       const priceInner = b2eHidePrices()
         ? `<span class="b2e-free-tag">${t("b2e_covered_tag")}</span>`
-        : (covered.has(item.uid) ? "" : money(item.lineTotal));
+        : b2eIsFree()
+          ? (covered.has(item.uid) ? `<span class="b2e-free-tag">${t("b2e_covered_tag")}</span>` : money(item.lineTotal))
+          : (covered.has(item.uid) ? "" : money(item.lineTotal));
       return `
       <div class="cart-line">
         <img src="${item.img}" alt="" />
@@ -2302,6 +2526,33 @@
     renderCheckout();
   }
 
+  // ── Code promo particulier (remise fixe en Rs, table promo_codes) ──
+  let promoState = { code: null, amount: 0, valid: false };
+  async function applyPromo() {
+    const code = ($("#i_promo")?.value || "").trim().toUpperCase();
+    if (!code) return;
+    const btn = $("#promoApplyBtn");
+    const err = $("#promoErr");
+    if (btn) { btn.disabled = true; btn.textContent = "…"; }
+    if (err) err.classList.remove("show");
+    try {
+      if (!_supa) throw new Error("no supabase");
+      const { data, error } = await _supa.from("promo_codes")
+        .select("code, amount, active").eq("code", code).eq("active", true).maybeSingle();
+      if (error || !data) { if (err) err.classList.add("show"); }
+      else {
+        promoState = { code: data.code, amount: Number(data.amount) || 0, valid: true };
+        renderCheckout();
+        return;
+      }
+    } catch (e) { if (err) err.classList.add("show"); }
+    if (btn) { btn.disabled = false; btn.textContent = t("co_promo_apply"); }
+  }
+  function removePromo() {
+    promoState = { code: null, amount: 0, valid: false };
+    renderCheckout();
+  }
+
   /* ============================================================
      B2E — avantage employé (compte + détection entreprise)
   ============================================================ */
@@ -2312,7 +2563,7 @@
 
     let { data: employee, error } = await _supa
       .from("employees")
-      .select("*, companies(id, name, benefit_mode, show_prices), company_offices(id, name, delivery_slot)")
+      .select("*, companies(id, name, benefit_mode, show_prices, billing_mode), company_offices(id, name, delivery_slot)")
       .eq("id", session.user.id)
       .single();
     if (error) {
@@ -2336,7 +2587,7 @@
     const periodStr = `${periodMonth.getFullYear()}-${String(periodMonth.getMonth() + 1).padStart(2, "0")}-01`;
     const { data: ledger } = await _supa
       .from("employee_budget_ledger")
-      .select("contributed")
+      .select("contributed, meals_covered")
       .eq("employee_id", employee.id)
       .eq("period_month", periodStr)
       .maybeSingle();
@@ -2347,17 +2598,20 @@
       company: employee.companies,
       office: employee.company_offices,
       benefitMode: employee.companies?.benefit_mode || "contribution",
+      billingMode: employee.companies?.billing_mode || "invoice",
       showPrices: employee.companies?.show_prices !== false,
       rules: rules || [],
       budgetUsed: ledger?.contributed || 0,
+      mealsUsed: ledger?.meals_covered || 0,
     };
     renderAll();
   }
 
   /* Mode 1 « repas offert » : l'entreprise prend en charge 1 article/jour (le plus cher), les extras au tarif normal */
   function b2eIsFree() { return b2eSession.active && b2eSession.benefitMode === "free_daily"; }
-  // L'entreprise a désactivé l'affichage des prix : cantine 100% prise en charge, aucun prix visible, rien à payer
-  function b2eHidePrices() { return b2eSession.active && b2eSession.showPrices === false; }
+  // L'entreprise a désactivé l'affichage des prix : cantine 100% prise en charge, aucun prix visible, rien à payer.
+  // En mode « 1 repas offert/jour », ce masquage NE s'applique PAS (les suppléments restent au tarif normal, payés par l'employé).
+  function b2eHidePrices() { return b2eSession.active && b2eSession.showPrices === false && !b2eIsFree(); }
   // Affiche la contribution par article (barré + « vous payez ») uniquement en mode contribution classique (prix visibles)
   function b2ePerItemContrib() { return b2eSession.active && !b2eIsFree() && !b2eHidePrices(); }
   // Valeur de l'article offert = prix unitaire le plus élevé du panier (1 unité prise en charge)
@@ -2396,15 +2650,39 @@
     const rule = b2eSession.rules[0];
     return rule?.monthly_cap ?? null;
   }
+  // Plafond mensuel en NOMBRE de menus (plats) couverts, et nombre restant ce mois-ci.
+  function b2eMealCap() {
+    const rule = b2eSession.rules[0];
+    return rule?.monthly_meal_cap ?? null;
+  }
+  function b2eMealsRemaining() {
+    const cap = b2eMealCap();
+    if (cap == null) return null;
+    return Math.max(0, cap - (b2eSession.mealsUsed || 0));
+  }
+  // Nombre de plats dans le panier (quantité comprise) — pour l'aperçu du plafond de menus.
+  function b2eCartDishCount() {
+    return cart.reduce((n, l) => n + (Number(l.qty) || 1), 0);
+  }
 
   // Aperçu affiché au client — le calcul qui compte est fait côté serveur dans /api/place-order
   function b2ePreviewContribution() {
-    if (!b2eSession.active || !b2eSession.rules.length) return 0;
-    const rule = b2eSession.rules[0];
+    if (!b2eSession.active) return 0;
     const sub = cartSubtotal();
+    if (b2eSession.billingMode === "full") return sub; // l'entreprise paie la totalité
+    if (!b2eSession.rules.length) return 0;
+    const rule = b2eSession.rules[0];
     const raw = rule.mode === "percent" ? sub * (rule.percent || 0) / 100 : Math.min(rule.amount || 0, sub);
     const cap = b2eMonthlyCap();
-    return cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
+    let val = cap != null ? Math.max(0, Math.min(raw, cap - b2eSession.budgetUsed)) : raw;
+    // Plafond en menus : au prorata si le panier dépasse le nombre de menus restants ce mois-ci.
+    const remain = b2eMealsRemaining();
+    if (remain != null) {
+      const dishes = b2eCartDishCount();
+      if (remain <= 0) val = 0;
+      else if (dishes > remain) val = val * (remain / dishes);
+    }
+    return val;
   }
 
   // Prénom du client B2C connecté (session Supabase hors employé) — pour personnaliser le lien compte
@@ -2435,7 +2713,37 @@
     // Une seule entrée « compte » : le lien du header (→ compte.html ou espace employé).
     // L'ancienne fenêtre de profil locale est retirée pour éviter le doublon.
     [$("#profileBtn"), $("#mobileProfileBtn")].forEach(b => { if (b) b.style.display = "none"; });
+
+    // Menu déroulant compte (visible uniquement si réellement connecté)
+    const logged = isAccountLogged();
+    const dd = $("#ddMyAccount");
+    if (dd) { dd.href = active ? "mon-espace-b2e.html" : "compte.html"; dd.textContent = active ? t("b2e_my_space") : (lang === "fr" ? "Mon compte" : "My account"); }
+    const ddLo = $("#ddLogout"); if (ddLo) ddLo.textContent = active ? t("b2e_logout") : (lang === "fr" ? "Se déconnecter" : "Log out");
+    const mLo = $("#mobileLogoutLink");
+    if (mLo) { mLo.style.display = logged ? "block" : "none"; mLo.textContent = active ? t("b2e_logout") : (lang === "fr" ? "Se déconnecter" : "Log out"); }
+    if (!logged) closeAcctDropdown();
   }
+
+  function isAccountLogged() { return b2eSession.active || !!b2cUser; }
+  function closeAcctDropdown() { const d = $("#acctDropdown"); if (d) d.classList.remove("open"); }
+  function onAccountClick(e) {
+    if (!isAccountLogged()) return true; // non connecté → navigation normale (compte.html = connexion)
+    e.preventDefault();
+    const d = $("#acctDropdown"); if (d) d.classList.toggle("open");
+    return false;
+  }
+  async function accountLogout() {
+    closeAcctDropdown();
+    toggleMobileNav(false);
+    if (b2eSession.active) { await b2eLogout(); return; }
+    if (_supa) await _supa.auth.signOut();
+    b2cUser = null;
+    renderAll();
+  }
+  document.addEventListener("click", (e) => {
+    const wrap = e.target.closest(".acct-menu-wrap");
+    if (!wrap) closeAcctDropdown();
+  });
 
   function renderB2EBanner() {
     updateAccountLinks();
@@ -2510,8 +2818,14 @@
     const sub    = cartSubtotal();
     const b2eContribution = b2eHidePrices() ? sub : (b2eIsFree() ? b2eFreeItemValue() : (b2eSession.active ? b2ePreviewContribution() : 0));
     const empAmt = b2eSession.active ? Math.max(0, sub - b2eContribution) : employeeAmount();
-    const noPayment = (b2eIsFree() && empAmt <= 0) || b2eHidePrices(); // 100% pris en charge → pas de paiement
+    const noPayment = (b2eSession.active && empAmt <= 0) || b2eHidePrices(); // rien à payer (offert, 100% pris en charge, ou solde nul)
     const subAmt = subsidyAmount();
+    // Code promo particulier (remise fixe, jamais sur les commandes employé)
+    const promoDiscount = (!b2eSession.active && promoState.valid) ? Math.min(promoState.amount, empAmt) : 0;
+    const finalAmt = Math.max(0, empAmt - promoDiscount);
+    // Employé connecté : nom / entreprise / bâtiment sont fournis par l'entreprise → champs verrouillés (téléphone reste ouvert)
+    const lockEmp  = b2eSession.active;
+    const lockAttr = lockEmp ? ' readonly style="background:var(--cream-2);cursor:not-allowed;"' : '';
     $("#checkoutBody").innerHTML = `
       <div class="ordernum-banner">
         <span>${t("co_ordernum")}</span><b>${checkout.orderNum || ""}</b>
@@ -2523,7 +2837,7 @@
 
       <div class="opt-group">
         <label class="gl">${t("co_day_t")}</label>
-        <div class="hint">${lang==="fr"?"Chaque plat est livré le jour choisi dans votre panier.":"Each dish is delivered on the day selected in your cart."}</div>
+        <div class="hint">${t("co_day_hint")}</div>
         <div class="day-recap">
           ${cartByDay().map(g => `<div class="day-recap-row"><b>${g.label}</b><span>${g.lines.map(l => l.qty + "× " + l.name[lang]).join(", ")}</span></div>`).join("")}
         </div>
@@ -2532,8 +2846,8 @@
       <div class="opt-group">
         <label class="gl">${t("co_info_t")}</label>
         <div class="two-col">
-          <div class="field" id="f_name"><label>${t("co_name")}</label><input id="i_name" type="text" autocomplete="name" /><div class="err">${t("err_required")}</div></div>
-          <div class="field" id="f_company"><label>${t("co_company")}</label><input id="i_company" type="text" autocomplete="organization" /><div class="err">${t("err_required")}</div></div>
+          <div class="field" id="f_name"><label>${t("co_name")}</label><input id="i_name" type="text" autocomplete="name"${lockAttr} /><div class="err">${t("err_required")}</div></div>
+          <div class="field" id="f_company"><label>${t("co_company")}</label><input id="i_company" type="text" autocomplete="organization"${lockAttr} /><div class="err">${t("err_required")}</div></div>
         </div>
         <div class="two-col">
           <div class="field" id="f_phone"><label>${t("co_phone")}</label><input id="i_phone" type="tel" autocomplete="tel" /><div class="err">${t("err_required")}</div></div>
@@ -2547,7 +2861,7 @@
 
       <div class="opt-group">
         <label class="gl">${t("co_addr_t")}</label>
-        <div class="field" id="f_building"><label>${t("co_building")}</label><input id="i_building" type="text" /><div class="err">${t("err_required")}</div></div>
+        <div class="field" id="f_building"><label>${t("co_building")}</label><input id="i_building" type="text"${lockAttr} /><div class="err">${t("err_required")}</div></div>
         <div class="two-col">
           <div class="field" id="f_town"><label>${t("co_town")}</label><input id="i_town" type="text" value="Ebène" readonly style="background:var(--cream-2);cursor:not-allowed;" /></div>
           <div class="field" id="f_locality"><label>${t("co_locality")}</label><input id="i_locality" type="text" /></div>
@@ -2561,43 +2875,27 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           <span>${b2eSession.company?.name || ""}${b2eSession.office ? " · " + b2eSession.office.name : ""}</span>
         </div>
-        ${b2eMonthlyCap() != null ? (function(){
-          const cap = b2eMonthlyCap();
-          const used = b2eSession.budgetUsed;
-          const remaining = Math.max(0, cap - used);
-          const pct = Math.min(100, Math.round(used / cap * 100));
-          return `
-          <div style="margin-top:12px;">
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;">
-              <span>${t("b2e_budget_line")}</span>
-              <span><b style="color:var(--ink);">${money(remaining)}</b> ${t("b2e_budget_remaining")}</span>
-            </div>
-            <div style="height:8px;background:var(--line);border-radius:999px;overflow:hidden;">
-              <div style="height:100%;width:${pct}%;background:var(--brand);"></div>
-            </div>
-            <div style="font-size:12px;color:var(--muted);margin-top:5px;">${money(used)} / ${money(cap)}</div>
-          </div>`;
-        })() : ""}
       </div>
-      ` : `
+      ` : ""}
+
+      ${!b2eSession.active ? `
       <div class="opt-group">
-        <label class="gl">${t("co_b2b_t")}</label>
-        <div class="hint">${t("co_b2b_h")}</div>
-        ${b2b.valid ? `
+        <label class="gl">${t("co_promo_t")}</label>
+        ${promoState.valid ? `
           <div class="b2b-success">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>${t("co_b2b_ok").replace("%s", b2b.subsidyPct)} · <b>${b2b.companyName}</b></span>
-            <button onclick="removeB2BCode()" style="margin-left:auto;color:var(--danger);font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;">${t("co_b2b_remove")}</button>
+            <span>${t("co_promo_ok").replace("%s", money(promoState.amount))} · <b>${promoState.code}</b></span>
+            <button onclick="removePromo()" style="margin-left:auto;color:var(--danger);font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;">${t("co_b2b_remove")}</button>
           </div>
         ` : `
           <div class="b2b-code-row">
-            <div class="field"><input id="i_b2b" type="text" placeholder="ex : MOKA-ENT" style="text-transform:uppercase;" /></div>
-            <button id="b2bApplyBtn" class="btn btn-ghost" onclick="applyB2BCode()">${t("co_b2b_apply")}</button>
+            <div class="field"><input id="i_promo" type="text" placeholder="${lang==="fr"?"ex : BIENVENUE":"e.g. WELCOME"}" style="text-transform:uppercase;" /></div>
+            <button id="promoApplyBtn" class="btn btn-ghost" onclick="applyPromo()">${t("co_promo_apply")}</button>
           </div>
-          <div class="b2b-err" id="b2bErr">${t("co_b2b_err")}</div>
+          <div class="b2b-err" id="promoErr">${t("co_promo_err")}</div>
         `}
       </div>
-      `}
+      ` : ""}
 
       ${noPayment ? `
       <div class="opt-group">
@@ -2614,33 +2912,25 @@
           <div><div class="pt">${t("co_pay_juice_t")}</div><div class="pd">${t("co_pay_juice_d")}</div></div>
         </label>
         <div class="juice-box${checkout.pay==="juice"?" show":""}" id="juiceBox">${t("co_juice_box")}<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">${t("co_juice_ref")} <b>${checkout.orderNum || ""}</b></div></div>
-        <label class="pay-opt ${checkout.pay==='card'?'selected':''}" onclick="pickPay('card')">
-          <input type="radio" name="pay" value="card" ${checkout.pay==='card'?'checked':''}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="26" height="26"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        ${PAYMENT_OPTS.cash ? `
+        <label class="pay-opt${checkout.pay==="cash"?" selected":""}" id="pay_cash" onclick="pickPay('cash')">
+          <input type="radio" name="pay" value="cash" ${checkout.pay==="cash"?"checked":""} />
+          <div><div class="pt">${t("co_pay_cash_t")}</div><div class="pd">${t("co_pay_cash_d")}</div></div>
+        </label>` : ""}
+        ${PAYMENT_OPTS.card && !b2eSession.active ? `
+        <label class="pay-opt${checkout.pay==="card"?" selected":""}" id="pay_card" onclick="pickPay('card')">
+          <input type="radio" name="pay" value="card" ${checkout.pay==="card"?"checked":""} />
           <div><div class="pt">${t("co_pay_card_t")}</div><div class="pd">${t("co_pay_card_d")}</div></div>
         </label>
-        <div class="card-box${checkout.pay==="card"?" show":""}" id="cardBox">
-          <div class="field" style="margin-bottom:10px;">
-            <label>${t("co_card_num")}</label>
-            <input id="i_card_num" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNum(this)" />
-          </div>
-          <div class="two-col">
-            <div class="field" style="margin:0;">
-              <label>${t("co_card_exp")}</label>
-              <input id="i_card_exp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" oninput="formatCardExp(this)" />
-            </div>
-            <div class="field" style="margin:0;">
-              <label>${t("co_card_cvc")}</label>
-              <input id="i_card_cvc" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" />
-            </div>
-          </div>
-          <div class="card-note">${t("co_card_note")}</div>
-        </div>
+        <div class="juice-box${checkout.pay==="card"?" show":""}" id="cardBox">${t("co_card_note")}</div>` : ""}
       </div>
       `}
 
       <div class="opt-group">
         <label class="gl">${t("co_summary")}</label>
+        <div class="day-recap" style="margin-top:4px;margin-bottom:10px;">
+          ${cartByDay().map(g => `<div class="day-recap-row"><b>${g.label}</b><span>${g.lines.map(l => l.qty + "× " + l.name[lang]).join(", ")}</span></div>`).join("")}
+        </div>
         ${b2eHidePrices() ? `
         <div class="confirm-recap" style="margin-top:8px;">
           ${cart.map(it => `<div class="r" style="color:var(--muted);font-size:14px;"><span>${it.qty}× ${it.name[lang]}</span></div>`).join("")}
@@ -2662,9 +2952,10 @@
           ` : `
           <div class="r"><span>${t("cart_delivery")}</span><b>${t("cart_delivery_free")}</b></div>
           `}
+          ${promoDiscount > 0 ? `<div class="r" style="color:var(--green-ok);"><span>${t("co_promo_line")} · ${promoState.code}</span><b>−${money(promoDiscount)}</b></div>` : ""}
           <div class="r" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px;">
             <span>${b2eSession.active || b2b.valid ? t("confirm_employee_pays") : t("cart_total")}</span>
-            <b>${money(empAmt)}</b>
+            <b>${money(finalAmt)}</b>
           </div>
         </div>
         `}
@@ -2698,7 +2989,7 @@
         if ($("#i_locality") && !$("#i_locality").value && b2eSession.office.address) $("#i_locality").value = b2eSession.office.address;
       }
     }
-    $("#placeOrderBtn").textContent = noPayment ? t("co_place_free") : `${t("co_place")} · ${money(empAmt)}`;
+    $("#placeOrderBtn").textContent = noPayment ? t("co_place_free") : `${t("co_place")} · ${money(finalAmt)}`;
   }
 
   function pickDay(time) {
@@ -2757,7 +3048,7 @@
     const groups = cartByDay(); // [{ts, label, lines}]
     const orderNum = checkout.orderNum || makeOrderNumber();
     const daysLabel = groups.map(g => g.label).join(" · ");
-    const payLabel = checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+    const payLabel = checkout.pay === "juice" ? t("co_pay_juice_t") : checkout.pay === "cash" ? t("co_pay_cash_t") : t("co_pay_card_t");
     const savedB2b = b2b.valid ? { ...b2b } : null;
     const fullAmt = cartSubtotal();
 
@@ -2773,45 +3064,75 @@
     });
     if (!savedB2b) payTotal = fullAmt;
 
+    // Code promo particulier : remise fixe déduite du montant à payer
+    const promoApplied = promoState.valid ? Math.min(promoState.amount, payTotal) : 0;
+    const promoUsed = promoState.valid ? { code: promoState.code, amount: promoApplied } : null;
+    payTotal = Math.max(0, payTotal - promoApplied);
+
+    // ── Paiement carte (MIPS) : créer le paiement puis rediriger vers la page sécurisée MIPS ──
+    if (checkout.pay === "card") {
+      const btn = $("#placeOrderBtn");
+      btn.disabled = true; btn.textContent = lang === "fr" ? "Redirection vers le paiement…" : "Redirecting to payment…";
+      try {
+        const res = await fetch("/api/mips", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "create", orderRef: orderNum, total: payTotal, name, email, phone, addr,
+            days: dayCalc.map(g => ({ items: g.lines, total: g.dayTotal, date: g.iso })),
+          }),
+        });
+        const p = await res.json().catch(() => ({}));
+        if (!res.ok || !p.url) throw new Error(p.error || (lang === "fr" ? "Paiement indisponible." : "Payment unavailable."));
+        saveProfile({ name, company, phone, email, addr, building, town, locality });
+        cart = []; saveCart();
+        window.location.href = p.url; // → page de paiement MIPS
+      } catch (e) {
+        alert((lang === "fr" ? "Le paiement n'a pas pu être initié : " : "Could not start payment: ") + e.message);
+        renderCheckout();
+      }
+      return;
+    }
+
     // Historique local (une entrée, items portent chacun leur .day)
-    const order = { num: orderNum, name, company, phone, email, addr, building, town, locality, days: groups.map(g => ({ day: g.ts, label: g.label })), pay: checkout.pay, items: [...cart], total: payTotal, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subTotal } : null, createdAt: Date.now() };
+    const order = { num: orderNum, name, company, phone, email, addr, building, town, locality, days: groups.map(g => ({ day: g.ts, label: g.label })), pay: checkout.pay, items: [...cart], total: payTotal, subtotal: fullAmt, b2b: savedB2b ? { code: savedB2b.code, company: savedB2b.companyName, subsidy: subTotal } : null, promo: promoUsed, createdAt: Date.now() };
     const history = JSON.parse(localStorage.getItem("bp_orders") || "[]");
     history.push(order);
     localStorage.setItem("bp_orders", JSON.stringify(history));
 
-    // Enregistrement Supabase : une ligne par jour de livraison
+    // Code promo B2B (ancien flux) : enregistrement direct
+    let _customerId = null;
     if (_supa) {
       const { data: { user } } = await _supa.auth.getUser();
-      dayCalc.forEach(g => {
-        if (savedB2b) {
+      _customerId = user ? user.id : null;
+      if (savedB2b) {
+        dayCalc.forEach(g => {
           _supa.from("b2b_orders").insert({
             company_id: savedB2b.companyId, employee_name: name, employee_phone: phone,
             order_ref: orderNum, order_items: g.lines, order_total: g.dayTotal,
             subsidy_amount: g.daySub, employee_amount: g.dayEmp,
             delivery_date: g.iso, status: "confirmed"
           }).then(({ error }) => { if (error) console.warn("B2B sync:", error.message); });
-        }
-        if (user) {
-          _supa.from("orders").insert({
-            customer_id: user.id, order_ref: orderNum, order_items: g.lines,
-            order_total: g.dayTotal, payment_method: checkout.pay,
-            delivery_date: g.iso, status: "confirmed"
-          }).then(({ error }) => { if (error) console.warn("Account sync:", error.message); });
-        }
-      });
+        });
+      }
     }
 
     // Sauvegarde du profil pour les prochaines visites (saisie une seule fois)
     saveProfile({ name, company, phone, email, addr, building, town, locality, b2bCode: savedB2b?.code || null });
 
-    // Email de confirmation (best-effort)
+    // Email de confirmation + enregistrement de la commande (TOUTES les commandes, invités compris) via le serveur
     fetch("/api/order-email", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to: email, orderRef: orderNum, items: order.items, total: payTotal, deliveryDate: daysLabel, payLabel, name, company, phone, addr, lang }),
+      body: JSON.stringify({
+        to: email, orderRef: orderNum, items: order.items, total: payTotal, deliveryDate: daysLabel, payLabel, payMethod: checkout.pay, name, company, phone, addr, lang,
+        customerId: _customerId,
+        promoCode: promoUsed ? promoUsed.code : null, promoAmount: promoUsed ? promoUsed.amount : 0,
+        days: dayCalc.map(g => ({ items: g.lines, total: g.dayTotal, date: g.iso })),
+      }),
     }).catch(() => {});
 
     cart = []; saveCart();
     b2b  = { code: null, companyId: null, companyName: null, subsidyPct: 50, valid: false };
+    promoState = { code: null, amount: 0, valid: false };
 
     renderConfirmation(orderNum, daysLabel, payLabel, payTotal, email, savedB2b, subTotal);
     closeAll();
@@ -2825,7 +3146,7 @@
     btn.textContent = lang === "fr" ? "Envoi de la commande…" : "Placing order…";
 
     const { data: { session } } = await _supa.auth.getSession();
-    const payLabel = checkout.pay === "juice" ? t("co_pay_juice_t") : t("co_pay_card_t");
+    const payLabel = checkout.pay === "juice" ? t("co_pay_juice_t") : checkout.pay === "cash" ? t("co_pay_cash_t") : t("co_pay_card_t");
     const groups = cartByDay(); // une commande B2E par jour de livraison
 
     let totalPay = 0, totalContribution = 0, firstRef = null, lastPickup = null;
@@ -2882,7 +3203,8 @@
     const d = new Date();
     const p = (n) => String(n).padStart(2, "0");
     const rand = Math.floor(1000 + Math.random() * 9000);
-    return `BP-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${rand}`;
+    // Format strictement alphanumérique (exigence MIPS : id_order = [A-Za-z0-9], 5–25 car.)
+    return `BP${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}${rand}`;
   }
 
   function renderConfirmation(num, dayStr, payLabel, total, email, savedB2b, subAmt, pickupCode) {
@@ -3177,7 +3499,9 @@
      INIT
   ============================================================ */
   // Contenu éditable depuis l'admin (site_content) — surcharge les textes par défaut
-  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_banner_budget","b2e_banner_icon","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3","nav_home","nav_weekly","nav_menu","nav_about","nav_entreprises","nav_contact"];
+  // Clés dont un libellé vide casserait l'affichage → on garde le défaut si l'admin a laissé vide.
+  const NEVER_EMPTY_KEYS = ["co_pay_cash_t","co_pay_cash_d","co_pay_juice_t","co_pay_juice_d","co_pay_card_t","co_pay_card_d","co_card_note","co_pay_t","co_place","checkout_title","pm_choose","pm_add","pm_qty"];
+  const EDITABLE_KEYS = ["topbar","hero_eyebrow","hero_title","hero_sub","hero_cta","hero_cta_b2e","info_strip","week_eyebrow","week_title","week_sub","about_eyebrow","about_title","about_p1","about_p2","contact_eyebrow","contact_title","contact_p","contact_zone_t","contact_zone_v","contact_phone_t","contact_phone_v","contact_email_t","contact_email_v","contact_hours_t","contact_hours_v","news_title","news_ph","news_btn","footer_legal","footer_tag","steps_eyebrow","steps_title","b2e_free_banner","b2e_covered_banner","b2e_covered_tag","b2e_free_tag","b2e_banner_budget","b2e_banner_icon","menu_eyebrow","menu_title","menu_sub","menu_from","menu_dishes_word","menu_cutoff_note","menu_free_delivery","pm_choose","pm_choose_h","pm_qty","pm_drinks_t","pm_drinks_h","pm_condiments_t","pm_condiments_h","pm_add","daily_veg_icon","daily_nonveg_icon","co_notice","co_day_t","co_day_hint","co_day_h","co_info_t","co_addr_t","co_moka_confirm","co_pay_t","co_pay_cash_t","co_pay_cash_d","co_pay_juice_t","co_pay_juice_d","co_pay_card_t","co_pay_card_d","co_card_note","co_juice_box","co_ordernum","co_juice_ref","co_place","co_summary","checkout_title","confirm_title","confirm_msg","confirm_email_note","b2e_cutoff","daily_desc","hero_preview_label","hero_pick_1","hero_pick_2","hero_pick_3","nav_home","nav_weekly","nav_menu","nav_about","nav_entreprises","nav_contact"];
   async function loadSiteContent() {
     if (!_supa) return;
     const { data, error } = await _supa.from("site_content").select("key, fr, en");
@@ -3186,6 +3510,7 @@
     // les autres sections = ui_font__<clé> / ui_scale__<clé>.
     const uiMap = {};
     const uiSet = (k, f, v) => { (uiMap[k] = uiMap[k] || {})[f] = v; };
+    let _heroChanged = false;
     for (const row of data) {
       if (row.key === "ui_font")       { uiSet("all", "font", row.fr || "");  continue; }
       if (row.key === "ui_font_scale") { uiSet("all", "scale", row.fr || ""); continue; }
@@ -3208,14 +3533,46 @@
         if (row.en) ABOUT_FEATURES.en = row.en.split("\n").map(s => s.trim()).filter(Boolean);
         continue;
       }
+      // Formule Midi / Lunch Combo — éditable depuis l'admin
+      if (row.key === "weeks_visible")  { const n = Math.max(1, Math.min(4, parseInt(row.fr, 10) || 1)); WEEK_OPTIONS = Array.from({ length: n }, (_, i) => i); continue; }
+      if (row.key === "combo_enabled")  { if (FORMULAS[0]) FORMULAS[0].enabled = (row.fr !== "0"); continue; }
+      if (row.key === "combo_name")     { if (FORMULAS[0]) { if (row.fr) FORMULAS[0].name.fr = row.fr; if (row.en) FORMULAS[0].name.en = row.en; } continue; }
+      if (row.key === "combo_desc")     { if (FORMULAS[0]) { if (row.fr) FORMULAS[0].desc.fr = row.fr; if (row.en) FORMULAS[0].desc.en = row.en; } continue; }
+      if (row.key === "combo_discount") { const n = parseInt(row.fr, 10); if (FORMULAS[0] && !isNaN(n)) FORMULAS[0].discount = Math.max(0, n); continue; }
+      if (row.key === "combo_img")      { if (FORMULAS[0] && row.fr) FORMULAS[0].img = row.fr; continue; }
+      // Modes de paiement activables côté admin
+      if (row.key === "pay_cash_enabled") { PAYMENT_OPTS.cash = (row.fr === "1"); continue; }
+      if (row.key === "pay_card_enabled") { PAYMENT_OPTS.card = (row.fr === "1"); continue; }
+      // Photos du site (gérées dans l'admin)
+      if (row.key === "hero_images") {
+        const arr = (row.fr || "").split(/[\n,]/).map(s => s.trim()).filter(Boolean);
+        if (arr.length) { HERO_IMAGES = arr; _heroChanged = true; }
+        continue;
+      }
+      if (row.key === "about_image") {
+        if (row.fr) { const el = document.getElementById("aboutImg"); if (el) el.src = row.fr; }
+        continue;
+      }
+      // SEO éditable depuis l'admin
+      // SEO (titre, description, mots-clés) : géré directement dans le HTML — l'admin ne l'écrase plus.
+      if (row.key === "seo_title" || row.key === "seo_description" || row.key === "seo_keywords") { continue; }
+      if (row.key === "og_image") { if (row.fr) { const o = document.getElementById("ogImage"); if (o) o.setAttribute("content", row.fr); } continue; }
       if (row.key === "popup_enabled") { WELCOME.enabled = (row.fr === "1"); continue; }
       if (row.key === "popup_title") { WELCOME.title.fr = row.fr || ""; WELCOME.title.en = row.en || ""; continue; }
       if (row.key === "popup_body")  { WELCOME.body.fr = row.fr || "";  WELCOME.body.en = row.en || "";  continue; }
       if (!EDITABLE_KEYS.includes(row.key)) continue;
-      if (row.fr) I18N.fr[row.key] = row.fr;
-      if (row.en) I18N.en[row.key] = row.en;
+      // Libellés de paiement : ne jamais écraser avec une valeur vide (sinon libellé cassé).
+      if (NEVER_EMPTY_KEYS.includes(row.key)) {
+        if (row.fr) I18N.fr[row.key] = row.fr;
+        if (row.en) I18N.en[row.key] = row.en;
+        continue;
+      }
+      // On applique même une valeur vide ("") : vider un champ dans l'admin = le retirer du site.
+      if (row.fr != null) I18N.fr[row.key] = row.fr;
+      if (row.en != null) I18N.en[row.key] = row.en;
     }
     applyUiTheme(uiMap);
+    if (_heroChanged) initHeroCarousel();
   }
 
   // Sélecteurs CSS par section (clés partagées avec l'admin)
@@ -3292,7 +3649,7 @@
   }
 
   /* ── Carrousel du hero (photos qui défilent) ── */
-  const HERO_IMAGES = [
+  let HERO_IMAGES = [
     "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1600&q=80",
     "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=1600&q=80",
     "https://images.unsplash.com/photo-1539252554453-80ab65ce3586?auto=format&fit=crop&w=1600&q=80",
@@ -3333,6 +3690,38 @@
     maybeShowWelcome();
   })();
   loadDailyMenu();
+
+  // Retour après paiement MIPS (le client revient sur le site après la page de paiement)
+  (function mipsReturn(){
+    const params = new URLSearchParams(location.search);
+    if (params.get("mips") !== "success") return;
+    const ref = params.get("ref") || "";
+    const fr = lang === "fr";
+    try { cart = []; saveCart(); } catch(e){}
+    history.replaceState(null, "", location.pathname);
+    // Overlay autonome (indépendant des modals du site) — affiché immédiatement
+    const showMipsOverlay = () => {
+      if (document.getElementById("mipsThanks")) return;
+      const ov = document.createElement("div");
+      ov.id = "mipsThanks";
+      ov.style.cssText = "position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);";
+      ov.innerHTML = `
+        <div style="background:#fff;border-radius:20px;max-width:420px;width:100%;padding:34px 28px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25);font-family:'Barlow',sans-serif;">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--green-ok,#2E7D52);display:grid;place-items:center;margin:0 auto 16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" width="30" height="30"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <h3 style="font-family:'Rubik',sans-serif;font-weight:800;font-size:22px;">${fr ? "Merci pour votre commande !" : "Thank you for your order!"}</h3>
+          <p style="color:var(--muted);margin-top:10px;font-size:15px;line-height:1.5;">${fr ? "Dès que votre paiement est validé, votre commande est confirmée et un email de confirmation vous est envoyé." : "As soon as your payment is validated, your order is confirmed and a confirmation email is sent to you."}</p>
+          ${ref ? `<div style="font-family:'Rubik';font-weight:800;color:var(--brand-deep);margin-top:14px;font-size:16px;">${ref}</div>` : ""}
+          <button style="margin-top:22px;background:var(--brand);color:#fff;border:none;border-radius:999px;padding:12px 28px;font-family:'Rubik';font-weight:700;font-size:15px;cursor:pointer;" onclick="this.closest('div[style]').parentNode.remove()">${fr ? "Continuer" : "Continue"}</button>
+        </div>`;
+      ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+      document.body.appendChild(ov);
+    };
+    showMipsOverlay();
+    // Filet de sécurité si l'init réaffiche/écrase quelque chose
+    setTimeout(showMipsOverlay, 1200);
+  })();
   loadCondiments();
   loadDrinks().then(() => { if ($("#formulaModal").classList.contains("open")) renderFormulaBody(); });
   initProfile();
@@ -3359,6 +3748,8 @@
      POPUP PROMO
   ============================================================ */
   function initPromo() {
+    // La pop-up promo est déclarée plus bas dans le HTML : on s'assure que ses éléments existent.
+    if (!$("#promoPopup") || !$("#promoWelcome")) return;
     const today = new Date().toISOString().slice(0, 10);
     if (localStorage.getItem("bp_promo_seen") === today) return;
     const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
@@ -3377,7 +3768,9 @@
     localStorage.setItem("bp_promo_seen", today);
   }
 
-  initPromo();
+  // Les éléments de la pop-up sont déclarés après ce script : on attend que le DOM soit prêt.
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initPromo);
+  else initPromo();
   </script>
 
   <div class="profile-modal" id="profileModal">

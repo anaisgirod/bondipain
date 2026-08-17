@@ -2,7 +2,7 @@ const { getSupabaseAdmin } = require('./_supabaseAdmin');
 const { sendEmail, wrap } = require('./_email');
 
 // Compte admin : info@bondipain.com. hello@ accepté le temps de la bascule du compte Supabase.
-const ADMIN_EMAILS = ['info@bondipain.com', 'hello@bondipain.com'];
+const ADMIN_EMAILS = ['info@bondipain.com', 'hello@bondipain.com', 'agirod@gramica.fr'];
 
 async function getAdmin(req, supabaseAdmin) {
   const authHeader = req.headers.authorization || '';

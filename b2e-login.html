@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9QR4QJW');</script>
+<!-- End Google Tag Manager -->
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bondipain — Avantage entreprise</title>
@@ -12,9 +20,9 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --brand:       #F2A24C;
-    --brand-deep:  #C9711B;
-    --brand-soft:  #FBE5CC;
+    --brand:       #FF8C00;
+    --brand-deep:  #DA4928;
+    --brand-soft:  #F6E1C4;
     --cream-2:     #FDF1E5;
     --ink:         #2A2622;
     --muted:       #837A70;
@@ -65,6 +73,11 @@
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9QR4QJW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 
 <div class="topbar">
   <a class="brand" href="index.html">
@@ -99,6 +112,13 @@
     </form>
 
     <p class="foot-link" data-i18n="foot">Pas encore invité ? Demandez à votre RH de vous ajouter, ou <a href="index.html#contact">contactez-nous</a>.</p>
+    <p class="foot-link" style="margin-top:12px;display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;">
+      <a href="faq.html" data-i18n="footer_faq">FAQ</a>
+      <a href="mentions-legales.html" data-i18n="footer_legal_notice">Mentions légales</a>
+      <a href="conditions-generales.html" data-i18n="footer_terms">CGV</a>
+      <a href="confidentialite.html" data-i18n="footer_privacy">Confidentialité</a>
+      <a href="cookies.html" data-i18n="footer_cookies">Cookies</a>
+    </p>
   </div>
 </div>
 
@@ -111,6 +131,7 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 const L = {
   fr: {
     back: "← Retour au site", badge: "Avantage entreprise", title: "Connexion employé",
+    footer_faq: "FAQ", footer_legal_notice: "Mentions légales", footer_terms: "CGV", footer_privacy: "Confidentialité", footer_cookies: "Cookies",
     sub: "Connectez-vous avec votre email professionnel. Votre entreprise, votre bureau et votre avantage repas sont détectés automatiquement.",
     email: "Email professionnel", pwd: "Mot de passe",
     pwd_hint: "Reçu par email lors de votre invitation par votre entreprise.",
@@ -122,6 +143,7 @@ const L = {
   },
   en: {
     back: "← Back to site", badge: "Company benefit", title: "Employee login",
+    footer_faq: "FAQ", footer_legal_notice: "Legal notice", footer_terms: "Terms", footer_privacy: "Privacy", footer_cookies: "Cookies",
     sub: "Sign in with your work email. Your company, office and meal benefit are detected automatically.",
     email: "Work email", pwd: "Password",
     pwd_hint: "Received by email when your company invited you.",

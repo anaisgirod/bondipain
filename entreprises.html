@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9QR4QJW');</script>
+<!-- End Google Tag Manager -->
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bondipain — Avantage déjeuner pour vos employés</title>
@@ -9,12 +17,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Rubik:wght@500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   :root {
-    --brand:#F2A24C; --brand-strong:#E5892B; --brand-deep:#C9711B; --brand-soft:#FBE5CC;
-    --cream:#FFF8F1; --cream-2:#FDF1E5; --ink:#2A2622; --muted:#837A70; --line:#EFE3D5;
+    --brand:#FF8C00; --brand-strong:#F07E1A; --brand-deep:#DA4928; --brand-soft:#F6E1C4; --gold:#FEC12C;
+    --cream:#F7F5F0; --cream-2:#FDF1E5; --ink:#2A2622; --muted:#837A70; --line:#EFE3D5;
     --green:#2E7D52; --green-soft:#E8F5E9;
     --shadow-sm:0 2px 10px rgba(60,40,15,.08); --shadow-md:0 8px 30px rgba(60,40,15,.12); --radius:16px;
   }
@@ -116,6 +125,11 @@
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9QR4QJW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 
 <header class="site">
   <div class="container nav">
@@ -145,11 +159,11 @@
     </div>
     <div class="contrib-card">
       <h4 data-i18n="cc_title">Exemple de contribution</h4>
-      <div class="cc-row"><span data-i18n="cc_price">Prix du repas</span><b>Rs 300</b></div>
-      <div class="cc-row green"><span data-i18n="cc_cover">Votre entreprise prend en charge</span><b>−Rs 150</b></div>
+      <div class="cc-row"><span data-i18n="cc_price">Prix du repas</span><b data-i18n="cc_price_val">Rs 300</b></div>
+      <div class="cc-row green"><span data-i18n="cc_cover">Votre entreprise prend en charge</span><b data-i18n="cc_cover_val">−Rs 150</b></div>
       <div class="cc-total">
         <span class="lbl" data-i18n="cc_pay">L'employé paie</span>
-        <span class="val">Rs 150</span>
+        <span class="val" data-i18n="cc_pay_val">Rs 150</span>
       </div>
       <div class="cc-note" data-i18n="cc_note">Vous fixez le montant : contribution fixe ou %, plafond mensuel, jours éligibles.</div>
     </div>
@@ -209,34 +223,34 @@
     </div>
     <div class="steps-grid">
       <div class="step">
-        <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#FBE5CC"/>
-          <rect x="30" y="26" width="44" height="52" rx="5" fill="#C9711B"/>
+        <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#F6E1C4"/>
+          <rect x="30" y="26" width="44" height="52" rx="5" fill="#DA4928"/>
           <rect x="36" y="32" width="8" height="8" rx="1.5" fill="#FDF1E5"/><rect x="48" y="32" width="8" height="8" rx="1.5" fill="#FDF1E5"/><rect x="60" y="32" width="8" height="8" rx="1.5" fill="#FDF1E5"/>
           <rect x="36" y="44" width="8" height="8" rx="1.5" fill="#FDF1E5"/><rect x="48" y="44" width="8" height="8" rx="1.5" fill="#FDF1E5"/><rect x="60" y="44" width="8" height="8" rx="1.5" fill="#FDF1E5"/>
-          <rect x="46" y="60" width="12" height="18" rx="1.5" fill="#F2A24C"/></svg></div>
+          <rect x="46" y="60" width="12" height="18" rx="1.5" fill="#FF8C00"/></svg></div>
         <div class="num">1</div><h4 data-i18n="step1_h">Créez votre compte</h4><p data-i18n="step1_p">On configure votre entreprise, vos bureaux et vos créneaux.</p></div>
       <div class="step">
         <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#E8F5E9"/>
           <circle cx="40" cy="42" r="10" fill="#2E7D52"/><path d="M24 70c0-9 7-15 16-15s16 6 16 15z" fill="#2E7D52"/>
-          <circle cx="64" cy="46" r="8" fill="#F2A24C"/><path d="M51 70c0-7 6-12 13-12s13 5 13 12z" fill="#F2A24C"/>
-          <rect x="60" y="30" width="26" height="18" rx="2.5" fill="#fff" stroke="#C9711B" stroke-width="2"/><path d="M60 32l13 9 13-9" fill="none" stroke="#C9711B" stroke-width="2"/></svg></div>
+          <circle cx="64" cy="46" r="8" fill="#FF8C00"/><path d="M51 70c0-7 6-12 13-12s13 5 13 12z" fill="#FF8C00"/>
+          <rect x="60" y="30" width="26" height="18" rx="2.5" fill="#fff" stroke="#DA4928" stroke-width="2"/><path d="M60 32l13 9 13-9" fill="none" stroke="#DA4928" stroke-width="2"/></svg></div>
         <div class="num">2</div><h4 data-i18n="step2_h">Invitez vos employés</h4><p data-i18n="step2_p">Par email professionnel ou code d'invitation.</p></div>
       <div class="step">
-        <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#FBE5CC"/>
-          <circle cx="52" cy="52" r="24" fill="#F2A24C"/><circle cx="52" cy="52" r="24" fill="none" stroke="#C9711B" stroke-width="2.5"/>
+        <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#F6E1C4"/>
+          <circle cx="52" cy="52" r="24" fill="#FF8C00"/><circle cx="52" cy="52" r="24" fill="none" stroke="#DA4928" stroke-width="2.5"/>
           <text x="52" y="63" font-family="Rubik,Arial" font-size="30" font-weight="800" fill="#fff" text-anchor="middle">%</text>
           <circle cx="80" cy="34" r="10" fill="#2E7D52"/><text x="80" y="39" font-family="Arial" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">Rs</text></svg></div>
         <div class="num">3</div><h4 data-i18n="step3_h">Définissez la contribution</h4><p data-i18n="step3_p">Montant fixe ou %, plafond mensuel, jours éligibles.</p></div>
       <div class="step">
         <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#E8F5E9"/>
           <rect x="38" y="24" width="32" height="56" rx="7" fill="#33302C"/><rect x="42" y="30" width="24" height="40" rx="2.5" fill="#FDF1E5"/><circle cx="54" cy="75" r="2.5" fill="#837A70"/>
-          <circle cx="54" cy="49" r="12" fill="#F2A24C"/><circle cx="50" cy="47" r="3" fill="#E86B4C"/><circle cx="58" cy="48" r="2.5" fill="#2E7D52"/></svg></div>
+          <circle cx="54" cy="49" r="12" fill="#FF8C00"/><circle cx="50" cy="47" r="3" fill="#E86B4C"/><circle cx="58" cy="48" r="2.5" fill="#2E7D52"/></svg></div>
         <div class="num">4</div><h4 data-i18n="step4_h">Vos employés commandent</h4><p data-i18n="step4_p">Ils voient leur avantage et paient uniquement le solde.</p></div>
       <div class="step">
-        <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#FBE5CC"/>
-          <path d="M36 24h26l10 10v46l-6-4-6 4-6-4-6 4-6-4-6 4V24z" fill="#fff" stroke="#C9711B" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M62 24v10h10" fill="none" stroke="#C9711B" stroke-width="2.5" stroke-linejoin="round"/>
-          <rect x="42" y="42" width="20" height="3.5" rx="1.75" fill="#F2A24C"/><rect x="42" y="50" width="24" height="3" rx="1.5" fill="#E8DED2"/><rect x="42" y="57" width="18" height="3" rx="1.5" fill="#E8DED2"/>
+        <div class="si-icon"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="52" fill="#F6E1C4"/>
+          <path d="M36 24h26l10 10v46l-6-4-6 4-6-4-6 4-6-4-6 4V24z" fill="#fff" stroke="#DA4928" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M62 24v10h10" fill="none" stroke="#DA4928" stroke-width="2.5" stroke-linejoin="round"/>
+          <rect x="42" y="42" width="20" height="3.5" rx="1.75" fill="#FF8C00"/><rect x="42" y="50" width="24" height="3" rx="1.5" fill="#E8DED2"/><rect x="42" y="57" width="18" height="3" rx="1.5" fill="#E8DED2"/>
           <circle cx="76" cy="72" r="12" fill="#2E7D52"/><path d="M71 72l4 4 6-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="num">5</div><h4 data-i18n="step5_h">Recevez la facture</h4><p data-i18n="step5_p">Facture mensuelle consolidée + export des commandes.</p></div>
     </div>
@@ -268,6 +282,14 @@
 <footer class="site">
   <div class="container">
     <p data-i18n="footer_html"><a href="index.html">← Retour au site Bondipain</a> · Livraison au bureau · Zone de Moka · <a href="employeur.html">Espace employeur</a></p>
+    <p style="margin-top:12px;font-size:13px;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;">
+      <a href="faq.html" data-i18n="footer_faq">FAQ</a>
+      <a href="mentions-legales.html" data-i18n="footer_legal_notice">Mentions légales</a>
+      <a href="conditions-generales.html" data-i18n="footer_terms">Conditions générales de vente</a>
+      <a href="confidentialite.html" data-i18n="footer_privacy">Politique de confidentialité</a>
+      <a href="cookies.html" data-i18n="footer_cookies">Politique relative aux cookies</a>
+    </p>
+    <p style="margin-top:10px;font-size:12.5px;"><span data-i18n="footer_madeby">Fait par</span> <a href="https://gramica-africa.com" target="_blank" rel="noopener">Gramica</a></p>
   </div>
 </footer>
 
@@ -282,6 +304,7 @@ const L = {
     hero_cta1: "Demander une démo entreprise", hero_cta2: "Comment ça marche",
     cc_title: "Exemple de contribution", cc_price: "Prix du repas",
     cc_cover: "Votre entreprise prend en charge", cc_pay: "L'employé paie",
+    cc_price_val: "Rs 300", cc_cover_val: "−Rs 150", cc_pay_val: "Rs 150",
     cc_note: "Vous fixez le montant : contribution fixe ou %, plafond mensuel, jours éligibles.",
     ben_eyebrow: "Pourquoi Bondipain", ben_h2: "Un vrai avantage, zéro casse-tête",
     ben_p: "Le même menu que le grand public, mais avec une contribution de votre entreprise appliquée automatiquement.",
@@ -311,6 +334,7 @@ const L = {
     cta_p: "Contactez-nous pour une démo et un devis adapté à la taille de votre entreprise.",
     cta_btn1: "Écrire à info@bondipain.com", cta_btn2: "J'ai déjà un compte entreprise",
     footer_html: '<a href="index.html">← Retour au site Bondipain</a> · Livraison au bureau · Zone de Moka · <a href="employeur.html">Espace employeur</a>',
+    footer_faq: "FAQ", footer_legal_notice: "Mentions légales", footer_terms: "Conditions générales de vente", footer_privacy: "Politique de confidentialité", footer_cookies: "Politique relative aux cookies", footer_madeby: "Fait par",
   },
   en: {
     nav_site: "Home", nav_employer: "Employer portal", nav_demo: "Request a demo",
@@ -320,6 +344,7 @@ const L = {
     hero_cta1: "Request a company demo", hero_cta2: "How it works",
     cc_title: "Example contribution", cc_price: "Meal price",
     cc_cover: "Your company covers", cc_pay: "The employee pays",
+    cc_price_val: "Rs 300", cc_cover_val: "−Rs 150", cc_pay_val: "Rs 150",
     cc_note: "You set the amount: fixed contribution or %, monthly cap, eligible days.",
     ben_eyebrow: "Why Bondipain", ben_h2: "A real benefit, zero hassle",
     ben_p: "The same menu as the general public, but with your company's contribution applied automatically.",
@@ -349,6 +374,7 @@ const L = {
     cta_p: "Get in touch for a demo and a quote tailored to your company's size.",
     cta_btn1: "Email info@bondipain.com", cta_btn2: "I already have a company account",
     footer_html: '<a href="index.html">← Back to the Bondipain site</a> · Office delivery · Moka area · <a href="employeur.html">Employer portal</a>',
+    footer_faq: "FAQ", footer_legal_notice: "Legal notice", footer_terms: "Terms & conditions", footer_privacy: "Privacy policy", footer_cookies: "Cookie policy", footer_madeby: "Made by",
   },
 };
 let lang = localStorage.getItem("bp_lang") || "fr";
@@ -362,6 +388,27 @@ function applyLang() {
 }
 function setLang(l) { lang = l; applyLang(); }
 document.addEventListener("DOMContentLoaded", applyLang);
+
+/* ── Contenu éditable depuis l'admin (site_content, clés préfixées « ent_ ») ── */
+(async function loadEntContent() {
+  try {
+    const SUPABASE_URL  = "https://cqtplubyjgkhbnlujsoe.supabase.co";
+    const SUPABASE_ANON = "sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
+    if (!window.supabase) return;
+    const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    const { data, error } = await _supa.from("site_content").select("key, fr, en");
+    if (error || !data) return;
+    for (const row of data) {
+      const m = row.key.match(/^ent_(.+)$/);
+      if (!m) continue;
+      const k = m[1];
+      if (L.fr[k] === undefined && L.en[k] === undefined) continue;
+      if (row.fr) L.fr[k] = row.fr;
+      if (row.en) L.en[k] = row.en;
+    }
+    applyLang();
+  } catch (e) { /* le site garde les textes par défaut */ }
+})();
 </script>
 </body>
 </html>

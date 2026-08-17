@@ -71,6 +71,16 @@ function makePickupCode() {
   return 'BP-' + Math.floor(1000 + Math.random() * 9000);
 }
 
+// Date limite d'annulation : 15h00 (heure Maurice, UTC+4) le jour ouvrable précédant la livraison.
+function cancelDeadlineMs(deliveryDateStr) {
+  const s = String(deliveryDateStr || '').slice(0, 10);
+  const [y, m, d] = s.split('-').map(Number);
+  if (!y) return 0;
+  let dt = new Date(Date.UTC(y, m - 1, d));
+  do { dt.setUTCDate(dt.getUTCDate() - 1); } while (dt.getUTCDay() === 0 || dt.getUTCDay() === 6);
+  return Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate(), 11, 0, 0); // 15h Maurice = 11h UTC
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -87,6 +97,44 @@ module.exports = async (req, res) => {
     }
     if (employee.status === 'removed') {
       res.status(403).json({ error: "Votre accès à l'avantage repas a été retiré." });
+      return;
+    }
+
+    // ── Annulation d'une commande employé (recrédite le budget mensuel) ──
+    if (req.body && req.body.action === 'cancel') {
+      const orderId = req.body.orderId;
+      if (!orderId) { res.status(400).json({ error: 'Commande introuvable.' }); return; }
+      const { data: ord, error: ordErr } = await supabaseAdmin
+        .from('b2e_orders')
+        .select('id, employee_id, delivery_date, status, employer_contribution, covered_meals')
+        .eq('id', orderId).maybeSingle();
+      if (ordErr) throw ordErr;
+      if (!ord || ord.employee_id !== employee.id) { res.status(404).json({ error: 'Commande introuvable.' }); return; }
+      if (ord.status === 'cancelled') { res.status(200).json({ ok: true, already: true }); return; }
+      if (ord.status && ord.status !== 'confirmed') { res.status(409).json({ error: 'Cette commande ne peut plus être annulée.' }); return; }
+      if (Date.now() >= cancelDeadlineMs(ord.delivery_date)) { res.status(409).json({ error: "Le délai d'annulation est dépassé." }); return; }
+
+      const { error: upErr } = await supabaseAdmin.from('b2e_orders').update({ status: 'cancelled' }).eq('id', orderId);
+      if (upErr) throw upErr;
+
+      // Recréditer le budget mensuel consommé (Rs) ET le compteur de menus couverts.
+      const contrib = Number(ord.employer_contribution || 0);
+      const coveredMeals = Number(ord.covered_meals || 0);
+      if (contrib > 0 || coveredMeals > 0) {
+        const periodMonth = firstOfMonth(ord.delivery_date);
+        const { data: ledger } = await supabaseAdmin
+          .from('employee_budget_ledger').select('contributed, meals_covered')
+          .eq('employee_id', employee.id).eq('period_month', periodMonth).maybeSingle();
+        const already = Number(ledger?.contributed || 0);
+        const alreadyMeals = Number(ledger?.meals_covered || 0);
+        const next = Math.max(0, Math.round((already - contrib) * 100) / 100);
+        const nextMeals = Math.max(0, alreadyMeals - coveredMeals);
+        await supabaseAdmin.from('employee_budget_ledger').upsert(
+          { employee_id: employee.id, period_month: periodMonth, contributed: next, meals_covered: nextMeals },
+          { onConflict: 'employee_id,period_month' }
+        );
+      }
+      res.status(200).json({ ok: true });
       return;
     }
 
@@ -118,13 +166,16 @@ module.exports = async (req, res) => {
     // Mode d'avantage de l'entreprise
     const { data: company } = await supabaseAdmin
       .from('companies')
-      .select('benefit_mode, show_prices, name')
+      .select('benefit_mode, show_prices, billing_mode, name')
       .eq('id', employee.company_id)
       .maybeSingle();
     const benefitMode = company?.benefit_mode || 'contribution';
 
-    // PRIX MASQUÉS : l'entreprise prend TOUT en charge (l'employé ne voit pas les prix et ne paie rien)
-    if (company && company.show_prices === false) {
+    // Prise en charge TOTALE (l'employé ne paie rien) si :
+    //  - l'entreprise paie la totalité (billing_mode = 'full'), OU
+    //  - les prix sont masqués ET ce n'est PAS le mode « 1 repas offert/jour »
+    //    (en mode 1-offert/jour, les repas en plus restent au tarif normal, payés par l'employé)
+    if (company && (company.billing_mode === 'full' || (company.show_prices === false && benefitMode !== 'free_daily'))) {
       const employerContribution = Math.round(orderTotal * 100) / 100;
       const pickupCode = makePickupCode();
       const orderRef = (typeof clientOrderRef === 'string' && /^BP-[0-9A-Z-]{4,20}$/i.test(clientOrderRef))
@@ -206,6 +257,7 @@ module.exports = async (req, res) => {
 
     let employerContribution = 0;
     let ruleId = null;
+    let coveredMeals = 0; // nombre de menus (plats) pris en charge par cette commande
 
     if (eligibleRule) {
       ruleId = eligibleRule.id;
@@ -230,21 +282,52 @@ module.exports = async (req, res) => {
         employerContribution = Math.max(0, Math.min(employerContribution, eligibleRule.daily_cap - alreadyToday));
       }
 
-      if (eligibleRule.monthly_cap != null) {
+      // Nombre de plats (menus) éligibles de cette commande, quantité comprise.
+      const eligibleDishCount = items.reduce((n, item) => {
+        const productEligible = !eligibleRule.eligible_products || eligibleRule.eligible_products.includes(item.id);
+        return productEligible ? n + (Number(item.qty) || 1) : n;
+      }, 0);
+
+      const capRs = eligibleRule.monthly_cap;          // plafond mensuel en Rs (peut être null)
+      const capMeals = eligibleRule.monthly_meal_cap;  // plafond mensuel en menus (peut être null)
+
+      if (capRs != null || capMeals != null) {
         const periodMonth = firstOfMonth(deliveryDate);
         const { data: ledger } = await supabaseAdmin
           .from('employee_budget_ledger')
-          .select('*')
+          .select('contributed, meals_covered')
           .eq('employee_id', employee.id)
           .eq('period_month', periodMonth)
           .maybeSingle();
-        const alreadyThisMonth = Number(ledger?.contributed || 0);
-        employerContribution = Math.max(0, Math.min(employerContribution, eligibleRule.monthly_cap - alreadyThisMonth));
+        const alreadyRs = Number(ledger?.contributed || 0);
+        const alreadyMeals = Number(ledger?.meals_covered || 0);
 
+        // Plafond en Rs : borne le montant couvert.
+        if (capRs != null) {
+          employerContribution = Math.max(0, Math.min(employerContribution, capRs - alreadyRs));
+        }
+        // Plafond en menus : limite le NOMBRE de plats couverts ce mois-ci.
+        if (capMeals != null) {
+          const remainingMeals = Math.max(0, capMeals - alreadyMeals);
+          if (remainingMeals <= 0) {
+            employerContribution = 0; coveredMeals = 0;
+          } else if (eligibleDishCount <= remainingMeals) {
+            coveredMeals = eligibleDishCount;
+          } else {
+            // Couverture partielle : seuls les plats restants sont pris en charge (prorata).
+            const frac = eligibleDishCount > 0 ? remainingMeals / eligibleDishCount : 0;
+            employerContribution = employerContribution * frac;
+            coveredMeals = remainingMeals;
+          }
+        } else {
+          coveredMeals = employerContribution > 0 ? eligibleDishCount : 0;
+        }
+
+        employerContribution = Math.round(employerContribution * 100) / 100;
         await supabaseAdmin
           .from('employee_budget_ledger')
           .upsert(
-            { employee_id: employee.id, period_month: periodMonth, contributed: alreadyThisMonth + employerContribution },
+            { employee_id: employee.id, period_month: periodMonth, contributed: alreadyRs + employerContribution, meals_covered: alreadyMeals + coveredMeals },
             { onConflict: 'employee_id,period_month' }
           );
       }
@@ -270,6 +353,7 @@ module.exports = async (req, res) => {
         contribution_rule_id: ruleId,
         employer_contribution: employerContribution,
         employee_amount: employeeAmount,
+        covered_meals: coveredMeals,
         payment_method: paymentMethod || 'cash',
         delivery_date: deliveryDate,
         pickup_code: pickupCode,

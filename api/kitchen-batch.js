@@ -1,7 +1,7 @@
 const { getSupabaseAdmin } = require('./_supabaseAdmin');
 
 // Compte admin : info@bondipain.com. hello@ accepté le temps de la bascule du compte Supabase.
-const ADMIN_EMAILS = ['info@bondipain.com', 'hello@bondipain.com'];
+const ADMIN_EMAILS = ['info@bondipain.com', 'hello@bondipain.com', 'agirod@gramica.fr'];
 
 async function getAdmin(req, supabaseAdmin) {
   const authHeader = req.headers.authorization || '';
@@ -62,12 +62,31 @@ module.exports = async (req, res) => {
       g.total += 1;
     }
 
+    // ── Commandes Particulier (B2C) pour la même date ──
+    const { data: b2cOrders } = await supabaseAdmin
+      .from('orders')
+      .select('order_ref, order_items, delivery_date, status, customer_name, customer_phone, delivery_address')
+      .eq('delivery_date', date)
+      .neq('status', 'cancelled');
+    for (const o of b2cOrders || []) {
+      const name = o.customer_name || 'Client';
+      const office = o.delivery_address ? `${name} — ${o.delivery_address}` : name;
+      const items = o.order_items || [];
+      const mealLabel = items.map(it => (it.name?.fr || it.name || 'Repas')).join(' + ') || 'Repas';
+      const mealCounts = {};
+      items.forEach(it => { const n = it.name?.fr || it.name || 'Repas'; mealCounts[n] = (mealCounts[n] || 0) + (it.qty || 1); });
+      groups[`B2C||${o.order_ref}`] = {
+        company: 'Particulier', office, slot: '11h–14h', mealCounts, total: 1,
+        orders: [{ order_ref: o.order_ref, pickup_code: null, employee: name, phone: o.customer_phone || '', company: 'Particulier', meal: mealLabel, allergens: [], status: o.status }],
+      };
+    }
+
     const groupList = Object.values(groups).sort((a, b) => a.slot.localeCompare(b.slot) || a.office.localeCompare(b.office));
     const route = groupList.map(g => `${g.office} (${g.slot})`);
 
     res.status(200).json({
       date,
-      totalOrders: (orders || []).length,
+      totalOrders: (orders || []).length + (b2cOrders || []).length,
       groups: groupList,
       route,
     });

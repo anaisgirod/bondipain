@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9QR4QJW');</script>
+<!-- End Google Tag Manager -->
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bondipain — Mon espace employé</title>
@@ -12,7 +20,7 @@
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
-    --brand:#F2A24C; --brand-deep:#C9711B; --brand-soft:#FBE5CC; --cream:#FFF8F1; --cream-2:#FDF1E5;
+    --brand:#FF8C00; --brand-deep:#DA4928; --brand-soft:#F6E1C4; --cream:#F7F5F0; --cream-2:#FDF1E5;
     --ink:#2A2622; --muted:#837A70; --line:#EFE3D5; --green:#2E7D52; --green-soft:#E8F5E9; --danger:#C0392B;
     --shadow:0 2px 12px rgba(60,40,15,.09); --radius:14px;
   }
@@ -91,6 +99,11 @@
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9QR4QJW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 
 <div id="loginRedirect" class="login-wrap">
   <div style="text-align:center;color:var(--muted)">Chargement de votre espace…</div>
@@ -163,6 +176,14 @@
   </div>
 </div>
 
+<p style="max-width:900px;margin:20px auto 40px;text-align:center;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;">
+  <a href="faq.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_faq">FAQ</a>
+  <a href="mentions-legales.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_legal_notice">Mentions légales</a>
+  <a href="conditions-generales.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_terms">CGV</a>
+  <a href="confidentialite.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_privacy">Confidentialité</a>
+  <a href="cookies.html" target="_blank" style="color:var(--brand-deep);font-weight:700;text-decoration:none;" data-i18n="footer_cookies">Cookies</a>
+</p>
+
 <script>
 const SUPABASE_URL="https://cqtplubyjgkhbnlujsoe.supabase.co";
 const SUPABASE_ANON="sb_publishable_PBzzpwEQ57cvpsk9adu69Q_KjKhC-Qb";
@@ -187,10 +208,12 @@ const L = {
   fr: { order:"Commander", logout:"Déconnexion", budget_left:"Budget restant", orders_month:"Commandes ce mois",
     meals_ordered:"repas commandés", avg_rating:"Note moyenne", on_rated:"sur vos repas notés",
     my_favorites:"Mes favoris", my_diet:"Mon profil alimentaire", diet:"Régime", allergen_alerts:"Alertes allergènes",
+    footer_faq:"FAQ", footer_legal_notice:"Mentions légales", footer_terms:"CGV", footer_privacy:"Confidentialité", footer_cookies:"Cookies",
     save_prefs:"Enregistrer mes préférences", prefs_saved:"Préférences enregistrées.", my_orders:"Mes commandes",
     loading:"Chargement…", hello:"Bonjour", benefit:"Votre avantage repas", used:"utilisés", unlimited:"Illimité",
     covered_month:"pris en charge ce mois", order_word:"Commande", meal_word:"Repas", cancelled:"Commande annulée",
     no_orders:"Aucune commande pour le moment.", delivery:"livraison", your_rating:"Votre note :", add_fav:"★ Ajouter aux favoris",
+    cancel_btn:"Annuler", cancel_confirm:"Annuler cette commande ? Cette action est irréversible.", err_prefix:"Erreur : ", download_receipt:"⬇ Reçu",
     no_fav:"Aucun favori. Ajoutez-en depuis vos commandes passées.", fav_word:"Favori", items:"article(s)",
     reorder:"Recommander", remove:"Retirer", all_months:"Tous les mois", nav_home_btn:"← Accueil",
     my_info:"Mes informations", info_name:"Nom", info_email:"Email", info_phone:"Téléphone", info_company:"Entreprise",
@@ -198,10 +221,12 @@ const L = {
   en: { order:"Order", logout:"Log out", budget_left:"Remaining budget", orders_month:"Orders this month",
     meals_ordered:"meals ordered", avg_rating:"Average rating", on_rated:"on your rated meals",
     my_favorites:"My favorites", my_diet:"My dietary profile", diet:"Diet", allergen_alerts:"Allergen alerts",
+    footer_faq:"FAQ", footer_legal_notice:"Legal notice", footer_terms:"Terms", footer_privacy:"Privacy", footer_cookies:"Cookies",
     save_prefs:"Save my preferences", prefs_saved:"Preferences saved.", my_orders:"My orders",
     loading:"Loading…", hello:"Hi", benefit:"Your meal benefit with", used:"used", unlimited:"Unlimited",
     covered_month:"covered this month", order_word:"Order", meal_word:"Meal", cancelled:"Order cancelled",
     no_orders:"No orders yet.", delivery:"delivery", your_rating:"Your rating:", add_fav:"★ Add to favorites",
+    cancel_btn:"Cancel", cancel_confirm:"Cancel this order? This cannot be undone.", err_prefix:"Error: ", download_receipt:"⬇ Receipt",
     no_fav:"No favorites yet. Add some from your past orders.", fav_word:"Favorite", items:"item(s)",
     reorder:"Reorder", remove:"Remove", all_months:"All months", nav_home_btn:"← Home",
     my_info:"My information", info_name:"Name", info_email:"Email", info_phone:"Phone", info_company:"Company",
@@ -358,7 +383,11 @@ function renderOrders(orders){
       ${trackerHtml(o.status)}
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;flex-wrap:wrap;">
         <div style="font-size:13px;color:var(--muted)">${T("your_rating")} ${ratingHtml}</div>
-        <button class="btn btn-ghost btn-sm" onclick='addFavorite(${JSON.stringify(JSON.stringify(o.order_items||[]))}, ${JSON.stringify(JSON.stringify(mealName(o)))})'>${T("add_fav")}</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${isCancellable(o) ? `<button class="btn btn-ghost btn-sm" style="border:1.5px solid var(--danger);color:var(--danger);" onclick="cancelB2EOrder('${o.id}', this)">${T("cancel_btn")}</button>` : ""}
+          <button class="btn btn-ghost btn-sm" onclick="downloadB2EReceipt('${o.id}')">${T("download_receipt")}</button>
+          <button class="btn btn-ghost btn-sm" onclick='addFavorite(${JSON.stringify(JSON.stringify(o.order_items||[]))}, ${JSON.stringify(JSON.stringify(mealName(o)))})'>${T("add_fav")}</button>
+        </div>
       </div>
     </div>`;
   }).join("");
@@ -367,6 +396,82 @@ function renderOrders(orders){
 async function rate(orderId, n){
   await _supa.from("b2e_orders").update({ rating:n }).eq("id", orderId);
   await loadStatsAndOrders();
+}
+
+// ── Téléchargement d'un reçu de commande (page imprimable / PDF) ──
+function downloadB2EReceipt(orderId){
+  const o = (ALL_ORDERS || []).find(x => String(x.id) === String(orderId));
+  if(!o) return;
+  const d = new Date(o.delivery_date || o.created_at);
+  const dateStr = `${d.getDate()} ${MONTHS[lang][d.getMonth()]} ${d.getFullYear()}`;
+  const items = o.order_items || [];
+  const itemName = (l) => { const n = l && l.name ? (typeof l.name === "string" ? l.name : (l.name[lang] || l.name.fr || l.name.en || "")) : (l.label || ""); return n; };
+  const lines = items.map(l => `<div class="ln"><span>${(l.qty?l.qty+"× ":"")}${itemName(l)}</span><span>${l.lineTotal!=null?money(l.lineTotal):""}</span></div>`).join("");
+  const fr = lang === "fr";
+  const html = `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><title>${o.order_ref||""}</title>
+    <style>
+      body{font-family:Arial,Helvetica,sans-serif;color:#2b2018;max-width:640px;margin:32px auto;padding:0 24px}
+      h1{font-size:22px;margin:0 0 2px} .brand{color:#E07A2E;font-weight:700;letter-spacing:.5px;margin-bottom:18px}
+      .ref{font-weight:700;color:#8a5a2b;font-size:15px} .meta{color:#666;font-size:13px;margin:2px 0}
+      .sec{font-weight:700;margin:22px 0 8px;font-size:14px}
+      .box{border:1px solid #e6ddce;border-radius:10px;padding:12px 14px;margin:10px 0}
+      .ln{display:flex;justify-content:space-between;font-size:13.5px;padding:2px 0}
+      .row{display:flex;justify-content:space-between;font-size:14px;padding:3px 0}
+      .tot{display:flex;justify-content:space-between;font-weight:700;font-size:17px;border-top:2px solid #e6ddce;margin-top:16px;padding-top:12px}
+      @media print{body{margin:0}}
+    </style></head><body>
+    <div class="brand">BONDIPAIN</div>
+    <h1>${fr?"Reçu de commande":"Order receipt"}</h1>
+    <div class="ref">${o.order_ref||""}</div>
+    <div class="meta">${fr?"Livraison":"Delivery"} : ${dateStr} · 11h–14h</div>
+    ${o.pickup_code?`<div class="meta">${fr?"Code de retrait":"Pickup code"} : ${o.pickup_code}</div>`:""}
+    <div class="sec">${fr?"Articles":"Items"}</div>
+    <div class="box">${lines || "—"}</div>
+    <div class="box">
+      <div class="row"><span>${fr?"Total repas":"Meal total"}</span><span>${money(o.order_total)}</span></div>
+      <div class="row" style="color:#2E7D52"><span>${fr?"Pris en charge (entreprise)":"Covered (employer)"}</span><span>−${money(o.employer_contribution)}</span></div>
+    </div>
+    <div class="tot"><span>${fr?"Payé par vous":"Paid by you"}</span><span>${money(o.employee_amount)}</span></div>
+    <script>window.onload=function(){window.print();}<\/script>
+    </body></html>`;
+  const w = window.open("", "_blank");
+  if(!w){ alert(fr?"Popup bloqué — autorisez les popups pour télécharger le reçu.":"Popup blocked — allow popups to download the receipt."); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
+// ── Annulation : possible jusqu'à 15h00 (heure Maurice) le jour ouvrable précédant la livraison ──
+function cancelDeadlineMs(deliveryDateStr){
+  if(!deliveryDateStr) return 0;
+  const s = String(deliveryDateStr).slice(0,10);
+  const [y,m,d] = s.split("-").map(Number);
+  let dt = new Date(Date.UTC(y, m-1, d));
+  do { dt.setUTCDate(dt.getUTCDate()-1); } while (dt.getUTCDay()===0 || dt.getUTCDay()===6);
+  return Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate(), 11, 0, 0); // 15h Maurice = 11h UTC
+}
+function isCancellable(o){
+  if(!o || !o.delivery_date) return false;
+  if(o.status && o.status !== "confirmed") return false;
+  return Date.now() < cancelDeadlineMs(o.delivery_date);
+}
+async function cancelB2EOrder(orderId, btn){
+  if(!orderId) return;
+  if(!confirm(T("cancel_confirm"))) return;
+  if(btn){ btn.disabled=true; btn.textContent="…"; }
+  try {
+    const { data:{ session } } = await _supa.auth.getSession();
+    if(!session) throw new Error("Session expirée.");
+    const res = await fetch("/api/place-order", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", Authorization:"Bearer "+session.access_token },
+      body: JSON.stringify({ action:"cancel", orderId })
+    });
+    const p = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(p.error || "Erreur");
+    await loadStatsAndOrders();
+  } catch(e){
+    alert((T("err_prefix")||"Erreur : ")+e.message);
+    if(btn){ btn.disabled=false; btn.textContent=T("cancel_btn"); }
+  }
 }
 
 /* ── Favoris ── */
